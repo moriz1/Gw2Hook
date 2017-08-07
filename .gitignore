@@ -20,6 +20,7 @@ ipch/
 # Temporary OS files
 .DS_Store
 Thumbs.db
+.vs/
 
 # Versioning
 /res/Version.h
