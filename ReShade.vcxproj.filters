@@ -28,9 +28,6 @@
     <Filter Include="hooks\dxgi">
       <UniqueIdentifier>{4d42777e-6ba3-4965-b0dc-88186095f1a9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="hooks\opengl">
-      <UniqueIdentifier>{78832e2a-8fda-4ae5-aecb-a4e0f5a0df02}</UniqueIdentifier>
-    </Filter>
     <Filter Include="hooks\windows">
       <UniqueIdentifier>{ab5a23b3-e97e-4a41-99a1-89c6f1d54b16}</UniqueIdentifier>
     </Filter>
@@ -143,18 +140,6 @@
     </ClCompile>
     <ClCompile Include="source\dxgi\dxgi_swapchain.cpp">
       <Filter>hooks\dxgi</Filter>
-    </ClCompile>
-    <ClCompile Include="source\opengl\opengl.cpp">
-      <Filter>hooks\opengl</Filter>
-    </ClCompile>
-    <ClCompile Include="source\opengl\opengl_effect_compiler.cpp">
-      <Filter>hooks\opengl</Filter>
-    </ClCompile>
-    <ClCompile Include="source\opengl\opengl_runtime.cpp">
-      <Filter>hooks\opengl</Filter>
-    </ClCompile>
-    <ClCompile Include="source\opengl\opengl_stateblock.cpp">
-      <Filter>hooks\opengl</Filter>
     </ClCompile>
     <ClCompile Include="source\windows\user32.cpp">
       <Filter>hooks\windows</Filter>
@@ -289,18 +274,6 @@
     </ClInclude>
     <ClInclude Include="source\dxgi\dxgi_swapchain.hpp">
       <Filter>hooks\dxgi</Filter>
-    </ClInclude>
-    <ClInclude Include="source\opengl\opengl_effect_compiler.hpp">
-      <Filter>hooks\opengl</Filter>
-    </ClInclude>
-    <ClInclude Include="source\opengl\opengl_loader.hpp">
-      <Filter>hooks\opengl</Filter>
-    </ClInclude>
-    <ClInclude Include="source\opengl\opengl_runtime.hpp">
-      <Filter>hooks\opengl</Filter>
-    </ClInclude>
-    <ClInclude Include="source\opengl\opengl_stateblock.hpp">
-      <Filter>hooks\opengl</Filter>
     </ClInclude>
     <ClInclude Include="res\resource.h">
       <Filter>resources</Filter>

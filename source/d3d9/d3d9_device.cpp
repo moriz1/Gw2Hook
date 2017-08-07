@@ -757,9 +757,59 @@ HRESULT STDMETHODCALLTYPE Direct3DDevice9::GetIndices(IDirect3DIndexBuffer9 **pp
 {
 	return _orig->GetIndices(ppIndexData);
 }
-HRESULT STDMETHODCALLTYPE Direct3DDevice9::CreatePixelShader(const DWORD *pFunction, IDirect3DPixelShader9 **ppShader)
-{
-	return _orig->CreatePixelShader(pFunction, ppShader);
+
+bool isEnd(DWORD token) {
+	return (token & D3DSI_OPCODE_MASK) == D3DSIO_END;
+}
+
+int get_pattern(const DWORD *pFunction, int l) {
+	//If mad oC0 -> mov oC0 -> end
+	if (pFunction[l - 4] == 0x2000001 && pFunction[l - 3] == 0x80280800 && pFunction[l - 9] == 0x4000004 && pFunction[l - 8] == 0x80270800) {
+		//If last arg of move is one of the following
+		if (pFunction[l - 2] == 0xa0000001 || pFunction[l - 2] == 0xa0000000 || pFunction[l - 2] == 0xa0000002 || pFunction[l - 2] == 0xa0ff0000 || pFunction[l - 2] == 0xa0ff0001) {
+			//If op above are lerp and add, it's map ps so ignore
+			if (pFunction[l - 13] == 0x3000002 && pFunction[l - 18] == 0x4000012) return -1;
+			//Else it need to be edited with pattern 1
+			return 1;
+		}
+	//If it's only mad oC0 -> end
+	} else if (pFunction[l - 6] == 0x4000004 && pFunction[l - 5] == 0x80270800) {
+		//If it's mad -> mad, it's UI ps
+		if (pFunction[l - 11] == 0x4000004) return -1;
+		//Else it need to be edited with pattern 2
+		return 2;
+	}
+	return -1;
+}
+
+#define MAX_TOKENS	8192
+static DWORD* _pFunction = (DWORD*)malloc(sizeof(DWORD)*MAX_TOKENS);
+
+HRESULT STDMETHODCALLTYPE Direct3DDevice9::CreatePixelShader(const DWORD *pFunction, IDirect3DPixelShader9 **ppShader) {
+	int op = 0;
+	int l = 1;
+	while ( !isEnd(pFunction[op++]) )  l++;
+
+	int pattern = get_pattern(pFunction, l);
+	switch(pattern){
+		case 1: //Detected pattern 1
+			for (int i = 0; i < l; ++i) _pFunction[i] = (DWORD)pFunction[i];
+			_pFunction[l - 9] = 0x2000001;
+			_pFunction[l - 6] = 0x0;
+			_pFunction[l - 5] = 0x0;
+			return _orig->CreatePixelShader(_pFunction, ppShader);
+			break;
+		case 2: //Detected pattern 2
+			for (int i = 0; i < l; ++i) _pFunction[i] = (DWORD)pFunction[i];
+			_pFunction[l - 6] = 0x2000001;
+			_pFunction[l - 2] = 0x0;
+			_pFunction[l - 3] = 0x0;
+			return _orig->CreatePixelShader(_pFunction, ppShader);
+			break;
+		default: //No pattern detected
+			return _orig->CreatePixelShader(pFunction, ppShader);
+			break;
+	}
 }
 HRESULT STDMETHODCALLTYPE Direct3DDevice9::SetPixelShader(IDirect3DPixelShader9 *pShader)
 {

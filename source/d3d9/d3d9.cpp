@@ -7,6 +7,7 @@
 #include "hook_manager.hpp"
 #include "d3d9_device.hpp"
 #include "d3d9_swapchain.hpp"
+#include <iostream>
 
 #pragma region Undefine Function Names
 #undef IDirect3D9_CreateDevice
@@ -15,6 +16,12 @@
 
 void dump_present_parameters(const D3DPRESENT_PARAMETERS &pp)
 {
+	/* Uncomment to get the console back, for debug
+	int console = AllocConsole();
+	FILE* fp;
+	freopen_s(&fp, "CONOUT$", "w", stdout);
+	*/
+
 	LOG(INFO) << "> Dumping presentation parameters:";
 	LOG(INFO) << "  +-----------------------------------------+-----------------------------------------+";
 	LOG(INFO) << "  | Parameter                               | Value                                   |";

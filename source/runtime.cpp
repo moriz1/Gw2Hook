@@ -1020,8 +1020,8 @@ namespace reshade
 				ImGuiWindowFlags_NoInputs |
 				ImGuiWindowFlags_NoFocusOnAppearing);
 
-			ImGui::TextUnformatted("ReShade " VERSION_STRING_FILE " by crosire");
-			ImGui::TextUnformatted("Visit http://reshade.me for news, updates, shaders and discussion.");
+			ImGui::TextUnformatted("ReShade " VERSION_STRING_FILE " by crosire (http://reshade.me)");
+			ImGui::TextUnformatted("Gw2 hook " VERSION_GW2SPEC_STRING_FILE " by Grenbur");
 
 			ImGui::Spacing();
 
