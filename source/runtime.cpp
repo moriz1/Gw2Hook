@@ -142,7 +142,6 @@ namespace reshade
 		_date[3] = tm.tm_hour * 3600 + tm.tm_min * 60 + tm.tm_sec;
 
 		// Advance various statistics
-		g_network_traffic = 0;
 		_framecount++;
 		_drawcalls = _vertices = 0;
 		_last_frame_duration = std::chrono::high_resolution_clock::now() - _last_present_time;
@@ -1021,7 +1020,7 @@ namespace reshade
 				ImGuiWindowFlags_NoFocusOnAppearing);
 
 			ImGui::TextUnformatted("ReShade " VERSION_STRING_FILE " by crosire (http://reshade.me)");
-			ImGui::TextUnformatted("Gw2 hook " VERSION_GW2SPEC_STRING_FILE " by Grenbur");
+			ImGui::TextUnformatted("Gw2 Hook " VERSION_GW2SPEC_STRING_FILE " by Grenbur (04348.github.io/Gw2Hook/)");
 
 			ImGui::Spacing();
 
@@ -1093,7 +1092,7 @@ namespace reshade
 			{
 				ImGui::SetNextWindowPosCenter(ImGuiSetCond_Once);
 				ImGui::SetNextWindowSize(ImVec2(710, 650), ImGuiSetCond_Once);
-				ImGui::Begin("ReShade " VERSION_STRING_FILE " by crosire###Main", &_show_menu,
+				ImGui::Begin("Gw2 Hook " VERSION_GW2SPEC_STRING_FILE " | ###Main", &_show_menu,
 					ImGuiWindowFlags_MenuBar |
 					ImGuiWindowFlags_NoCollapse);
 
@@ -1658,7 +1657,6 @@ namespace reshade
 			ImGui::Text("Draw Calls: %u (%u vertices)", _drawcalls, _vertices);
 			ImGui::Text("Frame %llu: %f ms", _framecount + 1, _last_frame_duration.count() * 1e-6f);
 			ImGui::Text("Timer: %f ms", std::fmod(std::chrono::duration_cast<std::chrono::nanoseconds>(_last_present_time - _start_time).count() * 1e-6f, 16777216.0f));
-			ImGui::Text("Network (traffic per frame): %u B", g_network_traffic);
 		}
 
 		if (ImGui::CollapsingHeader("Textures", ImGuiTreeNodeFlags_DefaultOpen))
@@ -1685,18 +1683,23 @@ namespace reshade
 	void runtime::draw_overlay_menu_about()
 	{
 		ImGui::PushTextWrapPos();
-		ImGui::TextUnformatted(R"(Copyright 2014 Patrick Mours. All rights reserved.
+		ImGui::TextUnformatted("Gw2 Hook is a fork of ReShade, rules about redistribution and use in source and binary forms are the same.");
+		if (ImGui::CollapsingHeader("ReShade"))
+		{
+			ImGui::TextUnformatted(R"(Copyright 2014 Patrick Mours. All rights reserved.
 
-https://github.com/crosire/reshade
+			https://github.com/crosire/reshade
 
-Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+			Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
- 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
- 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
- 3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+			 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+			 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+			 3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.)");
+			THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.)");
 
+		}
+		
 		if (ImGui::CollapsingHeader("MinHook"))
 		{
 			ImGui::TextUnformatted(R"(Copyright (C) 2009-2016 Tsuda Kageyu. All rights reserved.

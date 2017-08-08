@@ -6,8 +6,16 @@
 #include "log.hpp"
 #include "d3d9_device.hpp"
 #include "d3d9_swapchain.hpp"
+#include <d3dx9shader.h>
 
 extern void dump_present_parameters(const D3DPRESENT_PARAMETERS &pp);
+
+#define MAX_TOKENS	8192
+static DWORD* _pFunction = (DWORD*)malloc(sizeof(DWORD)*MAX_TOKENS);
+static void* _pShader = NULL;
+static DWORD pattern[] = { 0x800c0001, 0xa0550006, 0x3000009, 0x80010002, 0x80e40001, 0xa0e40004, 0x3000009,
+						   0x80020002, 0x80e40001, 0xa0e40005, 0x2000001, 0xe0030000, 0x80440002 };//l = 13
+static bool fx_applied = false;
 
 // IDirect3DDevice9
 HRESULT STDMETHODCALLTYPE Direct3DDevice9::QueryInterface(REFIID riid, void **ppvObj)
@@ -261,10 +269,13 @@ HRESULT STDMETHODCALLTYPE Direct3DDevice9::Reset(D3DPRESENT_PARAMETERS *pPresent
 
 	return hr;
 }
+
 HRESULT STDMETHODCALLTYPE Direct3DDevice9::Present(const RECT *pSourceRect, const RECT *pDestRect, HWND hDestWindowOverride, const RGNDATA *pDirtyRegion)
 {
 	assert(_implicit_swapchain != nullptr);
 	assert(_implicit_swapchain->_runtime != nullptr);
+
+	fx_applied = false;
 
 	_implicit_swapchain->_runtime->on_present();
 
@@ -697,12 +708,37 @@ HRESULT STDMETHODCALLTYPE Direct3DDevice9::GetFVF(DWORD *pFVF)
 {
 	return _orig->GetFVF(pFVF);
 }
+
+bool isEnd(DWORD token) {
+	return (token & D3DSI_OPCODE_MASK) == D3DSIO_END;
+}
+
 HRESULT STDMETHODCALLTYPE Direct3DDevice9::CreateVertexShader(const DWORD *pFunction, IDirect3DVertexShader9 **ppShader)
 {
-	return _orig->CreateVertexShader(pFunction, ppShader);
+	HRESULT hr = _orig->CreateVertexShader(pFunction, ppShader);
+	if (_pShader == NULL) {
+		int op = 0;
+		int l = 1;
+		while (!isEnd(pFunction[op++]))  l++;
+		for (int i = 0; i < 13; ++i) {
+			if (pFunction[l - 2 - i] != pattern[12 - i]) return hr;
+		}
+		_pShader = *ppShader;
+	}
+	return hr;
 }
+
+bool isInjectionShader(void* pShader) {
+	return pShader == _pShader;
+}
+
 HRESULT STDMETHODCALLTYPE Direct3DDevice9::SetVertexShader(IDirect3DVertexShader9 *pShader)
 {
+	if (pShader == NULL) return _orig->SetVertexShader(pShader);
+	if (!fx_applied && isInjectionShader(pShader)) {
+		fx_applied = true;
+		_implicit_swapchain->_runtime->applyPostFX();
+	}
 	return _orig->SetVertexShader(pShader);
 }
 HRESULT STDMETHODCALLTYPE Direct3DDevice9::GetVertexShader(IDirect3DVertexShader9 **ppShader)
@@ -758,17 +794,15 @@ HRESULT STDMETHODCALLTYPE Direct3DDevice9::GetIndices(IDirect3DIndexBuffer9 **pp
 	return _orig->GetIndices(ppIndexData);
 }
 
-bool isEnd(DWORD token) {
-	return (token & D3DSI_OPCODE_MASK) == D3DSIO_END;
-}
-
-int get_pattern(const DWORD *pFunction, int l) {
+int Direct3DDevice9::get_pattern(const DWORD *pFunction, int l) {
 	//If mad oC0 -> mov oC0 -> end
 	if (pFunction[l - 4] == 0x2000001 && pFunction[l - 3] == 0x80280800 && pFunction[l - 9] == 0x4000004 && pFunction[l - 8] == 0x80270800) {
 		//If last arg of move is one of the following
 		if (pFunction[l - 2] == 0xa0000001 || pFunction[l - 2] == 0xa0000000 || pFunction[l - 2] == 0xa0000002 || pFunction[l - 2] == 0xa0ff0000 || pFunction[l - 2] == 0xa0ff0001) {
 			//If op above are lerp and add, it's map ps so ignore
-			if (pFunction[l - 13] == 0x3000002 && pFunction[l - 18] == 0x4000012) return -1;
+			if (pFunction[l - 13] == 0x3000002 && pFunction[l - 18] == 0x4000012) {
+				return -1;
+			}
 			//Else it need to be edited with pattern 1
 			return 1;
 		}
@@ -782,16 +816,14 @@ int get_pattern(const DWORD *pFunction, int l) {
 	return -1;
 }
 
-#define MAX_TOKENS	8192
-static DWORD* _pFunction = (DWORD*)malloc(sizeof(DWORD)*MAX_TOKENS);
-
 HRESULT STDMETHODCALLTYPE Direct3DDevice9::CreatePixelShader(const DWORD *pFunction, IDirect3DPixelShader9 **ppShader) {
 	int op = 0;
 	int l = 1;
 	while ( !isEnd(pFunction[op++]) )  l++;
 
-	int pattern = get_pattern(pFunction, l);
-	switch(pattern){
+	int _pattern = get_pattern(pFunction, l);
+	
+	switch(_pattern){
 		case 1: //Detected pattern 1
 			for (int i = 0; i < l; ++i) _pFunction[i] = (DWORD)pFunction[i];
 			_pFunction[l - 9] = 0x2000001;
@@ -811,6 +843,7 @@ HRESULT STDMETHODCALLTYPE Direct3DDevice9::CreatePixelShader(const DWORD *pFunct
 			break;
 	}
 }
+
 HRESULT STDMETHODCALLTYPE Direct3DDevice9::SetPixelShader(IDirect3DPixelShader9 *pShader)
 {
 	return _orig->SetPixelShader(pShader);

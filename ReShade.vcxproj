@@ -58,6 +58,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>C:\Program Files %28x86%29\Windows Kits\10\Include\10.0.15063.0\shared;C:\Program Files %28x86%29\Windows Kits\10\Include\10.0.15063.0\um;$(IncludePath)</IncludePath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>D:\Programmes\DirectX SDK\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\Programmes\DirectX SDK\Lib\x64;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
@@ -104,6 +108,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)\bin\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>res\exports.def</ModuleDefinitionFile>
+      <AdditionalDependencies>d3dx9.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <FxCompile>
       <ShaderModel>4.0</ShaderModel>
@@ -198,26 +203,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\constant_folding.cpp" />
-    <ClCompile Include="source\d3d10\d3d10.cpp" />
-    <ClCompile Include="source\d3d10\d3d10_device.cpp" />
-    <ClCompile Include="source\d3d10\d3d10_effect_compiler.cpp" />
-    <ClCompile Include="source\d3d10\d3d10_runtime.cpp" />
-    <ClCompile Include="source\d3d10\d3d10_stateblock.cpp" />
-    <ClCompile Include="source\d3d11\d3d11.cpp" />
-    <ClCompile Include="source\d3d11\d3d11_device.cpp" />
-    <ClCompile Include="source\d3d11\d3d11_device_context.cpp" />
-    <ClCompile Include="source\d3d11\d3d11_effect_compiler.cpp" />
-    <ClCompile Include="source\d3d11\d3d11_runtime.cpp" />
-    <ClCompile Include="source\d3d11\d3d11_stateblock.cpp" />
     <ClCompile Include="source\d3d9\d3d9.cpp" />
     <ClCompile Include="source\d3d9\d3d9_device.cpp" />
     <ClCompile Include="source\d3d9\d3d9_effect_compiler.cpp" />
     <ClCompile Include="source\d3d9\d3d9_runtime.cpp" />
     <ClCompile Include="source\d3d9\d3d9_swapchain.cpp" />
     <ClCompile Include="source\directory_watcher.cpp" />
-    <ClCompile Include="source\dxgi\dxgi.cpp" />
-    <ClCompile Include="source\dxgi\dxgi_device.cpp" />
-    <ClCompile Include="source\dxgi\dxgi_swapchain.cpp" />
     <ClCompile Include="source\filesystem.cpp" />
     <ClCompile Include="source\hook.cpp" />
     <ClCompile Include="source\hook_manager.cpp" />
@@ -241,26 +232,12 @@
     <ClInclude Include="source\com_ptr.hpp" />
     <ClInclude Include="source\constant_folding.hpp" />
     <ClInclude Include="source\critical_section.hpp" />
-    <ClInclude Include="source\d3d10\d3d10.hpp" />
-    <ClInclude Include="source\d3d10\d3d10_device.hpp" />
-    <ClInclude Include="source\d3d10\d3d10_effect_compiler.hpp" />
-    <ClInclude Include="source\d3d10\d3d10_runtime.hpp" />
-    <ClInclude Include="source\d3d10\d3d10_stateblock.hpp" />
-    <ClInclude Include="source\d3d11\d3d11.hpp" />
-    <ClInclude Include="source\d3d11\d3d11_device.hpp" />
-    <ClInclude Include="source\d3d11\d3d11_device_context.hpp" />
-    <ClInclude Include="source\d3d11\d3d11_effect_compiler.hpp" />
-    <ClInclude Include="source\d3d11\d3d11_runtime.hpp" />
-    <ClInclude Include="source\d3d11\d3d11_stateblock.hpp" />
     <ClInclude Include="source\d3d9\d3d9.hpp" />
     <ClInclude Include="source\d3d9\d3d9_device.hpp" />
     <ClInclude Include="source\d3d9\d3d9_effect_compiler.hpp" />
     <ClInclude Include="source\d3d9\d3d9_runtime.hpp" />
     <ClInclude Include="source\d3d9\d3d9_swapchain.hpp" />
     <ClInclude Include="source\directory_watcher.hpp" />
-    <ClInclude Include="source\dxgi\dxgi.hpp" />
-    <ClInclude Include="source\dxgi\dxgi_device.hpp" />
-    <ClInclude Include="source\dxgi\dxgi_swapchain.hpp" />
     <ClInclude Include="source\filesystem.hpp" />
     <ClInclude Include="source\hook.hpp" />
     <ClInclude Include="source\hook_manager.hpp" />

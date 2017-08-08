@@ -11,31 +11,6 @@ EXPORTS
 	D3DPERF_SetOptions
 	D3DPERF_GetStatus
 
-	; d3d10.dll
-	D3D10CreateDevice
-	D3D10CreateDeviceAndSwapChain
-
-	; d3d10_1.dll
-	D3D10CreateDevice1
-	D3D10CreateDeviceAndSwapChain1
-
-	; d3d11.dll
-	D3D11CreateDevice
-	D3D11CreateDeviceAndSwapChain
-
-	; dxgi.dll
-	CreateDXGIFactory
-	CreateDXGIFactory1
-	CreateDXGIFactory2
-
-	DXGIDumpJournal
-	DXGIReportAdapterConfiguration
-	DXGID3D10CreateDevice
-	DXGID3D10CreateLayeredDevice
-	DXGID3D10GetLayeredDeviceSize
-	DXGID3D10RegisterLayers
-
-
 	; user32.dll
 	RegisterClassA = HookRegisterClassA
 	RegisterClassW = HookRegisterClassW
