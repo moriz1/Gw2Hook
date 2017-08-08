@@ -6,7 +6,6 @@
 #include "log.hpp"
 #include "d3d9_device.hpp"
 #include "d3d9_swapchain.hpp"
-#include <d3dx9shader.h>
 
 extern void dump_present_parameters(const D3DPRESENT_PARAMETERS &pp);
 
