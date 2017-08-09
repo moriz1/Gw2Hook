@@ -483,6 +483,7 @@ namespace reshade::d3d9
 			return;
 		}
 
+		//_device->StretchRect(_backbuffer.get(), nullptr, _backbuffer_resolved.get(), nullptr, D3DTEXF_NONE);
 		hr = _device->GetRenderTargetData(_backbuffer_resolved.get(), screenshot_surface.get());
 
 		if (FAILED(hr))

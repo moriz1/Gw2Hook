@@ -15,17 +15,17 @@ xmlns="http://www.w3.org/TR/REC-html40">
  <o:DocumentProperties>
   <o:Author>Barjou-Suire Emile</o:Author>
   <o:LastAuthor>Barjou-Suire Emile</o:LastAuthor>
-  <o:Revision>12</o:Revision>
-  <o:TotalTime>118</o:TotalTime>
+  <o:Revision>15</o:Revision>
+  <o:TotalTime>418</o:TotalTime>
   <o:Created>2017-08-08T10:05:00Z</o:Created>
-  <o:LastSaved>2017-08-08T15:28:00Z</o:LastSaved>
+  <o:LastSaved>2017-08-09T13:16:00Z</o:LastSaved>
   <o:Pages>1</o:Pages>
-  <o:Words>432</o:Words>
-  <o:Characters>2382</o:Characters>
+  <o:Words>464</o:Words>
+  <o:Characters>2556</o:Characters>
   <o:Company>Nyrhu Group</o:Company>
-  <o:Lines>19</o:Lines>
-  <o:Paragraphs>5</o:Paragraphs>
-  <o:CharactersWithSpaces>2809</o:CharactersWithSpaces>
+  <o:Lines>21</o:Lines>
+  <o:Paragraphs>6</o:Paragraphs>
+  <o:CharactersWithSpaces>3014</o:CharactersWithSpaces>
   <o:Version>16.00</o:Version>
  </o:DocumentProperties>
  <o:OfficeDocumentSettings>
@@ -38,8 +38,6 @@ target="index_fichiers/props007.xml">
 <link rel=colorSchemeMapping href="index_fichiers/colorschememapping.xml">
 <!--[if gte mso 9]><xml>
  <w:WordDocument>
-  <w:SpellingState>Clean</w:SpellingState>
-  <w:GrammarState>Clean</w:GrammarState>
   <w:TrackMoves>false</w:TrackMoves>
   <w:TrackFormatting/>
   <w:HyphenationZone>21</w:HyphenationZone>
@@ -1634,12 +1632,6 @@ span.CitationintenseCar
 	color:#70AD47;
 	mso-themecolor:accent6;
 	font-style:italic;}
-span.SpellE
-	{mso-style-name:"";
-	mso-spl-e:yes;}
-span.GramE
-	{mso-style-name:"";
-	mso-gram-e:yes;}
 .MsoChpDefault
 	{mso-style-type:export-only;
 	mso-default-props:yes;
@@ -2071,259 +2063,296 @@ style='tab-interval:35.4pt'>
 
 <div class=WordSection1>
 
-<p class=MsoTitle><span lang=EN-US style='mso-ansi-language:EN-US'>Gw2 Hook<span
+<p class=MsoTitle style='margin-left:35.4pt;mso-add-space:auto'><span
+lang=EN-US style='mso-ansi-language:EN-US'>Gw2 Hook ReGw2<span
 class=MsoSubtleEmphasis><o:p></o:p></span></span></p>
 
-<p class=MsoSubtitle><span lang=EN-US style='mso-ansi-language:EN-US'>Gw2Hook
-is a fork of <span class=SpellE>ReShade</span> which target only Guild Wars 2.<o:p></o:p></span></p>
+<p class=MsoSubtitle style='margin-left:35.4pt'><span lang=EN-US
+style='mso-ansi-language:EN-US'>Gw2Hook is a fork of ReShade which target only
+Guild Wars 2.<o:p></o:p></span></p>
 
-<p class=MsoIntenseQuote><span lang=EN-US style='mso-ansi-language:EN-US'>Modifying
-Guild Wars 2 is not supported by Arena.Net or <span class=SpellE>NCSoft</span>.
-Use it at your own risk.<o:p></o:p></span></p>
+<p class=MsoIntenseQuote style='margin-left:71.4pt'><span lang=EN-US
+style='mso-ansi-language:EN-US'>Modifying Guild Wars 2 is not supported by
+Arena.Net or NCSoft. Use it at your own risk.<o:p></o:p></span></p>
 
-<p class=MsoNormal><span lang=EN-US style='mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></p>
+<p class=MsoNormal style='margin-left:35.4pt'><span lang=EN-US
+style='mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></p>
 
-<p class=MsoNormal style='line-height:normal'><span lang=EN-US
-style='mso-ansi-language:EN-US'>This aims at removing the fog in Gw2, but I
-decided to add more functions to it. This at still in an early stage, and
-should be used keeping this in mind. <span
-style='mso-spacerun:yes'>&nbsp;</span>Also, I&#8217;ve never used DirectX nor
-any low-level Graphic API, the code is far from being clean!<o:p></o:p></span></p>
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:3.0pt;
+margin-left:35.4pt;line-height:normal'><span lang=EN-US style='mso-ansi-language:
+EN-US'>This aims at removing the fog in Gw2, but I decided to add more functions
+to it. This at still in an early stage, and should be used keeping this in
+mind.<span style='mso-spacerun:yes'>&nbsp; </span>Also, I&#8217;ve never used
+DirectX nor any low-level Graphic API, the code is far from being clean!<o:p></o:p></span></p>
 
-<p class=MsoNormal style='line-height:normal'><span lang=EN-US
-style='mso-ansi-language:EN-US'>So, to remove the fog, I installed a hook on
-the <span class=SpellE>CreatePixelShader</span>, so I have access to each <span
-class=SpellE>shader&#8217;s</span> bytecode. After some time, I got a pattern
-in the bytecode that is used to apply the fog, so basically I just had to
-change the mad (multiply and add) op that applied the final <span class=SpellE>tex</span>
-to the object with the fog to a <span class=SpellE>mov</span> (which just&#8230;
-move the <span class=SpellE>tex</span> to the object).<o:p></o:p></span></p>
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:3.0pt;
+margin-left:35.4pt;line-height:normal'><span lang=EN-US style='mso-ansi-language:
+EN-US'>So, to remove the fog, I installed a hook on the CreatePixelShader, so I
+have access to each shader&#8217;s bytecode. After some researches, I found a
+pattern in the bytecode that is used to apply the fog, so basically I just had
+to change a <span class=MsoSubtleReference>mad</span> (multiply and add) op
+that applied the final tex to the object with the fog to a <span
+class=MsoSubtleReference>mov</span> (which&#8230; move the tex, without adding
+the fog).<o:p></o:p></span></p>
 
-<p class=MsoNormal style='line-height:normal'><span lang=EN-US
-style='mso-ansi-language:EN-US'>To skip the HUD, I installed two hook: <o:p></o:p></span></p>
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:3.0pt;
+margin-left:35.4pt;line-height:normal'><span lang=EN-US style='mso-ansi-language:
+EN-US'>To skip the HUD, I installed two hook: <o:p></o:p></span></p>
 
-<p class=MsoNormal style='line-height:normal'><span lang=EN-US
-style='mso-ansi-language:EN-US'>One in <span class=SpellE>CreateVertexShader</span>,
-that allow me to search and save the ref of the <span class=SpellE>shader</span>
-after which I want to apply the FXs.<o:p></o:p></span></p>
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:3.0pt;
+margin-left:35.4pt;line-height:normal'><span lang=EN-US style='mso-ansi-language:
+EN-US'>One in CreateVertexShader, that allow me to search and save the ref of
+the shader after which I want to apply the FXs.<o:p></o:p></span></p>
 
-<p class=MsoNormal style='line-height:normal'><span lang=EN-US
-style='mso-ansi-language:EN-US'>One in <span class=SpellE>SetVertexArray</span>,
-that call the FX to be draw if the <span class=SpellE>shader</span> is the one
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:3.0pt;
+margin-left:35.4pt;line-height:normal'><span lang=EN-US style='mso-ansi-language:
+EN-US'>One in SetVertexArray, that call FXs to be draw if the shader is the one
 I saved the ref before.<o:p></o:p></span></p>
 
-<h1><span lang=EN-US style='mso-ansi-language:EN-US'>Latest version:<o:p></o:p></span></h1>
+<h1 style='margin-left:35.4pt'><span lang=EN-US style='mso-ansi-language:EN-US'>Latest
+version:<o:p></o:p></span></h1>
 
-<p class=MsoNormal style='margin-left:35.4pt;text-indent:35.4pt'><span
+<p class=MsoNormal style='margin-left:70.8pt;text-indent:35.4pt'><span
 lang=EN-US style='mso-ansi-language:EN-US'>Download : <a
-href="Gw2Hook_b1_6_0.zip">Gw2Hook_b1_6_0.zip</a><o:p></o:p></span></p>
+href="Gw2Hook_b1_6_0.zip">Gw2Hook_b1_7_0.zip</a><o:p></o:p></span></p>
 
-<h1><span lang=EN-US style='mso-ansi-language:EN-US'>Instruction:<o:p></o:p></span></h1>
+<h1 style='margin-left:35.4pt'><span lang=EN-US style='mso-ansi-language:EN-US'>Instruction:<o:p></o:p></span></h1>
 
-<p class=MsoListParagraphCxSpFirst style='margin-left:71.25pt;mso-add-space:
-auto;text-indent:-18.0pt;mso-list:l3 level1 lfo9'><![if !supportLists]><span
+<p class=MsoListParagraphCxSpFirst style='margin-left:106.65pt;mso-add-space:
+auto;text-indent:-18.0pt;mso-list:l3 level1 lfo2'><![if !supportLists]><span
 lang=EN-US style='mso-fareast-font-family:Calibri;mso-fareast-theme-font:minor-latin;
 mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin;mso-ansi-language:
 EN-US'><span style='mso-list:Ignore'>1.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>Download
-from above<o:p></o:p></span></p>
+the .zip from above<o:p></o:p></span></p>
 
-<p class=MsoListParagraphCxSpMiddle style='margin-left:71.25pt;mso-add-space:
-auto;text-indent:-18.0pt;mso-list:l3 level1 lfo9'><![if !supportLists]><span
+<p class=MsoListParagraphCxSpMiddle style='margin-left:106.65pt;mso-add-space:
+auto;text-indent:-18.0pt;mso-list:l3 level1 lfo2'><![if !supportLists]><span
 lang=EN-US style='mso-fareast-font-family:Calibri;mso-fareast-theme-font:minor-latin;
 mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin;mso-ansi-language:
 EN-US'><span style='mso-list:Ignore'>2.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>Go
 to your Guild Wars 2 installation directory<o:p></o:p></span></p>
 
-<p class=MsoListParagraphCxSpMiddle style='margin-left:71.25pt;mso-add-space:
-auto;text-indent:-18.0pt;mso-list:l3 level1 lfo9'><![if !supportLists]><span
+<p class=MsoListParagraphCxSpMiddle style='margin-left:106.65pt;mso-add-space:
+auto;text-indent:-18.0pt;mso-list:l3 level1 lfo2'><![if !supportLists]><span
 lang=EN-US style='mso-fareast-font-family:Calibri;mso-fareast-theme-font:minor-latin;
 mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin;mso-ansi-language:
 EN-US'><span style='mso-list:Ignore'>3.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>Extract
 the d3d9.dll from the .zip in the bin64/ folder<o:p></o:p></span></p>
 
-<p class=MsoListParagraphCxSpMiddle style='margin-left:71.25pt;mso-add-space:
-auto;text-indent:-18.0pt;mso-list:l3 level1 lfo9'><![if !supportLists]><span
+<p class=MsoListParagraphCxSpMiddle style='margin-left:143.25pt;mso-add-space:
+auto;text-indent:-143.25pt;mso-text-indent-alt:-9.0pt;mso-list:l3 level3 lfo2'><![if !supportLists]><span
+lang=EN-US style='mso-fareast-font-family:Calibri;mso-fareast-theme-font:minor-latin;
+mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin;mso-ansi-language:
+EN-US'><span style='mso-list:Ignore'><span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>i.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'><a
+href="http://gw2bgdm.blogspot.fr/p/faq.html#2.9">See here if you are using ArcDPS
+or BGDM</a><o:p></o:p></span></p>
+
+<p class=MsoListParagraphCxSpMiddle style='margin-left:106.65pt;mso-add-space:
+auto;text-indent:-18.0pt;mso-list:l3 level1 lfo2'><![if !supportLists]><span
 lang=EN-US style='mso-fareast-font-family:Calibri;mso-fareast-theme-font:minor-latin;
 mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin;mso-ansi-language:
 EN-US'><span style='mso-list:Ignore'>4.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>Be
 sure to remove d3d9.ini from the bin64/ folder if there is one<o:p></o:p></span></p>
 
-<p class=MsoListParagraphCxSpMiddle style='margin-left:71.25pt;mso-add-space:
-auto;text-indent:-18.0pt;mso-list:l3 level1 lfo9'><![if !supportLists]><span
+<p class=MsoListParagraphCxSpMiddle style='margin-left:106.65pt;mso-add-space:
+auto;text-indent:-18.0pt;mso-list:l3 level1 lfo2'><![if !supportLists]><span
 lang=EN-US style='mso-fareast-font-family:Calibri;mso-fareast-theme-font:minor-latin;
 mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin;mso-ansi-language:
 EN-US'><span style='mso-list:Ignore'>5.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>If
-you want to have all the <span class=SpellE>reshade&#8217;s</span> <span
-class=SpellE><span class=GramE>shaders</span></span><span class=GramE> :</span>
-<o:p></o:p></span></p>
+you want to have all the reshade&#8217;s shaders : <o:p></o:p></span></p>
 
-<p class=MsoListParagraphCxSpMiddle style='margin-left:107.25pt;mso-add-space:
-auto;text-indent:-18.0pt;mso-list:l3 level2 lfo9'><![if !supportLists]><span
+<p class=MsoListParagraphCxSpMiddle style='margin-left:142.65pt;mso-add-space:
+auto;text-indent:-18.0pt;mso-list:l3 level2 lfo2'><![if !supportLists]><span
 lang=EN-US style='mso-fareast-font-family:Calibri;mso-fareast-theme-font:minor-latin;
 mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin;mso-ansi-language:
 EN-US'><span style='mso-list:Ignore'>a.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>Go
 to <a href="https://github.com/crosire/reshade-shaders">https://github.com/crosire/reshade-shaders</a><o:p></o:p></span></p>
 
-<p class=MsoListParagraphCxSpMiddle style='margin-left:107.25pt;mso-add-space:
-auto;text-indent:-18.0pt;mso-list:l3 level2 lfo9'><![if !supportLists]><span
+<p class=MsoListParagraphCxSpMiddle style='margin-left:142.65pt;mso-add-space:
+auto;text-indent:-18.0pt;mso-list:l3 level2 lfo2'><![if !supportLists]><span
 lang=EN-US style='mso-fareast-font-family:Calibri;mso-fareast-theme-font:minor-latin;
 mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin;mso-ansi-language:
 EN-US'><span style='mso-list:Ignore'>b.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>&#8220;Clone
 or download&#8221; - &gt; Download as a zip<o:p></o:p></span></p>
 
-<p class=MsoListParagraphCxSpMiddle style='margin-left:107.25pt;mso-add-space:
-auto;text-indent:-18.0pt;mso-list:l3 level2 lfo9'><![if !supportLists]><span
+<p class=MsoListParagraphCxSpMiddle style='margin-left:142.65pt;mso-add-space:
+auto;text-indent:-18.0pt;mso-list:l3 level2 lfo2'><![if !supportLists]><span
 lang=EN-US style='mso-fareast-font-family:Calibri;mso-fareast-theme-font:minor-latin;
 mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin;mso-ansi-language:
 EN-US'><span style='mso-list:Ignore'>c.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>Extract
-the two folder from this .zip in bin64/, so you avec bin64/<span class=SpellE>Shaders</span>
-and bin64/Texture<o:p></o:p></span></p>
+the two folder from this .zip in bin64/, so you avec bin64/Shaders and
+bin64/Texture<o:p></o:p></span></p>
 
-<p class=MsoListParagraphCxSpMiddle style='margin-left:143.25pt;mso-add-space:
-auto;text-indent:-143.25pt;mso-text-indent-alt:-9.0pt;mso-list:l3 level3 lfo9'><![if !supportLists]><span
+<p class=MsoListParagraphCxSpMiddle style='margin-left:178.65pt;mso-add-space:
+auto;text-indent:-178.65pt;mso-text-indent-alt:-9.0pt;mso-list:l3 level3 lfo2'><![if !supportLists]><span
 lang=EN-US style='mso-fareast-font-family:Calibri;mso-fareast-theme-font:minor-latin;
 mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin;mso-ansi-language:
-EN-US'><span style='mso-list:Ignore'><span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+EN-US'><span style='mso-list:Ignore'><span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span>i.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>You
-can delete textures and <span class=SpellE>shaders</span> that you won&#8217;t
-use, as they will make loading longer<o:p></o:p></span></p>
+can delete individual textures and shaders that you won&#8217;t use, as they
+will increase loading time<o:p></o:p></span></p>
 
-<p class=MsoListParagraphCxSpMiddle style='margin-left:107.25pt;mso-add-space:
-auto;text-indent:-18.0pt;mso-list:l3 level2 lfo9'><![if !supportLists]><span
+<p class=MsoListParagraphCxSpMiddle style='margin-left:142.65pt;mso-add-space:
+auto;text-indent:-18.0pt;mso-list:l3 level2 lfo2'><![if !supportLists]><span
 lang=EN-US style='mso-fareast-font-family:Calibri;mso-fareast-theme-font:minor-latin;
 mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin;mso-ansi-language:
 EN-US'><span style='mso-list:Ignore'>d.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>Start
 the game<o:p></o:p></span></p>
 
-<p class=MsoListParagraphCxSpMiddle style='margin-left:107.25pt;mso-add-space:
-auto;text-indent:-18.0pt;mso-list:l3 level2 lfo9'><![if !supportLists]><span
+<p class=MsoListParagraphCxSpMiddle style='margin-left:142.65pt;mso-add-space:
+auto;text-indent:-18.0pt;mso-list:l3 level2 lfo2'><![if !supportLists]><span
 lang=EN-US style='mso-fareast-font-family:Calibri;mso-fareast-theme-font:minor-latin;
 mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin;mso-ansi-language:
 EN-US'><span style='mso-list:Ignore'>e.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>Open
-<span class=SpellE>ReShade&#8217;s</span> UI with Shift-F2<o:p></o:p></span></p>
+ReShade&#8217;s UI with Shift-F2<o:p></o:p></span></p>
 
-<p class=MsoListParagraphCxSpMiddle style='margin-left:107.25pt;mso-add-space:
-auto;text-indent:-18.0pt;mso-list:l3 level2 lfo9'><![if !supportLists]><span
+<p class=MsoListParagraphCxSpMiddle style='margin-left:142.65pt;mso-add-space:
+auto;text-indent:-18.0pt;mso-list:l3 level2 lfo2'><![if !supportLists]><span
 lang=EN-US style='mso-fareast-font-family:Calibri;mso-fareast-theme-font:minor-latin;
 mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin;mso-ansi-language:
 EN-US'><span style='mso-list:Ignore'>f.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>Follow
 the instruction, name the preset as you wish<o:p></o:p></span></p>
 
-<p class=MsoListParagraphCxSpMiddle style='margin-left:107.25pt;mso-add-space:
-auto;text-indent:-18.0pt;mso-list:l3 level2 lfo9'><![if !supportLists]><span
+<p class=MsoListParagraphCxSpMiddle style='margin-left:142.65pt;mso-add-space:
+auto;text-indent:-18.0pt;mso-list:l3 level2 lfo2'><![if !supportLists]><span
 lang=EN-US style='mso-fareast-font-family:Calibri;mso-fareast-theme-font:minor-latin;
 mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin;mso-ansi-language:
 EN-US'><span style='mso-list:Ignore'>g.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>In
-the second tab, you&#8217;ll see a path for texture and another one for <span
-class=SpellE>shaders</span> that point to [&#8230;]/Guild Wars 2/bin64/<o:p></o:p></span></p>
+the second tab, you&#8217;ll see a path for texture and another one for shaders
+that point to [&#8230;]/Guild Wars 2/bin64/<o:p></o:p></span></p>
 
-<p class=MsoListParagraphCxSpMiddle style='margin-left:143.25pt;mso-add-space:
-auto;text-indent:-143.25pt;mso-text-indent-alt:-9.0pt;mso-list:l3 level3 lfo9'><![if !supportLists]><span
+<p class=MsoListParagraphCxSpMiddle style='margin-left:178.65pt;mso-add-space:
+auto;text-indent:-178.65pt;mso-text-indent-alt:-9.0pt;mso-list:l3 level3 lfo2'><![if !supportLists]><span
 lang=EN-US style='mso-fareast-font-family:Calibri;mso-fareast-theme-font:minor-latin;
 mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin;mso-ansi-language:
-EN-US'><span style='mso-list:Ignore'><span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+EN-US'><span style='mso-list:Ignore'><span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span>i.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>Add
-respectively &#8220;<span class=SpellE>Shaders</span>&#8221; and &#8220;Textures&#8221;,
-you should have<span class=GramE>: <span style='mso-spacerun:yes'>&nbsp;</span>[</span>&#8230;]/Guild
-Wars 2/bin64/<span class=SpellE>Shaders</span> and [&#8230;]/Guild Wars
-2/bin64/Textures<o:p></o:p></span></p>
+respectively &#8220;Shaders&#8221; and &#8220;Textures&#8221;, you should have:
+[&#8230;]/Guild Wars 2/bin64/Shaders and [&#8230;]/Guild Wars 2/bin64/Textures<o:p></o:p></span></p>
 
-<p class=MsoListParagraphCxSpLast style='margin-left:143.25pt;mso-add-space:
-auto;text-indent:-143.25pt;mso-text-indent-alt:-9.0pt;mso-list:l3 level3 lfo9'><![if !supportLists]><span
+<p class=MsoListParagraphCxSpLast style='margin-left:178.65pt;mso-add-space:
+auto;text-indent:-178.65pt;mso-text-indent-alt:-9.0pt;mso-list:l3 level3 lfo2'><![if !supportLists]><span
 lang=EN-US style='mso-fareast-font-family:Calibri;mso-fareast-theme-font:minor-latin;
 mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin;mso-ansi-language:
-EN-US'><span style='mso-list:Ignore'><span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+EN-US'><span style='mso-list:Ignore'><span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span>ii.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>In
 the first tab, click on reload<o:p></o:p></span></p>
 
-<h1><span lang=EN-US style='mso-ansi-language:EN-US'>Functions: <o:p></o:p></span></h1>
+<h1 style='margin-left:35.4pt'><span lang=EN-US style='mso-ansi-language:EN-US'>Functions:
+<o:p></o:p></span></h1>
 
-<p class=MsoListParagraphCxSpFirst style='margin-left:71.25pt;mso-add-space:
-auto;text-indent:-18.0pt;mso-list:l0 level1 lfo2'><![if !supportLists]><span
+<p class=MsoListParagraphCxSpFirst style='margin-left:106.65pt;mso-add-space:
+auto;text-indent:-18.0pt;mso-list:l0 level1 lfo4'><![if !supportLists]><span
 lang=EN-US style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
 Symbol;mso-ansi-language:EN-US'><span style='mso-list:Ignore'>&middot;<span
 style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>All
-<span class=SpellE>ReShade</span> normal functions (UI, <span class=SpellE>Shaders</span>,
-&#8230;).<o:p></o:p></span></p>
+ReShade normal functions (UI, Shaders, &#8230;).<o:p></o:p></span></p>
 
-<p class=MsoListParagraphCxSpMiddle style='margin-left:71.25pt;mso-add-space:
-auto;text-indent:-18.0pt;mso-list:l0 level1 lfo2'><![if !supportLists]><span
+<p class=MsoListParagraphCxSpMiddle style='margin-left:106.65pt;mso-add-space:
+auto;text-indent:-18.0pt;mso-list:l0 level1 lfo4'><![if !supportLists]><span
 lang=EN-US style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
 Symbol;mso-ansi-language:EN-US'><span style='mso-list:Ignore'>&middot;<span
 style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>No
 network monitoring.<o:p></o:p></span></p>
 
-<p class=MsoListParagraphCxSpMiddle style='margin-left:71.25pt;mso-add-space:
-auto;text-indent:-18.0pt;mso-list:l0 level1 lfo2'><![if !supportLists]><span
+<p class=MsoListParagraphCxSpMiddle style='margin-left:106.65pt;mso-add-space:
+auto;text-indent:-18.0pt;mso-list:l0 level1 lfo4'><![if !supportLists]><span
 lang=EN-US style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
 Symbol;mso-ansi-language:EN-US'><span style='mso-list:Ignore'>&middot;<span
 style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span></span></span><![endif]><span class=SpellE><span lang=EN-US
-style='mso-ansi-language:EN-US'>PostFX</span></span><span lang=EN-US
-style='mso-ansi-language:EN-US'> are applied before the game draw the HUD.<o:p></o:p></span></p>
+</span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>PostFX
+are applied before the game draw the HUD.<o:p></o:p></span></p>
 
-<p class=MsoListParagraphCxSpMiddle style='margin-left:71.25pt;mso-add-space:
-auto;text-indent:-18.0pt;mso-list:l0 level1 lfo2'><![if !supportLists]><span
+<p class=MsoListParagraphCxSpMiddle style='margin-left:106.65pt;mso-add-space:
+auto;text-indent:-18.0pt;mso-list:l0 level1 lfo4'><![if !supportLists]><span
 lang=EN-US style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
 Symbol;mso-ansi-language:EN-US'><span style='mso-list:Ignore'>&middot;<span
 style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span></span></span><![endif]><span class=SpellE><span lang=EN-US
-style='mso-ansi-language:EN-US'>ReShade</span></span><span lang=EN-US
-style='mso-ansi-language:EN-US'> UI is drawn on top of the game's HUD.<o:p></o:p></span></p>
+</span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>ReShade
+UI is drawn on top of the game's HUD.<o:p></o:p></span></p>
 
-<p class=MsoListParagraphCxSpLast style='margin-left:71.25pt;mso-add-space:
-auto;text-indent:-18.0pt;mso-list:l0 level1 lfo2'><![if !supportLists]><span
+<p class=MsoListParagraphCxSpLast style='margin-left:106.65pt;mso-add-space:
+auto;text-indent:-18.0pt;mso-list:l0 level1 lfo4'><![if !supportLists]><span
 lang=EN-US style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
 Symbol;mso-ansi-language:EN-US'><span style='mso-list:Ignore'>&middot;<span
 style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>Removes
 fog.<o:p></o:p></span></p>
 
-<h1><span lang=EN-US style='mso-ansi-language:EN-US'>Know issues:<o:p></o:p></span></h1>
+<h1 style='margin-left:35.4pt'><span lang=EN-US style='mso-ansi-language:EN-US'>Know
+issues:<o:p></o:p></span></h1>
 
-<p class=MsoListParagraph style='margin-left:71.4pt;mso-add-space:auto;
-text-indent:-18.0pt;mso-list:l1 level1 lfo4'><![if !supportLists]><span
+<p class=MsoListParagraph style='margin-left:106.8pt;mso-add-space:auto;
+text-indent:-18.0pt;mso-list:l1 level1 lfo6'><![if !supportLists]><span
 lang=EN-US style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
 Symbol;mso-ansi-language:EN-US'><span style='mso-list:Ignore'>&middot;<span
 style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>HUD
 skip doesn&#8217;t work on PC and NPC&#8217;s names.<o:p></o:p></span></p>
 
-<h1><span lang=EN-US style='mso-ansi-language:EN-US'>Changelog: <o:p></o:p></span></h1>
+<h1 style='margin-left:35.4pt'><span lang=EN-US style='mso-ansi-language:EN-US'>Changelog:
+<o:p></o:p></span></h1>
 
 <table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0
- style='border-collapse:collapse;border:none;mso-border-alt:solid windowtext .5pt;
- mso-yfti-tbllook:1184;mso-padding-alt:0cm 5.4pt 0cm 5.4pt'>
+ style='margin-left:35.4pt;border-collapse:collapse;border:none;mso-border-alt:
+ solid windowtext .5pt;mso-yfti-tbllook:1184;mso-padding-alt:0cm 5.4pt 0cm 5.4pt'>
  <tr style='mso-yfti-irow:0;mso-yfti-firstrow:yes'>
   <td width=302 valign=top style='width:226.55pt;border:solid windowtext 1.0pt;
   mso-border-alt:solid windowtext .5pt;padding:0cm 5.4pt 0cm 5.4pt'>
   <p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
   normal'><span lang=EN-US style='mso-bidi-font-family:Calibri;mso-ansi-language:
-  EN-US'>Release b1.6.0<o:p></o:p></span></p>
+  EN-US'>Release b1.7.0<o:p></o:p></span></p>
   </td>
   <td width=718 valign=top style='width:538.5pt;border:solid windowtext 1.0pt;
   border-left:none;mso-border-left-alt:solid windowtext .5pt;mso-border-alt:
   solid windowtext .5pt;padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoListParagraph style='margin-bottom:0cm;margin-bottom:.0001pt;
+  mso-add-space:auto;text-indent:-18.0pt;line-height:normal;mso-list:l4 level1 lfo8'><![if !supportLists]><span
+  lang=EN-US style='font-family:Symbol;mso-fareast-font-family:Symbol;
+  mso-bidi-font-family:Symbol;mso-ansi-language:EN-US'><span style='mso-list:
+  Ignore'>&middot;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span></span></span><![endif]><span lang=EN-US style='mso-bidi-font-family:
+  Calibri;mso-ansi-language:EN-US'>Added toggle option for the fog (under
+  General).<o:p></o:p></span></p>
+  <p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
+  normal'><span lang=EN-US style='mso-bidi-font-family:Calibri;mso-ansi-language:
+  EN-US'><o:p>&nbsp;</o:p></span></p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:1'>
+  <td width=302 valign=top style='width:226.55pt;border:solid windowtext 1.0pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;mso-border-alt:solid windowtext .5pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
+  normal'><span lang=EN-US style='mso-bidi-font-family:Calibri;mso-ansi-language:
+  EN-US'>Release b1.6.0<o:p></o:p></span></p>
+  </td>
+  <td width=718 valign=top style='width:538.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  mso-border-alt:solid windowtext .5pt;padding:0cm 5.4pt 0cm 5.4pt'>
   <p class=MsoListParagraphCxSpFirst style='margin-bottom:0cm;margin-bottom:
   .0001pt;mso-add-space:auto;text-indent:-18.0pt;line-height:normal;mso-list:
-  l4 level1 lfo6'><![if !supportLists]><span lang=EN-US style='font-family:
+  l4 level1 lfo8'><![if !supportLists]><span lang=EN-US style='font-family:
   Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol;mso-ansi-language:
   EN-US'><span style='mso-list:Ignore'>&middot;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   </span></span></span><![endif]><span lang=EN-US style='mso-bidi-font-family:
@@ -2333,7 +2362,7 @@ skip doesn&#8217;t work on PC and NPC&#8217;s names.<o:p></o:p></span></p>
   style='mso-bidi-font-family:Calibri;mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></p>
   </td>
  </tr>
- <tr style='mso-yfti-irow:1'>
+ <tr style='mso-yfti-irow:2'>
   <td width=302 valign=top style='width:226.55pt;border:solid windowtext 1.0pt;
   border-top:none;mso-border-top-alt:solid windowtext .5pt;mso-border-alt:solid windowtext .5pt;
   padding:0cm 5.4pt 0cm 5.4pt'>
@@ -2347,34 +2376,32 @@ skip doesn&#8217;t work on PC and NPC&#8217;s names.<o:p></o:p></span></p>
   mso-border-alt:solid windowtext .5pt;padding:0cm 5.4pt 0cm 5.4pt'>
   <p class=MsoListParagraphCxSpFirst style='margin-bottom:0cm;margin-bottom:
   .0001pt;mso-add-space:auto;text-indent:-18.0pt;line-height:normal;mso-list:
-  l4 level1 lfo6'><![if !supportLists]><span lang=EN-US style='font-family:
+  l4 level1 lfo8'><![if !supportLists]><span lang=EN-US style='font-family:
   Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol;mso-ansi-language:
   EN-US'><span style='mso-list:Ignore'>&middot;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   </span></span></span><![endif]><span lang=EN-US style='mso-bidi-font-family:
   Calibri;mso-ansi-language:EN-US'>FX now ignores the HUD (</span><span
-  class=SpellE><span lang=EN-US style='font-size:9.5pt;font-family:Consolas;
-  mso-bidi-font-family:Consolas;color:black;mso-ansi-language:EN-US'>CreateVertexShader</span></span><span
   lang=EN-US style='font-size:9.5pt;font-family:Consolas;mso-bidi-font-family:
-  Consolas;color:black;mso-ansi-language:EN-US'> and <span class=SpellE>SetVertexShader</span>
-  hook).</span><span lang=EN-US style='mso-bidi-font-family:Calibri;mso-ansi-language:
-  EN-US'><o:p></o:p></span></p>
+  Consolas;color:black;mso-ansi-language:EN-US'>CreateVertexShader and
+  SetVertexShader hook).</span><span lang=EN-US style='mso-bidi-font-family:
+  Calibri;mso-ansi-language:EN-US'><o:p></o:p></span></p>
   <p class=MsoListParagraphCxSpMiddle style='margin-bottom:0cm;margin-bottom:
   .0001pt;mso-add-space:auto;text-indent:-18.0pt;line-height:normal;mso-list:
-  l4 level1 lfo6'><![if !supportLists]><span lang=EN-US style='font-family:
+  l4 level1 lfo8'><![if !supportLists]><span lang=EN-US style='font-family:
   Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol;mso-ansi-language:
   EN-US'><span style='mso-list:Ignore'>&middot;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   </span></span></span><![endif]><span lang=EN-US style='mso-bidi-font-family:
   Calibri;mso-ansi-language:EN-US'>Removed network check.<o:p></o:p></span></p>
   <p class=MsoListParagraphCxSpMiddle style='margin-bottom:0cm;margin-bottom:
   .0001pt;mso-add-space:auto;text-indent:-18.0pt;line-height:normal;mso-list:
-  l4 level1 lfo6'><![if !supportLists]><span lang=EN-US style='font-family:
+  l4 level1 lfo8'><![if !supportLists]><span lang=EN-US style='font-family:
   Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol;mso-ansi-language:
   EN-US'><span style='mso-list:Ignore'>&middot;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   </span></span></span><![endif]><span lang=EN-US style='mso-bidi-font-family:
   Calibri;mso-ansi-language:EN-US'>Removed unused DirectX 10+ components.<o:p></o:p></span></p>
   <p class=MsoListParagraphCxSpMiddle style='margin-bottom:0cm;margin-bottom:
   .0001pt;mso-add-space:auto;text-indent:-18.0pt;line-height:normal;mso-list:
-  l4 level1 lfo6'><![if !supportLists]><span lang=EN-US style='font-family:
+  l4 level1 lfo8'><![if !supportLists]><span lang=EN-US style='font-family:
   Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol;mso-ansi-language:
   EN-US'><span style='mso-list:Ignore'>&middot;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   </span></span></span><![endif]><span lang=EN-US style='mso-bidi-font-family:
@@ -2384,7 +2411,7 @@ skip doesn&#8217;t work on PC and NPC&#8217;s names.<o:p></o:p></span></p>
   style='mso-bidi-font-family:Calibri;mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></p>
   </td>
  </tr>
- <tr style='mso-yfti-irow:2;mso-yfti-lastrow:yes'>
+ <tr style='mso-yfti-irow:3;mso-yfti-lastrow:yes'>
   <td width=302 valign=top style='width:226.55pt;border:solid windowtext 1.0pt;
   border-top:none;mso-border-top-alt:solid windowtext .5pt;mso-border-alt:solid windowtext .5pt;
   padding:0cm 5.4pt 0cm 5.4pt'>
@@ -2397,42 +2424,42 @@ skip doesn&#8217;t work on PC and NPC&#8217;s names.<o:p></o:p></span></p>
   mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
   mso-border-alt:solid windowtext .5pt;padding:0cm 5.4pt 0cm 5.4pt'>
   <p class=MsoListParagraph style='margin-bottom:0cm;margin-bottom:.0001pt;
-  mso-add-space:auto;text-indent:-18.0pt;line-height:normal;mso-list:l2 level1 lfo8'><![if !supportLists]><span
+  mso-add-space:auto;text-indent:-18.0pt;line-height:normal;mso-list:l2 level1 lfo10'><![if !supportLists]><span
   lang=EN-US style='font-family:Symbol;mso-fareast-font-family:Symbol;
   mso-bidi-font-family:Symbol;mso-ansi-language:EN-US'><span style='mso-list:
   Ignore'>&middot;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:
-  EN-US'>Added </span><span class=SpellE><span lang=EN-US style='font-size:
-  9.5pt;font-family:Consolas;mso-bidi-font-family:Consolas;color:black;
-  mso-ansi-language:EN-US'>CreatePixelShader</span></span><span lang=EN-US
-  style='font-size:9.5pt;font-family:Consolas;mso-bidi-font-family:Consolas;
-  color:black;mso-ansi-language:EN-US'> hook that edit on the fly pixel <span
-  class=SpellE>shader</span> to remove the fog.</span><span lang=EN-US
-  style='mso-ansi-language:EN-US'><o:p></o:p></span></p>
+  EN-US'>Added </span><span lang=EN-US style='font-size:9.5pt;font-family:Consolas;
+  mso-bidi-font-family:Consolas;color:black;mso-ansi-language:EN-US'>CreatePixelShader
+  hook that edit on the fly pixel shader to remove the fog.</span><span
+  lang=EN-US style='mso-ansi-language:EN-US'><o:p></o:p></span></p>
   </td>
  </tr>
 </table>
 
-<p class=MsoNormal><span lang=EN-US style='mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></p>
+<p class=MsoNormal style='margin-left:35.4pt'><span lang=EN-US
+style='mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></p>
 
-<h1><span lang=EN-US style='mso-ansi-language:EN-US'>Contact: <o:p></o:p></span></h1>
+<h1 style='margin-left:35.4pt'><span lang=EN-US style='mso-ansi-language:EN-US'>Contact:
+<o:p></o:p></span></h1>
 
-<p class=MsoNormal style='line-height:normal'><span lang=EN-US
-style='mso-ansi-language:EN-US'>Be aware that this is a side project, I&#8217;m
-a student and will not be able to spend too much time supporting this tool.<o:p></o:p></span></p>
+<p class=MsoNormal style='margin-left:35.4pt;line-height:normal'><span
+lang=EN-US style='mso-ansi-language:EN-US'>Be aware that this is a side
+project, I&#8217;m a student and will not be able to spend too much time
+supporting this tool.<o:p></o:p></span></p>
 
-<p class=MsoNormal style='line-height:normal'><span class=SpellE><span
-class=Titre3Car><span style='font-size:12.0pt'>Reddit</span></span></span><span
-class=Titre3Car><span style='font-size:12.0pt'> :</span></span><span
-lang=EN-US style='mso-ansi-language:EN-US'> <span class=SpellE>Grenbur</span> <o:p></o:p></span></p>
+<p class=MsoNormal style='margin-left:35.4pt;line-height:normal'><span
+class=Titre3Car><span style='font-size:12.0pt'>Reddit :</span></span><span
+style='mso-ansi-language:EN-US'> </span><span class=MsoSubtleReference>Grenbur</span><span
+style='mso-ansi-language:EN-US'> <span lang=EN-US><o:p></o:p></span></span></p>
 
-<p class=MsoNormal style='line-height:normal'><span class=SpellE><span
-class=Titre3Car><span style='font-size:12.0pt'>InGame</span></span></span><span
-class=Titre3Car><span style='font-size:12.0pt'> :</span></span><span
-style='mso-ansi-language:EN-US'> </span>Orthros.5913<span lang=EN-US
-style='mso-ansi-language:EN-US'><o:p></o:p></span></p>
+<p class=MsoNormal style='margin-left:35.4pt;line-height:normal'><span
+class=Titre3Car><span style='font-size:12.0pt'>InGame :</span></span><span
+style='mso-ansi-language:EN-US'> </span><span class=MsoSubtleReference>Orthros.5913</span><span
+lang=EN-US style='mso-ansi-language:EN-US'><o:p></o:p></span></p>
 
-<p class=MsoNormal><span lang=EN-US style='mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></p>
+<p class=MsoNormal style='margin-left:35.4pt'><span lang=EN-US
+style='mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></p>
 
 </div>
 

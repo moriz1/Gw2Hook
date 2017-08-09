@@ -11,9 +11,13 @@ extern void dump_present_parameters(const D3DPRESENT_PARAMETERS &pp);
 
 #define MAX_TOKENS	8192
 static DWORD* _pFunction = (DWORD*)malloc(sizeof(DWORD)*MAX_TOKENS);
+static void** _arrShaders = (void**)malloc(sizeof(void*)*MAX_TOKENS*3);
 static void* _pShader = NULL;
 static DWORD pattern[] = { 0x800c0001, 0xa0550006, 0x3000009, 0x80010002, 0x80e40001, 0xa0e40004, 0x3000009,
 						   0x80020002, 0x80e40001, 0xa0e40005, 0x2000001, 0xe0030000, 0x80440002 };//l = 13
+/*static DWORD pattern[] = { 0x90e40000, 0xa0e40001, 0x3000009, 0xe0040001, 0x90e40000, 0xa0e400021, 0x3000009,
+						   0xe0080001, 0x90e40000, 0xa0e40003, 0x2000001, 0xe0030000, 0x90e40007 };//l = 13*/
+
 static bool fx_applied = false;
 
 // IDirect3DDevice9
@@ -708,6 +712,10 @@ HRESULT STDMETHODCALLTYPE Direct3DDevice9::GetFVF(DWORD *pFVF)
 	return _orig->GetFVF(pFVF);
 }
 
+bool isInjectionShader(void* pShader) {
+	return pShader == _pShader;
+}
+
 bool isEnd(DWORD token) {
 	return (token & D3DSI_OPCODE_MASK) == D3DSIO_END;
 }
@@ -715,6 +723,15 @@ bool isEnd(DWORD token) {
 HRESULT STDMETHODCALLTYPE Direct3DDevice9::CreateVertexShader(const DWORD *pFunction, IDirect3DVertexShader9 **ppShader)
 {
 	HRESULT hr = _orig->CreateVertexShader(pFunction, ppShader);
+	/*LOG(INFO) << "New shader : " << (void *)(*ppShader);
+	int op = 0;
+	int l = 1;
+	while (!isEnd(pFunction[op++])) l++;
+	for (int i = 12; i >= 0; --i) {
+		LOG(INFO) << std::hex << pFunction[l - 2 - i];
+	}
+	LOG(INFO) << "#";
+	_arrShaders[nb++] = *ppShader;*/
 	if (_pShader == NULL) {
 		int op = 0;
 		int l = 1;
@@ -723,13 +740,14 @@ HRESULT STDMETHODCALLTYPE Direct3DDevice9::CreateVertexShader(const DWORD *pFunc
 			if (pFunction[l - 2 - i] != pattern[12 - i]) return hr;
 		}
 		_pShader = *ppShader;
+		//ref = it;
 	}
 	return hr;
 }
 
-bool isInjectionShader(void* pShader) {
-	return pShader == _pShader;
-}
+static int ord = 0;
+
+
 
 HRESULT STDMETHODCALLTYPE Direct3DDevice9::SetVertexShader(IDirect3DVertexShader9 *pShader)
 {
@@ -816,6 +834,7 @@ int Direct3DDevice9::get_pattern(const DWORD *pFunction, int l) {
 }
 
 HRESULT STDMETHODCALLTYPE Direct3DDevice9::CreatePixelShader(const DWORD *pFunction, IDirect3DPixelShader9 **ppShader) {
+	if((_implicit_swapchain->_runtime->_nofog_mode != 0)) return _orig->CreatePixelShader(pFunction, ppShader);
 	int op = 0;
 	int l = 1;
 	while ( !isEnd(pFunction[op++]) )  l++;
