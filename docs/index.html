@@ -15,10 +15,10 @@ xmlns="http://www.w3.org/TR/REC-html40">
  <o:DocumentProperties>
   <o:Author>Barjou-Suire Emile</o:Author>
   <o:LastAuthor>Barjou-Suire Emile</o:LastAuthor>
-  <o:Revision>30</o:Revision>
-  <o:TotalTime>642</o:TotalTime>
+  <o:Revision>31</o:Revision>
+  <o:TotalTime>650</o:TotalTime>
   <o:Created>2017-08-08T10:05:00Z</o:Created>
-  <o:LastSaved>2017-08-10T13:35:00Z</o:LastSaved>
+  <o:LastSaved>2017-08-10T13:43:00Z</o:LastSaved>
   <o:Pages>1</o:Pages>
   <o:Words>485</o:Words>
   <o:Characters>2669</o:Characters>
@@ -38,8 +38,6 @@ target="index_fichiers/props007.xml">
 <link rel=colorSchemeMapping href="index_fichiers/colorschememapping.xml">
 <!--[if gte mso 9]><xml>
  <w:WordDocument>
-  <w:SpellingState>Clean</w:SpellingState>
-  <w:GrammarState>Clean</w:GrammarState>
   <w:TrackMoves>false</w:TrackMoves>
   <w:TrackFormatting/>
   <w:HyphenationZone>21</w:HyphenationZone>
@@ -1635,12 +1633,6 @@ span.CitationintenseCar
 	color:#70AD47;
 	mso-themecolor:accent6;
 	font-style:italic;}
-span.SpellE
-	{mso-style-name:"";
-	mso-spl-e:yes;}
-span.GramE
-	{mso-style-name:"";
-	mso-gram-e:yes;}
 .MsoChpDefault
 	{mso-style-type:export-only;
 	mso-default-props:yes;
@@ -2081,7 +2073,7 @@ Guild Wars 2.<o:p></o:p></span></p>
 
 <p class=MsoIntenseQuote style='margin-left:71.4pt'><span lang=EN-US
 style='mso-ansi-language:EN-US'>Modifying Guild Wars 2 is not supported by
-Arena.Net or <span class=SpellE>NCSoft</span>. Use it at your own risk.<o:p></o:p></span></p>
+Arena.Net or NCSoft. Use it at your own risk.<o:p></o:p></span></p>
 
 <p class=MsoNormal style='margin-left:35.4pt'><span lang=EN-US
 style='mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></p>
@@ -2097,31 +2089,30 @@ is far from being clean!<o:p></o:p></span></p>
 <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:3.0pt;
 margin-left:35.4pt;line-height:normal'><span lang=EN-US style='mso-ansi-language:
 EN-US'>So, to remove the fog, I installed a hook on the </span><span
-class=SpellE><span class=MsoSubtleReference>CreatePixelShader</span></span><span
-lang=EN-US style='mso-ansi-language:EN-US'>, so I have access to each <span
-class=SpellE>shader&#8217;s</span> bytecode. After some researches, I found a
-pattern in the bytecode that is used to apply the fog, so basically I just had
-to change a <span class=MsoSubtleReference>mad</span> (multiply and add) op
-that applied the final <span class=SpellE>tex</span> to the object with the fog
-to a <span class=SpellE><span class=MsoSubtleReference>mov</span></span>
-(which&#8230; move the <span class=SpellE>tex</span>, without adding the fog).<o:p></o:p></span></p>
+class=MsoSubtleReference>CreatePixelShader</span><span lang=EN-US
+style='mso-ansi-language:EN-US'>, so I have access to each shader&#8217;s
+bytecode. After some researches, I found a pattern in the bytecode that is used
+to apply the fog, so basically I just had to change a <span
+class=MsoSubtleReference>mad</span> (multiply and add) op that applied the
+final tex to the object with the fog to a <span class=MsoSubtleReference>mov</span>
+(which&#8230; move the tex, without adding the fog).<o:p></o:p></span></p>
 
 <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:3.0pt;
 margin-left:35.4pt;line-height:normal'><span lang=EN-US style='mso-ansi-language:
-EN-US'>To skip the HUD, I removed the hook in </span><span class=SpellE><span
-class=MsoSubtleReference>on_present</span></span><span style='mso-ansi-language:
-EN-US'> <span lang=EN-US>that applied the shaders, installed two hook instead: <o:p></o:p></span></span></p>
+EN-US'>To skip the HUD, I removed the hook in </span><span
+class=MsoSubtleReference>on_present</span><span style='mso-ansi-language:EN-US'>
+<span lang=EN-US>that applied the shaders, installed two hook instead: <o:p></o:p></span></span></p>
 
 <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:3.0pt;
 margin-left:35.4pt;line-height:normal'><span lang=EN-US style='mso-ansi-language:
-EN-US'>One in </span><span class=SpellE><span class=MsoSubtleReference>CreateVertexShader</span></span><span
+EN-US'>One in </span><span class=MsoSubtleReference>CreateVertexShader</span><span
 lang=EN-US style='mso-ansi-language:EN-US'>, that allow me to search and save
 the ref of the shader after which I want to apply the FXs.<o:p></o:p></span></p>
 
 <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:3.0pt;
 margin-left:35.4pt;line-height:normal'><span lang=EN-US style='mso-ansi-language:
-EN-US'>One in <span class=SpellE><span class=MsoSubtleReference>SetVertexArray</span></span>,
-that call FXs to be draw if the shader is the one I saved the ref before.<o:p></o:p></span></p>
+EN-US'>One in <span class=MsoSubtleReference>SetVertexArray</span>, that call
+FXs to be draw if the shader is the one I saved the ref before.<o:p></o:p></span></p>
 
 <h1 style='margin-left:35.4pt'><span lang=EN-US style='mso-ansi-language:EN-US'>Latest
 version:<o:p></o:p></span></h1>
@@ -2163,8 +2154,8 @@ mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin;mso-ansi-language:
 EN-US'><span style='mso-list:Ignore'><span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span>i.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'><a
-href="http://gw2bgdm.blogspot.fr/p/faq.html#2.9">See here if you are using <span
-class=SpellE>ArcDPS</span> or BGDM</a><o:p></o:p></span></p>
+href="http://gw2bgdm.blogspot.fr/p/faq.html#2.9">See here if you are using
+ArcDPS or BGDM</a><o:p></o:p></span></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-left:106.65pt;mso-add-space:
 auto;text-indent:-18.0pt;mso-list:l3 level1 lfo2'><![if !supportLists]><span
@@ -2180,8 +2171,7 @@ lang=EN-US style='mso-fareast-font-family:Calibri;mso-fareast-theme-font:minor-l
 mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin;mso-ansi-language:
 EN-US'><span style='mso-list:Ignore'>5.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>If
-you want to have all the <span class=SpellE>reshade&#8217;s</span> <span
-class=GramE>shaders :</span> <o:p></o:p></span></p>
+you want to have all the reshade&#8217;s shaders : <o:p></o:p></span></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-left:142.65pt;mso-add-space:
 auto;text-indent:-18.0pt;mso-list:l3 level2 lfo2'><![if !supportLists]><span
@@ -2235,7 +2225,7 @@ lang=EN-US style='mso-fareast-font-family:Calibri;mso-fareast-theme-font:minor-l
 mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin;mso-ansi-language:
 EN-US'><span style='mso-list:Ignore'>e.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>Open
-<span class=SpellE>ReShade&#8217;s</span> UI with Shift-F2<o:p></o:p></span></p>
+ReShade&#8217;s UI with Shift-F2<o:p></o:p></span></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-left:142.65pt;mso-add-space:
 auto;text-indent:-18.0pt;mso-list:l3 level2 lfo2'><![if !supportLists]><span
@@ -2301,9 +2291,8 @@ auto;text-indent:-18.0pt;mso-list:l0 level1 lfo4'><![if !supportLists]><span
 lang=EN-US style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
 Symbol;mso-ansi-language:EN-US'><span style='mso-list:Ignore'>&middot;<span
 style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span></span></span><![endif]><span class=SpellE><span lang=EN-US
-style='mso-ansi-language:EN-US'>PostFX</span></span><span lang=EN-US
-style='mso-ansi-language:EN-US'> are applied before the game draw the HUD.<o:p></o:p></span></p>
+</span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>PostFX
+are applied before the game draw the HUD.<o:p></o:p></span></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-left:106.65pt;mso-add-space:
 auto;text-indent:-18.0pt;mso-list:l0 level1 lfo4'><![if !supportLists]><span
@@ -2411,11 +2400,10 @@ skip doesn&#8217;t work on char&#8217;s icon (Merchant, bank, etc.).<o:p></o:p><
   EN-US'><span style='mso-list:Ignore'>&middot;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   </span></span></span><![endif]><span lang=EN-US style='mso-bidi-font-family:
   Calibri;mso-ansi-language:EN-US'>FX now ignores the HUD (</span><span
-  class=SpellE><span class=MsoSubtleReference><span style='mso-bidi-font-family:
-  Calibri'>CreateVertexShader</span></span></span><span lang=EN-US
-  style='font-size:9.5pt;font-family:Consolas;mso-bidi-font-family:Consolas;
-  color:black;mso-ansi-language:EN-US'> and </span><span class=SpellE><span
-  class=MsoSubtleReference><span style='mso-bidi-font-family:Calibri'>SetVertexShader</span></span></span><span
+  class=MsoSubtleReference><span style='mso-bidi-font-family:Calibri'>CreateVertexShader</span></span><span
+  lang=EN-US style='font-size:9.5pt;font-family:Consolas;mso-bidi-font-family:
+  Consolas;color:black;mso-ansi-language:EN-US'> and </span><span
+  class=MsoSubtleReference><span style='mso-bidi-font-family:Calibri'>SetVertexShader</span></span><span
   lang=EN-US style='font-size:9.5pt;font-family:Consolas;mso-bidi-font-family:
   Consolas;color:black;mso-ansi-language:EN-US'> hook).</span><span lang=EN-US
   style='mso-bidi-font-family:Calibri;mso-ansi-language:EN-US'><o:p></o:p></span></p>
@@ -2463,12 +2451,11 @@ skip doesn&#8217;t work on char&#8217;s icon (Merchant, bank, etc.).<o:p></o:p><
   Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol;mso-ansi-language:
   EN-US'><span style='mso-list:Ignore'>&middot;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:
-  EN-US'>Added </span><span class=SpellE><span class=MsoSubtleReference><span
-  style='mso-bidi-font-family:Calibri'>CreatePixelShader</span></span></span><span
-  lang=EN-US style='font-size:9.5pt;font-family:Consolas;mso-bidi-font-family:
-  Consolas;color:black;mso-ansi-language:EN-US'> hook that edit on the fly
-  pixel shader to remove the fog.</span><span lang=EN-US style='mso-ansi-language:
-  EN-US'><o:p></o:p></span></p>
+  EN-US'>Added </span><span class=MsoSubtleReference><span style='mso-bidi-font-family:
+  Calibri'>CreatePixelShader</span></span><span lang=EN-US style='font-size:
+  9.5pt;font-family:Consolas;mso-bidi-font-family:Consolas;color:black;
+  mso-ansi-language:EN-US'> hook that edit on the fly pixel shader to remove
+  the fog.</span><span lang=EN-US style='mso-ansi-language:EN-US'><o:p></o:p></span></p>
   </td>
  </tr>
 </table>
@@ -2485,15 +2472,12 @@ project, I&#8217;m a student and will not be able to spend too much time
 supporting this tool.<o:p></o:p></span></p>
 
 <p class=MsoNormal style='margin-left:35.4pt;line-height:normal'><span
-class=SpellE><span class=Titre3Car><span style='font-size:12.0pt'>Reddit</span></span></span><span
-class=Titre3Car><span style='font-size:12.0pt'> :</span></span><span
-style='mso-ansi-language:EN-US'> </span><span class=SpellE><span
-class=MsoSubtleReference>Grenbur</span></span><span style='mso-ansi-language:
-EN-US'> <span lang=EN-US><o:p></o:p></span></span></p>
+class=Titre3Car><span style='font-size:12.0pt'>Reddit :</span></span><span
+style='mso-ansi-language:EN-US'> </span><span class=MsoSubtleReference>Grenbur</span><span
+style='mso-ansi-language:EN-US'> <span lang=EN-US><o:p></o:p></span></span></p>
 
 <p class=MsoNormal style='margin-left:35.4pt;line-height:normal'><span
-class=SpellE><span class=Titre3Car><span style='font-size:12.0pt'>InGame</span></span></span><span
-class=Titre3Car><span style='font-size:12.0pt'> :</span></span><span
+class=Titre3Car><span style='font-size:12.0pt'>InGame :</span></span><span
 style='mso-ansi-language:EN-US'> </span><span class=MsoSubtleReference>Orthros.5913</span><span
 lang=EN-US style='mso-ansi-language:EN-US'><o:p></o:p></span></p>
 
