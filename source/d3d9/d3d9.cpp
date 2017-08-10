@@ -18,8 +18,9 @@ void dump_present_parameters(const D3DPRESENT_PARAMETERS &pp)
 {
 	// Uncomment to get the console back, for debug
 	/*int console = AllocConsole();
-	FILE* fp;
-	freopen_s(&fp, "CONOUT$", "w", stdout);*/
+	FILE* fp, *conin;
+	freopen_s(&fp, "CONOUT$", "w", stdout);
+	freopen_s(&conin, "conin$", "r", stdin);*/
 	
 
 	LOG(INFO) << "> Dumping presentation parameters:";

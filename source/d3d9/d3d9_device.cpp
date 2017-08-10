@@ -10,14 +10,21 @@
 extern void dump_present_parameters(const D3DPRESENT_PARAMETERS &pp);
 
 #define MAX_TOKENS	8192
-static DWORD* _pFunction = (DWORD*)malloc(sizeof(DWORD)*MAX_TOKENS);
-static void** _arrShaders = (void**)malloc(sizeof(void*)*MAX_TOKENS*3);
-static void* _pShader = NULL;
-static DWORD pattern[] = { 0x800c0001, 0xa0550006, 0x3000009, 0x80010002, 0x80e40001, 0xa0e40004, 0x3000009,
-						   0x80020002, 0x80e40001, 0xa0e40005, 0x2000001, 0xe0030000, 0x80440002 };//l = 13
-/*static DWORD pattern[] = { 0x90e40000, 0xa0e40001, 0x3000009, 0xe0040001, 0x90e40000, 0xa0e400021, 0x3000009,
-						   0xe0080001, 0x90e40000, 0xa0e40003, 0x2000001, 0xe0030000, 0x90e40007 };//l = 13*/
+static DWORD _pFunction[MAX_TOKENS];
+static void* _pShaderSt = NULL;
+static void* _pShaderUs = NULL;
+static int vs_count = 0; //Used to save ref of second Us pattern and not first (second is 241th vs created)
 
+static DWORD patternStable[] = { 0x800c0001, 0xa0550006, 0x3000009, 0x80010002, 0x80e40001, 0xa0e40004, 0x3000009,
+						   0x80020002, 0x80e40001, 0xa0e40005, 0x2000001, 0xe0030000, 0x80440002 };//l = 13
+
+static DWORD patternUnstable[] = { 0x80070000, 0xa0000004, 0x2000001, 0x80070000, 0xa0000004, 0x3000009, 0xe0010001,
+							0x90e40000, 0xa0e40000, 0x3000009, 0xe0020001, 0x90e40000, 0xa0e40001, 0x3000009,
+							0xe0040001, 0x90e40000, 0xa0e40002, 0x3000009, 0xe0080001, 0x90e40000, 0xa0e40003,
+							0x2000001, 0xe0030000, 0x90e40007 }; //l=24
+
+static bool can_use_unstable = false;
+static bool unstable_in_cframe = false;
 static bool fx_applied = false;
 
 // IDirect3DDevice9
@@ -279,6 +286,12 @@ HRESULT STDMETHODCALLTYPE Direct3DDevice9::Present(const RECT *pSourceRect, cons
 	assert(_implicit_swapchain->_runtime != nullptr);
 
 	fx_applied = false;
+	if (unstable_in_cframe) {
+		can_use_unstable = true;
+	} else {
+		can_use_unstable = false;
+	}
+	unstable_in_cframe = false;
 
 	_implicit_swapchain->_runtime->on_present();
 
@@ -712,8 +725,12 @@ HRESULT STDMETHODCALLTYPE Direct3DDevice9::GetFVF(DWORD *pFVF)
 	return _orig->GetFVF(pFVF);
 }
 
-bool isInjectionShader(void* pShader) {
-	return pShader == _pShader;
+bool isInjectionShaderSt(void* pShader) {
+	return pShader == _pShaderSt;
+}
+
+bool isInjectionShaderUs(void* pShader) {
+	return pShader == _pShaderUs;
 }
 
 bool isEnd(DWORD token) {
@@ -723,36 +740,51 @@ bool isEnd(DWORD token) {
 HRESULT STDMETHODCALLTYPE Direct3DDevice9::CreateVertexShader(const DWORD *pFunction, IDirect3DVertexShader9 **ppShader)
 {
 	HRESULT hr = _orig->CreateVertexShader(pFunction, ppShader);
-	/*LOG(INFO) << "New shader : " << (void *)(*ppShader);
+	LOG(INFO) << "New shader : " << (void *)(*ppShader);
 	int op = 0;
 	int l = 1;
 	while (!isEnd(pFunction[op++])) l++;
-	for (int i = 12; i >= 0; --i) {
+	for (int i = 23; i >= 0; --i) {
 		LOG(INFO) << std::hex << pFunction[l - 2 - i];
 	}
 	LOG(INFO) << "#";
-	_arrShaders[nb++] = *ppShader;*/
-	if (_pShader == NULL) {
-		int op = 0;
-		int l = 1;
+	vs_count++;
+	if (_pShaderUs == NULL || _pShaderSt == NULL) {
+		int op = 0, l = 1;
+		bool test = true;
 		while (!isEnd(pFunction[op++]))  l++;
-		for (int i = 0; i < 13; ++i) {
-			if (pFunction[l - 2 - i] != pattern[12 - i]) return hr;
+
+		if (_pShaderSt == NULL) {
+			for (int i = 0; i < 13; ++i) {
+				if (pFunction[l - 2 - i] != patternStable[12 - i]) {
+					test = false;
+					break;
+				}
+			}
+			if (test) {
+				_pShaderSt = *ppShader;
+			}
 		}
-		_pShader = *ppShader;
-		//ref = it;
+		if (_pShaderUs == NULL) {
+			for (int i = 0; i < 24; ++i) {
+				if (pFunction[l - 2 - i] != patternUnstable[23 - i]) return hr;
+			}
+			if (vs_count < 150) return hr;
+			_pShaderUs = *ppShader;
+		}
 	}
 	return hr;
 }
 
-static int ord = 0;
-
-
-
 HRESULT STDMETHODCALLTYPE Direct3DDevice9::SetVertexShader(IDirect3DVertexShader9 *pShader)
 {
 	if (pShader == NULL) return _orig->SetVertexShader(pShader);
-	if (!fx_applied && isInjectionShader(pShader)) {
+	if (isInjectionShaderUs(pShader)) unstable_in_cframe = true;
+	
+	if (!fx_applied && can_use_unstable && isInjectionShaderUs(pShader)) {
+		fx_applied = true;
+		_implicit_swapchain->_runtime->applyPostFX();
+	} else if (!fx_applied && !can_use_unstable && isInjectionShaderSt(pShader)) {
 		fx_applied = true;
 		_implicit_swapchain->_runtime->applyPostFX();
 	}
