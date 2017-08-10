@@ -315,8 +315,8 @@ namespace reshade::d3d9
 		{
 			return;
 		}
-
-		detect_depth_source();
+		
+		//detect_depth_source();
 
 		// Begin post processing
 		if (FAILED(_device->BeginScene()))

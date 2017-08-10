@@ -285,6 +285,7 @@ HRESULT STDMETHODCALLTYPE Direct3DDevice9::Present(const RECT *pSourceRect, cons
 	assert(_implicit_swapchain != nullptr);
 	assert(_implicit_swapchain->_runtime != nullptr);
 
+	if (!fx_applied) _implicit_swapchain->_runtime->applyPostFX();
 	fx_applied = false;
 	if (unstable_in_cframe) {
 		can_use_unstable = true;
