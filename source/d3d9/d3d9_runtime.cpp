@@ -240,10 +240,12 @@ namespace reshade::d3d9
 		_depth_source_table.clear();
 	}
 
-	void d3d9_runtime::applyPostFX() {
-		
-		detect_depth_source();
-
+	void d3d9_runtime::applyPostFX(bool noZBuff) {
+		if (noZBuff) {
+			create_depthstencil_replacement(nullptr);
+		} else {
+			detect_depth_source();
+		}
 		// Capture device state
 		_stateblock->Capture();
 

@@ -7,6 +7,11 @@
 #include "d3d9_device.hpp"
 #include "d3d9_swapchain.hpp"
 
+typedef union {
+	DWORD d;
+	float f;
+} DWFL;
+
 extern void dump_present_parameters(const D3DPRESENT_PARAMETERS &pp);
 
 #define MAX_TOKENS	8192
@@ -14,6 +19,9 @@ static DWORD _pFunction[MAX_TOKENS];
 static void* _pShaderSt = NULL;
 static void* _pShaderUs = NULL;
 static int vs_count = 0; //Used to save ref of second Us pattern and not first (second is 241th vs created)
+static void* _pShaderChS = NULL;
+static bool onCharSelecLastFrame = false;
+static bool onCharSelec = false;
 
 static DWORD patternStable[] = { 0x800c0001, 0xa0550006, 0x3000009, 0x80010002, 0x80e40001, 0xa0e40004, 0x3000009,
 						   0x80020002, 0x80e40001, 0xa0e40005, 0x2000001, 0xe0030000, 0x80440002 };//l = 13
@@ -22,6 +30,8 @@ static DWORD patternUnstable[] = { 0x80070000, 0xa0000004, 0x2000001, 0x80070000
 							0x90e40000, 0xa0e40000, 0x3000009, 0xe0020001, 0x90e40000, 0xa0e40001, 0x3000009,
 							0xe0040001, 0x90e40000, 0xa0e40002, 0x3000009, 0xe0080001, 0x90e40000, 0xa0e40003,
 							0x2000001, 0xe0030000, 0x90e40007 }; //l=24
+
+static DWORD patternCharSelec[] = { 0x80440002, 0x2000001, 0xe00c0000, 0x90440009, 0x2000001, 0xe0030001, 0x90440008 }; //l = 7
 
 static bool can_use_unstable = false;
 static bool unstable_in_cframe = false;
@@ -285,7 +295,11 @@ HRESULT STDMETHODCALLTYPE Direct3DDevice9::Present(const RECT *pSourceRect, cons
 	assert(_implicit_swapchain != nullptr);
 	assert(_implicit_swapchain->_runtime != nullptr);
 
-	if (!fx_applied) _implicit_swapchain->_runtime->applyPostFX();
+	if (onCharSelec) onCharSelecLastFrame = true;
+	else onCharSelecLastFrame = false;
+	onCharSelec = false;
+
+	if (!fx_applied) _implicit_swapchain->_runtime->applyPostFX(onCharSelecLastFrame);
 	fx_applied = false;
 	if (unstable_in_cframe) {
 		can_use_unstable = true;
@@ -726,6 +740,10 @@ HRESULT STDMETHODCALLTYPE Direct3DDevice9::GetFVF(DWORD *pFVF)
 	return _orig->GetFVF(pFVF);
 }
 
+bool isInjectionShaderChS(void* pShader) {
+	return pShader == _pShaderChS;
+}
+
 bool isInjectionShaderSt(void* pShader) {
 	return pShader == _pShaderSt;
 }
@@ -741,15 +759,37 @@ bool isEnd(DWORD token) {
 HRESULT STDMETHODCALLTYPE Direct3DDevice9::CreateVertexShader(const DWORD *pFunction, IDirect3DVertexShader9 **ppShader)
 {
 	HRESULT hr = _orig->CreateVertexShader(pFunction, ppShader);
-	/* Uncomment to log all vertex shader
-	LOG(INFO) << "New shader : " << (void *)(*ppShader);
+
+	//Uncomment to log all vertex shader
+	/*
+	DWORD tmp;
+	LPD3DXBUFFER disassembly;
 	int op = 0;
 	int l = 1;
 	while (!isEnd(pFunction[op++])) l++;
-	for (int i = 23; i >= 0; --i) {
-		LOG(INFO) << std::hex << pFunction[l - 2 - i];
+	LOG(INFO) << "### New pixel shader P1 Edited : ###";
+	for (int i = 0; i < l; ++i) {
+		LOG(INFO) << std::hex << (DWORD)pFunction[i];
 	}
-	LOG(INFO) << "#";*/
+	D3DXDisassembleShader(pFunction, true, "", &disassembly);
+	LOG(INFO) << static_cast<char*>(disassembly->GetBufferPointer());*/
+
+	if (_pShaderChS == NULL) {
+		int op = 0, l = 1;
+		bool test = true;
+		while (!isEnd(pFunction[op++]))  l++;
+		for (int i = 0; i < 7; ++i) {
+			if (pFunction[l - 2 - i] != patternCharSelec[6 - i]) {
+				test = false;
+				break;
+			}
+		}
+		if (test) {
+			_pShaderChS = *ppShader;
+			return hr;
+		}
+	}
+
 	vs_count++;
 	if (_pShaderUs == NULL || _pShaderSt == NULL) {
 		int op = 0, l = 1;
@@ -782,13 +822,14 @@ HRESULT STDMETHODCALLTYPE Direct3DDevice9::SetVertexShader(IDirect3DVertexShader
 {
 	if (pShader == NULL) return _orig->SetVertexShader(pShader);
 	if (isInjectionShaderUs(pShader)) unstable_in_cframe = true;
+	if (isInjectionShaderChS(pShader)) onCharSelec = true;
 	
 	if (!fx_applied && can_use_unstable && isInjectionShaderUs(pShader)) {
 		fx_applied = true;
-		_implicit_swapchain->_runtime->applyPostFX();
+		_implicit_swapchain->_runtime->applyPostFX(onCharSelecLastFrame);
 	} else if (!fx_applied && !can_use_unstable && isInjectionShaderSt(pShader)) {
 		fx_applied = true;
-		_implicit_swapchain->_runtime->applyPostFX();
+		_implicit_swapchain->_runtime->applyPostFX(onCharSelecLastFrame);
 	}
 	return _orig->SetVertexShader(pShader);
 }
@@ -875,61 +916,64 @@ void shiftR(DWORD* token, int place, int n, int l) {
 }
 
 HRESULT STDMETHODCALLTYPE Direct3DDevice9::CreatePixelShader(const DWORD *pFunction, IDirect3DPixelShader9 **ppShader) {
-	if((_implicit_swapchain->_runtime->_nofog_mode > 1)) return _orig->CreatePixelShader(pFunction, ppShader);
+	if((_implicit_swapchain->_runtime->_fog_amount == 1)) return _orig->CreatePixelShader(pFunction, ppShader);
 	int op = 0;
 	int l = 1;
 	while ( !isEnd(pFunction[op++]) )  l++;
 
 	int _pattern = get_pattern(pFunction, l);
-	DWORD tmp;
+	DWFL hexFloat;
+	hexFloat.f = _implicit_swapchain->_runtime->_fog_amount;
+	DWORD constant[] = { 0x5000051, 0xa00f00df, hexFloat.d, hexFloat.d, hexFloat.d, hexFloat.d };
 	switch(_pattern){
 		case 1: //Detected pattern 1
-			for (int i = 0; i < l; ++i)  _pFunction[i] = (DWORD)pFunction[i];
-			if (_implicit_swapchain->_runtime->_nofog_mode == 0) {
-				_pFunction[l - 9] = 0x2000001;
-				_pFunction[l - 6] = 0x0;
-				_pFunction[l - 5] = 0x0;
-			} else {
-				_pFunction[l - 9] = 0x4000012;
-				tmp = _pFunction[l - 6];
-				_pFunction[l - 6] = _pFunction[l - 7];
-				_pFunction[l - 7] = tmp;
+			_pFunction[0] = pFunction[0];
+			for (int i = 1; i < 7; ++i) _pFunction[i] = constant[i - 1];
+			for (int i = 1; i < l; ++i) {
+				//0x5000051
+				_pFunction[i+6] = pFunction[i];
 			}
-			/* Trying to find a better way to reduce fog.
-			_pFunction[l + 4] = pFunction[l - 1]; //END>>5
-			_pFunction[l + 3] = pFunction[l - 2];//c1>>4
-			_pFunction[l + 2] = pFunction[l - 3];//oC0.w>>4
-			_pFunction[l + 1] = pFunction[l - 4];//mov>>4
+			l += 6;
+			//Trying to find a better way to reduce fog.
+			_pFunction[l + 4] = _pFunction[l - 1]; //END>>5
+			_pFunction[l + 3] = _pFunction[l - 2];//c1>>4
+			_pFunction[l + 2] = _pFunction[l - 3];//oC0.w>>4
+			_pFunction[l + 1] = _pFunction[l - 4];//mov>>4
 
 			_pFunction[l - 4] = 0x4000012; //lrp
-			_pFunction[l - 3] = pFunction[l - 8];//oC0.xyz
-			_pFunction[l - 2] = pFunction[l - 6];//r0.w
+			_pFunction[l - 3] = _pFunction[l - 8];//oC0.xyz
+			_pFunction[l - 2] = 0xa00000df;//c223
 			_pFunction[l - 1] = 0x80e40001;//r1
-			_pFunction[l] = pFunction[l - 7];//r0
+			_pFunction[l] = _pFunction[l - 7];//r0
 
 			_pFunction[l - 8] = 0x800f0001;//oC0.xyz > r1
 
-			LOG(INFO) << "### New pixel shader P1 : ###";
-			for (int i = 0; i <= l+4; ++i) {
+			/*LOG(INFO) << "### New pixel shader P1 Edited : ###";
+			for (int i = 0; i < l+5; ++i) {
 				LOG(INFO) << std::hex << (DWORD)_pFunction[i];
 			}
 			D3DXDisassembleShader(_pFunction, true, "", &disassembly);
-			LOG(INFO) << static_cast<char*>(disassembly->GetBufferPointer());
-			*/
+			LOG(INFO) << static_cast<char*>(disassembly->GetBufferPointer());*/
+			
 			return _orig->CreatePixelShader(_pFunction, ppShader);
 			break;
 		case 2: //Detected pattern 2
-			for (int i = 0; i < l; ++i) _pFunction[i] = (DWORD)pFunction[i];
-			if (_implicit_swapchain->_runtime->_nofog_mode == 0) {
-				_pFunction[l - 6] = 0x2000001;
-				_pFunction[l - 2] = 0x0;
-				_pFunction[l - 3] = 0x0;
-			} else {
-				_pFunction[l - 6] = 0x4000012;
-				tmp = _pFunction[l - 3];
-				_pFunction[l - 3] = _pFunction[l - 4];
-				_pFunction[l - 4] = tmp;
+			for (int i = 1; i < 7; ++i) _pFunction[i] = constant[i - 1];
+			for (int i = 1; i < l; ++i) {
+				//0x5000051
+				_pFunction[i + 6] = pFunction[i];
 			}
+			l += 6;
+
+			_pFunction[l + 4] = _pFunction[l - 1]; //END>>5
+
+			_pFunction[l -1] = 0x4000012; //lrp
+			_pFunction[l] = _pFunction[l - 5];//oC0.xyz
+			_pFunction[l + 1] = 0xa00000df;//c223
+			_pFunction[l + 2] = 0x80e40001;//r1
+			_pFunction[l + 3] = _pFunction[l - 4];//r0
+			
+			_pFunction[l - 5] = 0x800f0001;//oC0.xyz > r1
 
 			return _orig->CreatePixelShader(_pFunction, ppShader);
 			break;

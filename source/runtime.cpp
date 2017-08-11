@@ -442,7 +442,7 @@ namespace reshade
 
 		pp.add_macro_definition("__RESHADE__", std::to_string(VERSION_MAJOR * 10000 + VERSION_MINOR * 100 + VERSION_REVISION));
 		pp.add_macro_definition("__RESHADE_PERFORMANCE_MODE__", _performance_mode ? "1" : "0");
-		pp.add_macro_definition("__RESHADE_NOFOG_MODE__", _nofog_mode==0 ? "0" : "1");
+		pp.add_macro_definition("__RESHADE_NOFOG__", _fog_amount==0 ? "1" : "0");
 		pp.add_macro_definition("__VENDOR__", std::to_string(_vendor_id));
 		pp.add_macro_definition("__DEVICE__", std::to_string(_device_id));
 		pp.add_macro_definition("__RENDERER__", std::to_string(_renderer_id));
@@ -667,7 +667,7 @@ namespace reshade
 		_effects_key.shift = config.get("INPUT", "KeyEffects", effects_key).as<bool>(2);
 
 		_performance_mode = config.get("GENERAL", "PerformanceMode", _performance_mode).as<bool>();
-		_nofog_mode = config.get("GENERAL", "NofogMode", _nofog_mode).as<int>();
+		_fog_amount = config.get("GENERAL", "FogAmount", _fog_amount).as<float>();
 		_input_processing_mode = config.get("INPUT", "InputProcessing", _input_processing_mode).as<int>();
 		const auto effect_search_paths = config.get("GENERAL", "EffectSearchPaths", _effect_search_paths).data();
 		_effect_search_paths.assign(effect_search_paths.begin(), effect_search_paths.end());
@@ -785,7 +785,7 @@ namespace reshade
 		config.set("INPUT", "InputProcessing", _input_processing_mode);
 
 		config.set("GENERAL", "PerformanceMode", _performance_mode);
-		config.set("GENERAL", "NofogMode", _nofog_mode);
+		config.set("GENERAL", "FogAmount", _fog_amount);
 		config.set("GENERAL", "EffectSearchPaths", _effect_search_paths);
 		config.set("GENERAL", "TextureSearchPaths", _texture_search_paths);
 		config.set("GENERAL", "PreprocessorDefinitions", _preprocessor_definitions);
@@ -1526,10 +1526,11 @@ namespace reshade
 				ImGui::SetTooltip("Click in the field and press any key to change the shortcut to that key.");
 			}
 
-			if (ImGui::Combo("Remove fog (Need a restart)", &_nofog_mode, "On\0Reduced\0Off\0"))
+			if (ImGui::DragFloat("Fog amount (need a restart)", &_fog_amount, 0.005f, 0.0f, 1.0f, "%.2f"))
 			{
 				save_configuration();
 			}
+			
 
 			int usage_mode_index = _performance_mode ? 0 : 1;
 

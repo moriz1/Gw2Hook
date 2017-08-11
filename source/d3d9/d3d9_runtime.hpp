@@ -40,7 +40,7 @@ namespace reshade::d3d9
 
 		bool on_init(const D3DPRESENT_PARAMETERS &pp);
 		void on_reset();
-		void applyPostFX();
+		void applyPostFX(bool noZBuff);
 		void on_present();
 		void on_draw_call(D3DPRIMITIVETYPE type, UINT count);
 		void on_set_depthstencil_surface(IDirect3DSurface9 *&depthstencil);
