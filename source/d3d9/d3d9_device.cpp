@@ -741,6 +741,7 @@ bool isEnd(DWORD token) {
 HRESULT STDMETHODCALLTYPE Direct3DDevice9::CreateVertexShader(const DWORD *pFunction, IDirect3DVertexShader9 **ppShader)
 {
 	HRESULT hr = _orig->CreateVertexShader(pFunction, ppShader);
+	/* Uncomment to log all vertex shader
 	LOG(INFO) << "New shader : " << (void *)(*ppShader);
 	int op = 0;
 	int l = 1;
@@ -748,7 +749,7 @@ HRESULT STDMETHODCALLTYPE Direct3DDevice9::CreateVertexShader(const DWORD *pFunc
 	for (int i = 23; i >= 0; --i) {
 		LOG(INFO) << std::hex << pFunction[l - 2 - i];
 	}
-	LOG(INFO) << "#";
+	LOG(INFO) << "#";*/
 	vs_count++;
 	if (_pShaderUs == NULL || _pShaderSt == NULL) {
 		int op = 0, l = 1;
@@ -866,27 +867,72 @@ int Direct3DDevice9::get_pattern(const DWORD *pFunction, int l) {
 	return -1;
 }
 
+void shiftR(DWORD* token, int place, int n, int l) {
+	int it = place;
+	for (int i = l - 1; i <= place; ++i) {
+		token[i + n] = token[i];
+	}
+}
+
+#include <d3dx9shader.h>
+
 HRESULT STDMETHODCALLTYPE Direct3DDevice9::CreatePixelShader(const DWORD *pFunction, IDirect3DPixelShader9 **ppShader) {
-	if((_implicit_swapchain->_runtime->_nofog_mode != 0)) return _orig->CreatePixelShader(pFunction, ppShader);
+	if((_implicit_swapchain->_runtime->_nofog_mode > 1)) return _orig->CreatePixelShader(pFunction, ppShader);
 	int op = 0;
 	int l = 1;
 	while ( !isEnd(pFunction[op++]) )  l++;
 
 	int _pattern = get_pattern(pFunction, l);
-	
+	DWORD tmp;
 	switch(_pattern){
 		case 1: //Detected pattern 1
-			for (int i = 0; i < l; ++i) _pFunction[i] = (DWORD)pFunction[i];
-			_pFunction[l - 9] = 0x2000001;
-			_pFunction[l - 6] = 0x0;
-			_pFunction[l - 5] = 0x0;
+			for (int i = 0; i < l; ++i)  _pFunction[i] = (DWORD)pFunction[i];
+			if (_implicit_swapchain->_runtime->_nofog_mode == 0) {
+				_pFunction[l - 9] = 0x2000001;
+				_pFunction[l - 6] = 0x0;
+				_pFunction[l - 5] = 0x0;
+			} else {
+				_pFunction[l - 9] = 0x4000012;
+				tmp = _pFunction[l - 6];
+				_pFunction[l - 6] = _pFunction[l - 7];
+				_pFunction[l - 7] = tmp;
+			}
+			/* Trying to find a better way to reduce fog.
+			_pFunction[l + 4] = pFunction[l - 1]; //END>>5
+			_pFunction[l + 3] = pFunction[l - 2];//c1>>4
+			_pFunction[l + 2] = pFunction[l - 3];//oC0.w>>4
+			_pFunction[l + 1] = pFunction[l - 4];//mov>>4
+
+			_pFunction[l - 4] = 0x4000012; //lrp
+			_pFunction[l - 3] = pFunction[l - 8];//oC0.xyz
+			_pFunction[l - 2] = pFunction[l - 6];//r0.w
+			_pFunction[l - 1] = 0x80e40001;//r1
+			_pFunction[l] = pFunction[l - 7];//r0
+
+			_pFunction[l - 8] = 0x800f0001;//oC0.xyz > r1
+
+			LOG(INFO) << "### New pixel shader P1 : ###";
+			for (int i = 0; i <= l+4; ++i) {
+				LOG(INFO) << std::hex << (DWORD)_pFunction[i];
+			}
+			D3DXDisassembleShader(_pFunction, true, "", &disassembly);
+			LOG(INFO) << static_cast<char*>(disassembly->GetBufferPointer());
+			*/
 			return _orig->CreatePixelShader(_pFunction, ppShader);
 			break;
 		case 2: //Detected pattern 2
 			for (int i = 0; i < l; ++i) _pFunction[i] = (DWORD)pFunction[i];
-			_pFunction[l - 6] = 0x2000001;
-			_pFunction[l - 2] = 0x0;
-			_pFunction[l - 3] = 0x0;
+			if (_implicit_swapchain->_runtime->_nofog_mode == 0) {
+				_pFunction[l - 6] = 0x2000001;
+				_pFunction[l - 2] = 0x0;
+				_pFunction[l - 3] = 0x0;
+			} else {
+				_pFunction[l - 6] = 0x4000012;
+				tmp = _pFunction[l - 3];
+				_pFunction[l - 3] = _pFunction[l - 4];
+				_pFunction[l - 4] = tmp;
+			}
+
 			return _orig->CreatePixelShader(_pFunction, ppShader);
 			break;
 		default: //No pattern detected

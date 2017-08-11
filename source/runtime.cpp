@@ -1526,7 +1526,7 @@ namespace reshade
 				ImGui::SetTooltip("Click in the field and press any key to change the shortcut to that key.");
 			}
 
-			if (ImGui::Combo("Remove fog (Need a restart)", &_nofog_mode, "On\0Off\0"))
+			if (ImGui::Combo("Remove fog (Need a restart)", &_nofog_mode, "On\0Reduced\0Off\0"))
 			{
 				save_configuration();
 			}
