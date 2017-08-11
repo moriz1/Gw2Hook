@@ -874,8 +874,6 @@ void shiftR(DWORD* token, int place, int n, int l) {
 	}
 }
 
-#include <d3dx9shader.h>
-
 HRESULT STDMETHODCALLTYPE Direct3DDevice9::CreatePixelShader(const DWORD *pFunction, IDirect3DPixelShader9 **ppShader) {
 	if((_implicit_swapchain->_runtime->_nofog_mode > 1)) return _orig->CreatePixelShader(pFunction, ppShader);
 	int op = 0;
