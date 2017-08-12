@@ -668,6 +668,8 @@ namespace reshade
 
 		_performance_mode = config.get("GENERAL", "PerformanceMode", _performance_mode).as<bool>();
 		_fog_amount = config.get("GENERAL", "FogAmount", _fog_amount).as<float>();
+		_no_bloom = config.get("GENERAL", "NoBloom", _no_bloom).as<int>();
+		_max_sun = config.get("GENERAL", "MaxSun", _max_sun).as<int>();
 		_input_processing_mode = config.get("INPUT", "InputProcessing", _input_processing_mode).as<int>();
 		const auto effect_search_paths = config.get("GENERAL", "EffectSearchPaths", _effect_search_paths).data();
 		_effect_search_paths.assign(effect_search_paths.begin(), effect_search_paths.end());
@@ -786,6 +788,8 @@ namespace reshade
 
 		config.set("GENERAL", "PerformanceMode", _performance_mode);
 		config.set("GENERAL", "FogAmount", _fog_amount);
+		config.set("GENERAL", "NoBloom", _no_bloom);
+		config.set("GENERAL", "MaxSun", _max_sun);
 		config.set("GENERAL", "EffectSearchPaths", _effect_search_paths);
 		config.set("GENERAL", "TextureSearchPaths", _texture_search_paths);
 		config.set("GENERAL", "PreprocessorDefinitions", _preprocessor_definitions);
@@ -1320,6 +1324,22 @@ namespace reshade
 			ImGui::Separator();
 			ImGui::Spacing();
 
+			if (ImGui::DragFloat("Fog amount (need a restart)", &_fog_amount, 0.005f, 0.0f, 1.0f, "%.2f")) {
+				save_configuration();
+			}
+
+			if (ImGui::Combo("Allow Gw2 bloom (need a restart)", &_no_bloom, "Yes\0No\0")) {
+				save_configuration();
+			}
+
+			if (ImGui::Combo("Force sun size (need a restart)", &_max_sun, "No\0Yes\0")) {
+				save_configuration();
+			}
+
+			ImGui::Spacing();
+			ImGui::Separator();
+			ImGui::Spacing();
+
 			ImGui::PushItemWidth(-130);
 
 			if (ImGui::InputText("##filter", _effect_filter_buffer, sizeof(_effect_filter_buffer), ImGuiInputTextFlags_AutoSelectAll))
@@ -1525,12 +1545,6 @@ namespace reshade
 			{
 				ImGui::SetTooltip("Click in the field and press any key to change the shortcut to that key.");
 			}
-
-			if (ImGui::DragFloat("Fog amount (need a restart)", &_fog_amount, 0.005f, 0.0f, 1.0f, "%.2f"))
-			{
-				save_configuration();
-			}
-			
 
 			int usage_mode_index = _performance_mode ? 0 : 1;
 

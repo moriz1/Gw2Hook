@@ -117,6 +117,8 @@ namespace reshade
 		void set_uniform_value(uniform &variable, const unsigned int *values, size_t count);
 		void set_uniform_value(uniform &variable, const float *values, size_t count);
 		float _fog_amount = 0;
+		int _no_bloom = 1;
+		int _max_sun = 1;
 
 	protected:
 		/// <summary>

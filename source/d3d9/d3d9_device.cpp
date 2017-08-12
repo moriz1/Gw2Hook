@@ -6,36 +6,9 @@
 #include "log.hpp"
 #include "d3d9_device.hpp"
 #include "d3d9_swapchain.hpp"
-
-typedef union {
-	DWORD d;
-	float f;
-} DWFL;
+#include "hook_gw2.hpp"
 
 extern void dump_present_parameters(const D3DPRESENT_PARAMETERS &pp);
-
-#define MAX_TOKENS	8192
-static DWORD _pFunction[MAX_TOKENS];
-static void* _pShaderSt = NULL;
-static void* _pShaderUs = NULL;
-static int vs_count = 0; //Used to save ref of second Us pattern and not first (second is 241th vs created)
-static void* _pShaderChS = NULL;
-static bool onCharSelecLastFrame = false;
-static bool onCharSelec = false;
-
-static DWORD patternStable[] = { 0x800c0001, 0xa0550006, 0x3000009, 0x80010002, 0x80e40001, 0xa0e40004, 0x3000009,
-						   0x80020002, 0x80e40001, 0xa0e40005, 0x2000001, 0xe0030000, 0x80440002 };//l = 13
-
-static DWORD patternUnstable[] = { 0x80070000, 0xa0000004, 0x2000001, 0x80070000, 0xa0000004, 0x3000009, 0xe0010001,
-							0x90e40000, 0xa0e40000, 0x3000009, 0xe0020001, 0x90e40000, 0xa0e40001, 0x3000009,
-							0xe0040001, 0x90e40000, 0xa0e40002, 0x3000009, 0xe0080001, 0x90e40000, 0xa0e40003,
-							0x2000001, 0xe0030000, 0x90e40007 }; //l=24
-
-static DWORD patternCharSelec[] = { 0x80440002, 0x2000001, 0xe00c0000, 0x90440009, 0x2000001, 0xe0030001, 0x90440008 }; //l = 7
-
-static bool can_use_unstable = false;
-static bool unstable_in_cframe = false;
-static bool fx_applied = false;
 
 // IDirect3DDevice9
 HRESULT STDMETHODCALLTYPE Direct3DDevice9::QueryInterface(REFIID riid, void **ppvObj)
@@ -295,18 +268,7 @@ HRESULT STDMETHODCALLTYPE Direct3DDevice9::Present(const RECT *pSourceRect, cons
 	assert(_implicit_swapchain != nullptr);
 	assert(_implicit_swapchain->_runtime != nullptr);
 
-	if (onCharSelec) onCharSelecLastFrame = true;
-	else onCharSelecLastFrame = false;
-	onCharSelec = false;
-
-	if (!fx_applied) _implicit_swapchain->_runtime->applyPostFX(onCharSelecLastFrame);
-	fx_applied = false;
-	if (unstable_in_cframe) {
-		can_use_unstable = true;
-	} else {
-		can_use_unstable = false;
-	}
-	unstable_in_cframe = false;
+	hook_gw2::PresentHook(_implicit_swapchain);
 
 	_implicit_swapchain->_runtime->on_present();
 
@@ -740,98 +702,13 @@ HRESULT STDMETHODCALLTYPE Direct3DDevice9::GetFVF(DWORD *pFVF)
 	return _orig->GetFVF(pFVF);
 }
 
-bool isInjectionShaderChS(void* pShader) {
-	return pShader == _pShaderChS;
+
+HRESULT STDMETHODCALLTYPE Direct3DDevice9::CreateVertexShader(const DWORD *pFunction, IDirect3DVertexShader9 **ppShader) {
+	return hook_gw2::CreateVertexHook(pFunction, ppShader, _orig, _implicit_swapchain);
 }
 
-bool isInjectionShaderSt(void* pShader) {
-	return pShader == _pShaderSt;
-}
-
-bool isInjectionShaderUs(void* pShader) {
-	return pShader == _pShaderUs;
-}
-
-bool isEnd(DWORD token) {
-	return (token & D3DSI_OPCODE_MASK) == D3DSIO_END;
-}
-
-HRESULT STDMETHODCALLTYPE Direct3DDevice9::CreateVertexShader(const DWORD *pFunction, IDirect3DVertexShader9 **ppShader)
-{
-	HRESULT hr = _orig->CreateVertexShader(pFunction, ppShader);
-
-	//Uncomment to log all vertex shader
-	/*
-	DWORD tmp;
-	LPD3DXBUFFER disassembly;
-	int op = 0;
-	int l = 1;
-	while (!isEnd(pFunction[op++])) l++;
-	LOG(INFO) << "### New pixel shader P1 Edited : ###";
-	for (int i = 0; i < l; ++i) {
-		LOG(INFO) << std::hex << (DWORD)pFunction[i];
-	}
-	D3DXDisassembleShader(pFunction, true, "", &disassembly);
-	LOG(INFO) << static_cast<char*>(disassembly->GetBufferPointer());*/
-
-	if (_pShaderChS == NULL) {
-		int op = 0, l = 1;
-		bool test = true;
-		while (!isEnd(pFunction[op++]))  l++;
-		for (int i = 0; i < 7; ++i) {
-			if (pFunction[l - 2 - i] != patternCharSelec[6 - i]) {
-				test = false;
-				break;
-			}
-		}
-		if (test) {
-			_pShaderChS = *ppShader;
-			return hr;
-		}
-	}
-
-	vs_count++;
-	if (_pShaderUs == NULL || _pShaderSt == NULL) {
-		int op = 0, l = 1;
-		bool test = true;
-		while (!isEnd(pFunction[op++]))  l++;
-
-		if (_pShaderSt == NULL) {
-			for (int i = 0; i < 13; ++i) {
-				if (pFunction[l - 2 - i] != patternStable[12 - i]) {
-					test = false;
-					break;
-				}
-			}
-			if (test) {
-				_pShaderSt = *ppShader;
-			}
-		}
-		if (_pShaderUs == NULL) {
-			for (int i = 0; i < 24; ++i) {
-				if (pFunction[l - 2 - i] != patternUnstable[23 - i]) return hr;
-			}
-			if (vs_count < 150) return hr;
-			_pShaderUs = *ppShader;
-		}
-	}
-	return hr;
-}
-
-HRESULT STDMETHODCALLTYPE Direct3DDevice9::SetVertexShader(IDirect3DVertexShader9 *pShader)
-{
-	if (pShader == NULL) return _orig->SetVertexShader(pShader);
-	if (isInjectionShaderUs(pShader)) unstable_in_cframe = true;
-	if (isInjectionShaderChS(pShader)) onCharSelec = true;
-	
-	if (!fx_applied && can_use_unstable && isInjectionShaderUs(pShader)) {
-		fx_applied = true;
-		_implicit_swapchain->_runtime->applyPostFX(onCharSelecLastFrame);
-	} else if (!fx_applied && !can_use_unstable && isInjectionShaderSt(pShader)) {
-		fx_applied = true;
-		_implicit_swapchain->_runtime->applyPostFX(onCharSelecLastFrame);
-	}
-	return _orig->SetVertexShader(pShader);
+HRESULT STDMETHODCALLTYPE Direct3DDevice9::SetVertexShader(IDirect3DVertexShader9 *pShader){
+	return hook_gw2::SetVertexHook(pShader, _orig, _implicit_swapchain);
 }
 HRESULT STDMETHODCALLTYPE Direct3DDevice9::GetVertexShader(IDirect3DVertexShader9 **ppShader)
 {
@@ -886,106 +763,13 @@ HRESULT STDMETHODCALLTYPE Direct3DDevice9::GetIndices(IDirect3DIndexBuffer9 **pp
 	return _orig->GetIndices(ppIndexData);
 }
 
-int Direct3DDevice9::get_pattern(const DWORD *pFunction, int l) {
-	//If mad oC0 -> mov oC0 -> end
-	if (pFunction[l - 4] == 0x2000001 && pFunction[l - 3] == 0x80280800 && pFunction[l - 9] == 0x4000004 && pFunction[l - 8] == 0x80270800) {
-		//If last arg of move is one of the following
-		if (pFunction[l - 2] == 0xa0000001 || pFunction[l - 2] == 0xa0000000 || pFunction[l - 2] == 0xa0000002 || pFunction[l - 2] == 0xa0ff0000 || pFunction[l - 2] == 0xa0ff0001) {
-			//If op above are lerp and add, it's map ps so ignore
-			if (pFunction[l - 13] == 0x3000002 && pFunction[l - 18] == 0x4000012) {
-				return -1;
-			}
-			//Else it need to be edited with pattern 1
-			return 1;
-		}
-	//If it's only mad oC0 -> end
-	} else if (pFunction[l - 6] == 0x4000004 && pFunction[l - 5] == 0x80270800) {
-		//If it's mad -> mad, it's UI ps
-		if (pFunction[l - 11] == 0x4000004) return -1;
-		//Else it need to be edited with pattern 2
-		return 2;
-	}
-	return -1;
-}
-
-void shiftR(DWORD* token, int place, int n, int l) {
-	int it = place;
-	for (int i = l - 1; i <= place; ++i) {
-		token[i + n] = token[i];
-	}
-}
-
 HRESULT STDMETHODCALLTYPE Direct3DDevice9::CreatePixelShader(const DWORD *pFunction, IDirect3DPixelShader9 **ppShader) {
-	if((_implicit_swapchain->_runtime->_fog_amount == 1)) return _orig->CreatePixelShader(pFunction, ppShader);
-	int op = 0;
-	int l = 1;
-	while ( !isEnd(pFunction[op++]) )  l++;
-
-	int _pattern = get_pattern(pFunction, l);
-	DWFL hexFloat;
-	hexFloat.f = _implicit_swapchain->_runtime->_fog_amount;
-	DWORD constant[] = { 0x5000051, 0xa00f00df, hexFloat.d, hexFloat.d, hexFloat.d, hexFloat.d };
-	switch(_pattern){
-		case 1: //Detected pattern 1
-			_pFunction[0] = pFunction[0];
-			for (int i = 1; i < 7; ++i) _pFunction[i] = constant[i - 1];
-			for (int i = 1; i < l; ++i) {
-				//0x5000051
-				_pFunction[i+6] = pFunction[i];
-			}
-			l += 6;
-			//Trying to find a better way to reduce fog.
-			_pFunction[l + 4] = _pFunction[l - 1]; //END>>5
-			_pFunction[l + 3] = _pFunction[l - 2];//c1>>4
-			_pFunction[l + 2] = _pFunction[l - 3];//oC0.w>>4
-			_pFunction[l + 1] = _pFunction[l - 4];//mov>>4
-
-			_pFunction[l - 4] = 0x4000012; //lrp
-			_pFunction[l - 3] = _pFunction[l - 8];//oC0.xyz
-			_pFunction[l - 2] = 0xa00000df;//c223
-			_pFunction[l - 1] = 0x80e40001;//r1
-			_pFunction[l] = _pFunction[l - 7];//r0
-
-			_pFunction[l - 8] = 0x800f0001;//oC0.xyz > r1
-
-			/*LOG(INFO) << "### New pixel shader P1 Edited : ###";
-			for (int i = 0; i < l+5; ++i) {
-				LOG(INFO) << std::hex << (DWORD)_pFunction[i];
-			}
-			D3DXDisassembleShader(_pFunction, true, "", &disassembly);
-			LOG(INFO) << static_cast<char*>(disassembly->GetBufferPointer());*/
-			
-			return _orig->CreatePixelShader(_pFunction, ppShader);
-			break;
-		case 2: //Detected pattern 2
-			for (int i = 1; i < 7; ++i) _pFunction[i] = constant[i - 1];
-			for (int i = 1; i < l; ++i) {
-				//0x5000051
-				_pFunction[i + 6] = pFunction[i];
-			}
-			l += 6;
-
-			_pFunction[l + 4] = _pFunction[l - 1]; //END>>5
-
-			_pFunction[l -1] = 0x4000012; //lrp
-			_pFunction[l] = _pFunction[l - 5];//oC0.xyz
-			_pFunction[l + 1] = 0xa00000df;//c223
-			_pFunction[l + 2] = 0x80e40001;//r1
-			_pFunction[l + 3] = _pFunction[l - 4];//r0
-			
-			_pFunction[l - 5] = 0x800f0001;//oC0.xyz > r1
-
-			return _orig->CreatePixelShader(_pFunction, ppShader);
-			break;
-		default: //No pattern detected
-			return _orig->CreatePixelShader(pFunction, ppShader);
-			break;
-	}
+	return hook_gw2::CreatePixelHook(pFunction, ppShader, _orig, _implicit_swapchain);
 }
 
 HRESULT STDMETHODCALLTYPE Direct3DDevice9::SetPixelShader(IDirect3DPixelShader9 *pShader)
 {
-	return _orig->SetPixelShader(pShader);
+	return hook_gw2::SetPixelHook(pShader, _orig, _implicit_swapchain);
 }
 HRESULT STDMETHODCALLTYPE Direct3DDevice9::GetPixelShader(IDirect3DPixelShader9 **ppShader)
 {
