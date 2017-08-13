@@ -1436,6 +1436,10 @@ namespace reshade::d3d9
 		{
 			_runtime->update_texture_reference(obj, texture_reference::depth_buffer);
 		}
+		/*HERE TO ADD TEXTURES*/
+		else if (node->semantic == "LIGHT" || node->semantic == "SV_LIGHT") {
+			_runtime->update_texture_reference(obj, texture_reference::light_buffer);
+		}
 		else
 		{
 			DWORD usage = 0;
@@ -1617,7 +1621,7 @@ namespace reshade::d3d9
 				samplers += " = { __Sampler";
 				samplers += sampler->unique_name;
 
-				if (texture->semantic == "COLOR" || texture->semantic == "SV_TARGET" || texture->semantic == "DEPTH" || texture->semantic == "SV_DEPTH")
+				if (texture->semantic == "COLOR" || texture->semantic == "SV_TARGET" || texture->semantic == "DEPTH" || texture->semantic == "SV_DEPTH" || texture->semantic == "LIGHT")
 				{
 					samplers += ", float2(" + std::to_string(1.0f / _runtime->frame_width()) + ", " + std::to_string(1.0f / _runtime->frame_height()) + ")";
 				}

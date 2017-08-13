@@ -59,7 +59,9 @@ namespace reshade
 	{
 		none,
 		back_buffer,
-		depth_buffer
+		depth_buffer,
+		/*HERE TO ADD TEXTURES*/
+		light_buffer,
 	};
 	enum class uniform_datatype
 	{

@@ -75,6 +75,13 @@ namespace reshade::d3d9
 			_backbuffer_resolved = _backbuffer;
 		}
 
+		/*HERE TO ADD TEXTURES*/
+
+		// Create light buffer shader texture
+		hr = _device->CreateTexture(_width, _height, 1, D3DUSAGE_RENDERTARGET, _backbuffer_format, D3DPOOL_DEFAULT, &_lightbuffer_texture, nullptr);
+		if (!SUCCEEDED(hr)) {
+			LOG(ERROR) << "Failed to create light buffer texture! HRESULT is '" << std::hex << hr << std::dec << "'.";
+		}
 		// Create back buffer shader texture
 		hr = _device->CreateTexture(_width, _height, 1, D3DUSAGE_RENDERTARGET, _backbuffer_format, D3DPOOL_DEFAULT, &_backbuffer_texture, nullptr);
 
@@ -221,6 +228,9 @@ namespace reshade::d3d9
 		_depthstencil_replacement.reset();
 		_depthstencil_texture.reset();
 
+		/*HERE TO ADD TEXTURES*/
+		_lightbuffer_texture.reset();
+
 		_default_depthstencil.reset();
 
 		_effect_triangle_buffer.reset();
@@ -240,7 +250,7 @@ namespace reshade::d3d9
 		_depth_source_table.clear();
 	}
 
-	void d3d9_runtime::applyPostFX(bool noZBuff) {
+	void d3d9_runtime::applyPostFX(bool noZBuff, IDirect3DSurface9* surface) {
 		if (noZBuff) {
 			create_depthstencil_replacement(nullptr);
 		} else {
@@ -270,10 +280,11 @@ namespace reshade::d3d9
 		}
 
 		// Resolve back buffer
-		if (_backbuffer_resolved != _backbuffer)
+		/*if (_backbuffer_resolved != _backbuffer)
 		{
 			_device->StretchRect(_backbuffer.get(), nullptr, _backbuffer_resolved.get(), nullptr, D3DTEXF_NONE);
-		}
+		}*/
+		_device->StretchRect(surface, nullptr, _backbuffer_resolved.get(), nullptr, D3DTEXF_NONE);
 
 		// Apply post processing
 		if (is_effect_loaded())
@@ -289,10 +300,11 @@ namespace reshade::d3d9
 		}
 
 		// Copy to back buffer
-		if (_backbuffer_resolved != _backbuffer)
+		/*if (_backbuffer_resolved != _backbuffer)
 		{
 			_device->StretchRect(_backbuffer_resolved.get(), nullptr, _backbuffer.get(), nullptr, D3DTEXF_NONE);
-		}
+		}*/
+		_device->StretchRect(_backbuffer_resolved.get(), nullptr, surface, nullptr, D3DTEXF_NONE);
 
 		// Apply previous device state
 		_stateblock->Apply();
@@ -616,6 +628,10 @@ namespace reshade::d3d9
 				break;
 			case texture_reference::depth_buffer:
 				new_reference = _depthstencil_texture;
+				break;
+			/*HERE TO ADD TEXTURES*/
+			case texture_reference::light_buffer:
+				new_reference = _lightbuffer_texture;
 				break;
 			default:
 				return false;
@@ -1010,6 +1026,10 @@ namespace reshade::d3d9
 			if (texture.impl_reference == texture_reference::depth_buffer)
 			{
 				update_texture_reference(texture, texture_reference::depth_buffer);
+			} 
+			/*HERE TO ADD TEXTURES*/
+			else if (texture.impl_reference == texture_reference::light_buffer) {
+				update_texture_reference(texture, texture_reference::light_buffer);
 			}
 		}
 

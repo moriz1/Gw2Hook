@@ -268,7 +268,7 @@ HRESULT STDMETHODCALLTYPE Direct3DDevice9::Present(const RECT *pSourceRect, cons
 	assert(_implicit_swapchain != nullptr);
 	assert(_implicit_swapchain->_runtime != nullptr);
 
-	hook_gw2::PresentHook(_implicit_swapchain);
+	hook_gw2::PresentHook(_implicit_swapchain, _orig);
 
 	_implicit_swapchain->_runtime->on_present();
 
@@ -403,7 +403,7 @@ HRESULT STDMETHODCALLTYPE Direct3DDevice9::CreateOffscreenPlainSurface(UINT Widt
 }
 HRESULT STDMETHODCALLTYPE Direct3DDevice9::SetRenderTarget(DWORD RenderTargetIndex, IDirect3DSurface9 *pRenderTarget)
 {
-	return _orig->SetRenderTarget(RenderTargetIndex, pRenderTarget);
+	return hook_gw2::SetRenderTargetHook(RenderTargetIndex, pRenderTarget, _orig);
 }
 HRESULT STDMETHODCALLTYPE Direct3DDevice9::GetRenderTarget(DWORD RenderTargetIndex, IDirect3DSurface9 **ppRenderTarget)
 {

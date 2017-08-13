@@ -40,7 +40,7 @@ namespace reshade::d3d9
 
 		bool on_init(const D3DPRESENT_PARAMETERS &pp);
 		void on_reset();
-		void applyPostFX(bool noZBuff);
+		void applyPostFX(bool noZBuff, IDirect3DSurface9* surface);
 		void on_present();
 		void on_draw_call(D3DPRIMITIVETYPE type, UINT count);
 		void on_set_depthstencil_surface(IDirect3DSurface9 *&depthstencil);
@@ -62,6 +62,8 @@ namespace reshade::d3d9
 		com_ptr<IDirect3DTexture9> _backbuffer_texture;
 		com_ptr<IDirect3DSurface9> _backbuffer_texture_surface;
 		com_ptr<IDirect3DTexture9> _depthstencil_texture;
+		/*HERE TO ADD TEXTURES*/
+		com_ptr<IDirect3DTexture9> _lightbuffer_texture;
 
 	private:
 		struct depth_source_info

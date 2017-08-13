@@ -13,11 +13,12 @@ typedef union {
 
 class hook_gw2 {
 public:
-	static void PresentHook(Direct3DSwapChain9* _implicit_swapchain);
+	static void PresentHook(Direct3DSwapChain9* _implicit_swapchain, IDirect3DDevice9* _orig);
 	static HRESULT CreateVertexHook(const DWORD *pFunction, IDirect3DVertexShader9 **ppShader, IDirect3DDevice9* _orig, Direct3DSwapChain9* _implicit_swapchain);
 	static HRESULT SetVertexHook(IDirect3DVertexShader9 *pShader, IDirect3DDevice9* _orig, Direct3DSwapChain9* _implicit_swapchain);
 	static HRESULT CreatePixelHook(const DWORD *pFunction, IDirect3DPixelShader9 **ppShader, IDirect3DDevice9* _orig, Direct3DSwapChain9* _implicit_swapchain);
 	static HRESULT SetPixelHook(IDirect3DPixelShader9 *pShader, IDirect3DDevice9* _orig, Direct3DSwapChain9* _implicit_swapchain);
+	static HRESULT SetRenderTargetHook(DWORD RenderTargetIndex, IDirect3DSurface9* pRenderTarget, IDirect3DDevice9* _orig);
 private:
 	static void replacePatternFog1(const DWORD *pFunction, int l, float _fog_amount);
 	static void replacePatternFog2(const DWORD *pFunction, int l, float _fog_amount);
@@ -26,22 +27,28 @@ private:
 	static bool isInjectionShaderChS(void* pShader);
 	static bool isInjectionShaderSt(void* pShader);
 	static bool isInjectionShaderUs(void* pShader);
+	static bool isInjectionShaderLit(void* pShader);
+	static bool isInjectionShaderPLit(void* pShader);
 	static bool isEnd(DWORD token);
 	static int get_pattern(const DWORD *pFunction, int l);
 	static bool checkPattern(const DWORD *pFunction, int l, DWORD *pattern, int pl);
 	static int getFuncLenght(const DWORD *pFunction);
 	static void logShader(const DWORD* pFunction);
 
-	static DWORD _pFunction[MAX_TOKENS];
+	static DWORD _pFunction[];
 	static void* _pShaderSt;
 	static void* _pShaderUs;
 	static void* _pShaderChS;
+	static void* _pShaderLit;
+	static void* _pShaderPLit;
 
 	static DWORD patternStable[];//l = 13
-	static DWORD patternUnstable[]; //l=24
+	static DWORD patternUnstable[]; //l = 7
 	static DWORD patternCharSelec[]; //l = 7
 	static DWORD patternBloom[]; //l = 7
 	static DWORD patternSun[]; //l = 7
+	static DWORD patternLight[]; //l = 7
+	static DWORD patternPostLight[]; //l = 7
 
 	static int vs_count; //Used to save ref of second Us pattern and not first (second is 241th vs created)
 	static bool onCharSelecLastFrame;
@@ -49,5 +56,8 @@ private:
 	static bool can_use_unstable;
 	static bool unstable_in_cframe;
 	static bool fx_applied;
+
+	static IDirect3DSurface9* lightSurface;
+	static IDirect3DSurface9* currentSurface;
 };
 
