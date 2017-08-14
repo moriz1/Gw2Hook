@@ -1,8 +1,8 @@
 #pragma once
 
+#include "d3d9.hpp"
 #include "log.hpp"
-#include "d3d9_device.hpp"
-#include "d3d9_swapchain.hpp"
+
 
 #define MAX_TOKENS	8192
 
@@ -13,51 +13,76 @@ typedef union {
 
 class hook_gw2 {
 public:
-	static void PresentHook(Direct3DSwapChain9* _implicit_swapchain, IDirect3DDevice9* _orig);
-	static HRESULT CreateVertexHook(const DWORD *pFunction, IDirect3DVertexShader9 **ppShader, IDirect3DDevice9* _orig, Direct3DSwapChain9* _implicit_swapchain);
-	static HRESULT SetVertexHook(IDirect3DVertexShader9 *pShader, IDirect3DDevice9* _orig, Direct3DSwapChain9* _implicit_swapchain);
-	static HRESULT CreatePixelHook(const DWORD *pFunction, IDirect3DPixelShader9 **ppShader, IDirect3DDevice9* _orig, Direct3DSwapChain9* _implicit_swapchain);
-	static HRESULT SetPixelHook(IDirect3DPixelShader9 *pShader, IDirect3DDevice9* _orig, Direct3DSwapChain9* _implicit_swapchain);
-	static HRESULT SetRenderTargetHook(DWORD RenderTargetIndex, IDirect3DSurface9* pRenderTarget, IDirect3DDevice9* _orig);
+	hook_gw2(Direct3DDevice9* device) :
+		_device(device),
+		_pShaderInjection_stable(NULL),
+		_pShaderInjection(NULL),
+		_pShaderCharScreen(NULL),
+		_pShaderLightMap(NULL),
+		_pShaderPostLightMap(NULL),
+		_surface_lightmap(NULL),
+		_surface_current(NULL),
+		_is_fx_done(false),
+		_is_on_char_screen_last_frame(false),
+		_is_on_char_screen(false),
+		_pattern_InjectionStable{ 0x800c0001, 0xa0550006, 0x3000009, 0x80010002, 0x80e40001, 0xa0e40004, 0x3000009, 0x80020002, 0x80e40001, 0xa0e40005, 0x2000001, 0xe0030000, 0x80440002 },//l = 13
+		_pattern_Injection{ 0x3000005, 0x80280800, 0x80000000, 0x80ff0001, 0x2000001, 0x80270800, 0x80e40001 }, //l = 7
+		_pattern_charScreen{ 0x80440002, 0x2000001, 0xe00c0000, 0x90440009, 0x2000001, 0xe0030001, 0x90440008 }, //l = 7
+		_pattern_bloom{ 0x3000005, 0x80270000, 0x80e40000, 0xa0ff0000, 0x2000001, 0x802f0800, 0x80e40000, }, //l = 7
+		_pattern_sun{ 0x1000041, 0x800f0002, 0x1000041, 0x800f0000, 0x2000001, 0x800f0800, 0xa0000001 }, //l = 7
+		_pattern_lightMap{ 0xa0000000, 0x80400000, 0x80950000, 0x3000005, 0x800f0800, 0x80e40000, 0x80e40001 }, //l = 7
+		_pattern_postLightMap{ 0x0, 0x2000001, 0x802f0000, 0xa0000000, 0x2000001, 0x802f0800, 0x80e40000 } //l = 7
+	{ }
+
+	void PresentHook();
+	HRESULT CreateVertexHook(const DWORD *pFunction, IDirect3DVertexShader9 **ppShader);
+	HRESULT SetVertexHook(IDirect3DVertexShader9 *pShader);
+	HRESULT CreatePixelHook(const DWORD *pFunction, IDirect3DPixelShader9 **ppShader);
+	HRESULT SetPixelHook(IDirect3DPixelShader9 *pShader);
+	HRESULT SetRenderTargetHook(DWORD RenderTargetIndex, IDirect3DSurface9* pRenderTarget);
+
 private:
-	static void replacePatternFog1(const DWORD *pFunction, int l, float _fog_amount);
-	static void replacePatternFog2(const DWORD *pFunction, int l, float _fog_amount);
-	static void replacePatternBloom(const DWORD *pFunction, int l);
-	static void replacePatternSun(const DWORD *pFunction, int l);
-	static bool isInjectionShaderChS(void* pShader);
-	static bool isInjectionShaderSt(void* pShader);
-	static bool isInjectionShaderUs(void* pShader);
-	static bool isInjectionShaderLit(void* pShader);
-	static bool isInjectionShaderPLit(void* pShader);
-	static bool isEnd(DWORD token);
-	static int get_pattern(const DWORD *pFunction, int l);
-	static bool checkPattern(const DWORD *pFunction, int l, DWORD *pattern, int pl);
-	static int getFuncLenght(const DWORD *pFunction);
-	static void logShader(const DWORD* pFunction);
+	void replacePatternFog1(const DWORD *pFunction, int l, float _fog_amount);
+	void replacePatternFog2(const DWORD *pFunction, int l, float _fog_amount);
+	void replacePatternBloom(const DWORD *pFunction, int l);
+	void replacePatternSun(const DWORD *pFunction, int l);
 
-	static DWORD _pFunction[];
-	static void* _pShaderSt;
-	static void* _pShaderUs;
-	static void* _pShaderChS;
-	static void* _pShaderLit;
-	static void* _pShaderPLit;
+	bool isInjectionShaderChS(void* pShader);
+	bool isInjectionShaderSt(void* pShader);
+	bool isInjectionShaderUs(void* pShader);
+	bool isInjectionShaderLit(void* pShader);
+	bool isInjectionShaderPLit(void* pShader);
+	bool isEnd(DWORD token);
 
-	static DWORD patternStable[];//l = 13
-	static DWORD patternUnstable[]; //l = 7
-	static DWORD patternCharSelec[]; //l = 7
-	static DWORD patternBloom[]; //l = 7
-	static DWORD patternSun[]; //l = 7
-	static DWORD patternLight[]; //l = 7
-	static DWORD patternPostLight[]; //l = 7
+	int get_pattern(const DWORD *pFunction, int l);
+	bool checkPattern(const DWORD *pFunction, int l, DWORD *pattern, int pl);
+	int getFuncLenght(const DWORD *pFunction);
 
-	static int vs_count; //Used to save ref of second Us pattern and not first (second is 241th vs created)
-	static bool onCharSelecLastFrame;
-	static bool onCharSelec;
-	static bool can_use_unstable;
-	static bool unstable_in_cframe;
-	static bool fx_applied;
+	void logShader(const DWORD* pFunction);
 
-	static IDirect3DSurface9* lightSurface;
-	static IDirect3DSurface9* currentSurface;
-};
+	DWORD _pFunction[MAX_TOKENS];
+	void* _pShaderInjection_stable;
+	void* _pShaderInjection;
+	void* _pShaderCharScreen;
+	void* _pShaderLightMap;
+	void* _pShaderPostLightMap;
+
+	DWORD _pattern_InjectionStable[13];//l = 13
+	DWORD _pattern_Injection[7]; //l = 7
+	DWORD _pattern_charScreen[7]; //l = 7
+	DWORD _pattern_bloom[7]; //l = 7
+	DWORD _pattern_sun[7]; //l = 7
+	DWORD _pattern_lightMap[7]; //l = 7
+	DWORD _pattern_postLightMap[7]; //l = 7
+
+	bool _is_on_char_screen_last_frame;
+	bool _is_on_char_screen;
+	bool can_use_unstable;
+	bool unstable_in_cframe;
+	bool _is_fx_done;
+
+	IDirect3DSurface9* _surface_lightmap;
+	IDirect3DSurface9* _surface_current;
+	Direct3DDevice9 *_device;
+};	
 

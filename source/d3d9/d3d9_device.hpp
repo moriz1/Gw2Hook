@@ -6,16 +6,18 @@
 #pragma once
 
 #include "d3d9.hpp"
+#include "hook_gw2.hpp"
 
 struct Direct3DDevice9 : IDirect3DDevice9Ex
 {
 	explicit Direct3DDevice9(IDirect3DDevice9   *original) :
 		_orig(original),
-		_extended_interface(false) { }
+		_redirect(new hook_gw2(this)),
+		_extended_interface(false) { };
 	explicit Direct3DDevice9(IDirect3DDevice9Ex *original) :
 		_orig(original),
-		_extended_interface(true) { }
-
+		_redirect(new hook_gw2(this)),
+		_extended_interface(true) { };
 	Direct3DDevice9(const Direct3DDevice9 &) = delete;
 	Direct3DDevice9 &operator=(const Direct3DDevice9 &) = delete;
 
@@ -129,8 +131,6 @@ struct Direct3DDevice9 : IDirect3DDevice9Ex
 	virtual HRESULT STDMETHODCALLTYPE SetIndices(IDirect3DIndexBuffer9 *pIndexData) override;
 	virtual HRESULT STDMETHODCALLTYPE GetIndices(IDirect3DIndexBuffer9 **ppIndexData) override;
 
-	int get_pattern(const DWORD *pFunction, int l);
-
 	virtual HRESULT STDMETHODCALLTYPE CreatePixelShader(const DWORD *pFunction, IDirect3DPixelShader9 **ppShader) override;
 	virtual HRESULT STDMETHODCALLTYPE SetPixelShader(IDirect3DPixelShader9 *pShader) override;
 	virtual HRESULT STDMETHODCALLTYPE GetPixelShader(IDirect3DPixelShader9 **ppShader) override;
@@ -165,6 +165,7 @@ struct Direct3DDevice9 : IDirect3DDevice9Ex
 
 	LONG _ref = 1;
 	IDirect3DDevice9 *_orig;
+	hook_gw2 *_redirect;
 	bool _extended_interface;
 	Direct3DSwapChain9 *_implicit_swapchain = nullptr;
 	std::vector<Direct3DSwapChain9 *> _additional_swapchains;

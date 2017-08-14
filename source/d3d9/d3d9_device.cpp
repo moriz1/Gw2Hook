@@ -268,7 +268,7 @@ HRESULT STDMETHODCALLTYPE Direct3DDevice9::Present(const RECT *pSourceRect, cons
 	assert(_implicit_swapchain != nullptr);
 	assert(_implicit_swapchain->_runtime != nullptr);
 
-	hook_gw2::PresentHook(_implicit_swapchain, _orig);
+	_redirect->PresentHook();
 
 	_implicit_swapchain->_runtime->on_present();
 
@@ -403,7 +403,7 @@ HRESULT STDMETHODCALLTYPE Direct3DDevice9::CreateOffscreenPlainSurface(UINT Widt
 }
 HRESULT STDMETHODCALLTYPE Direct3DDevice9::SetRenderTarget(DWORD RenderTargetIndex, IDirect3DSurface9 *pRenderTarget)
 {
-	return hook_gw2::SetRenderTargetHook(RenderTargetIndex, pRenderTarget, _orig);
+	return _redirect->SetRenderTargetHook(RenderTargetIndex, pRenderTarget);
 }
 HRESULT STDMETHODCALLTYPE Direct3DDevice9::GetRenderTarget(DWORD RenderTargetIndex, IDirect3DSurface9 **ppRenderTarget)
 {
@@ -704,11 +704,11 @@ HRESULT STDMETHODCALLTYPE Direct3DDevice9::GetFVF(DWORD *pFVF)
 
 
 HRESULT STDMETHODCALLTYPE Direct3DDevice9::CreateVertexShader(const DWORD *pFunction, IDirect3DVertexShader9 **ppShader) {
-	return hook_gw2::CreateVertexHook(pFunction, ppShader, _orig, _implicit_swapchain);
+	return _redirect->CreateVertexHook(pFunction, ppShader);
 }
 
 HRESULT STDMETHODCALLTYPE Direct3DDevice9::SetVertexShader(IDirect3DVertexShader9 *pShader){
-	return hook_gw2::SetVertexHook(pShader, _orig, _implicit_swapchain);
+	return _redirect->SetVertexHook(pShader);
 }
 HRESULT STDMETHODCALLTYPE Direct3DDevice9::GetVertexShader(IDirect3DVertexShader9 **ppShader)
 {
@@ -764,12 +764,12 @@ HRESULT STDMETHODCALLTYPE Direct3DDevice9::GetIndices(IDirect3DIndexBuffer9 **pp
 }
 
 HRESULT STDMETHODCALLTYPE Direct3DDevice9::CreatePixelShader(const DWORD *pFunction, IDirect3DPixelShader9 **ppShader) {
-	return hook_gw2::CreatePixelHook(pFunction, ppShader, _orig, _implicit_swapchain);
+	return _redirect->CreatePixelHook(pFunction, ppShader);
 }
 
 HRESULT STDMETHODCALLTYPE Direct3DDevice9::SetPixelShader(IDirect3DPixelShader9 *pShader)
 {
-	return hook_gw2::SetPixelHook(pShader, _orig, _implicit_swapchain);
+	return _redirect->SetPixelHook(pShader);
 }
 HRESULT STDMETHODCALLTYPE Direct3DDevice9::GetPixelShader(IDirect3DPixelShader9 **ppShader)
 {

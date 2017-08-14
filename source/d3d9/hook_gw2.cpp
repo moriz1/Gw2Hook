@@ -1,166 +1,123 @@
+#include "d3d9_device.hpp"
+#include "d3d9_swapchain.hpp"
 #include "hook_gw2.hpp"
-#include <d3dx9shader.h>
-#include <sstream>
 
-DWORD hook_gw2::patternStable[] = { 0x800c0001, 0xa0550006, 0x3000009, 0x80010002, 0x80e40001, 0xa0e40004, 0x3000009,
-									0x80020002, 0x80e40001, 0xa0e40005, 0x2000001, 0xe0030000, 0x80440002 };//l = 13
-
-DWORD hook_gw2::patternUnstable[] = { 0x3000005, 0x80280800, 0x80000000, 0x80ff0001, 0x2000001, 0x80270800, 0x80e40001 }; //l = 7 PS !!
-
-/*DWORD hook_gw2::patternUnstable[] = { 0x80070000, 0xa0000004, 0x2000001, 0x80070000, 0xa0000004, 0x3000009, 0xe0010001,
-0x90e40000, 0xa0e40000, 0x3000009, 0xe0020001, 0x90e40000, 0xa0e40001, 0x3000009,
-0xe0040001, 0x90e40000, 0xa0e40002, 0x3000009, 0xe0080001, 0x90e40000, 0xa0e40003,
-0x2000001, 0xe0030000, 0x90e40007 }; //l=24*/
-
-DWORD hook_gw2::patternCharSelec[] = { 0x80440002, 0x2000001, 0xe00c0000, 0x90440009, 0x2000001, 0xe0030001, 0x90440008 }; //l = 7
-
-DWORD hook_gw2::patternBloom[] = { 0x3000005, 0x80270000, 0x80e40000, 0xa0ff0000, 0x2000001, 0x802f0800, 0x80e40000, }; //l = 7
-
-DWORD hook_gw2::patternSun[] = { 0x1000041, 0x800f0002, 0x1000041, 0x800f0000, 0x2000001, 0x800f0800, 0xa0000001 }; //l = 7
-
-DWORD hook_gw2::patternLight[] = { 0xa0000000, 0x80400000, 0x80950000, 0x3000005, 0x800f0800, 0x80e40000, 0x80e40001 }; //l = 7
-
-DWORD hook_gw2::patternPostLight[] = { 0x0, 0x2000001, 0x802f0000, 0xa0000000, 0x2000001, 0x802f0800, 0x80e40000 }; //l = 7
-
-DWORD hook_gw2::_pFunction[MAX_TOKENS];
-void* hook_gw2::_pShaderSt = NULL;
-void* hook_gw2::_pShaderUs = NULL;
-void* hook_gw2::_pShaderChS = NULL;
-void* hook_gw2::_pShaderLit = NULL;
-void* hook_gw2::_pShaderPLit = NULL;
-
-bool hook_gw2::can_use_unstable = false;
-bool hook_gw2::unstable_in_cframe = false;
-bool hook_gw2::fx_applied = false;
-bool hook_gw2::onCharSelecLastFrame = false;
-bool hook_gw2::onCharSelec = false;
-
-IDirect3DSurface9* hook_gw2::lightSurface = NULL;
-IDirect3DSurface9* hook_gw2::currentSurface = NULL;
-
-void hook_gw2::PresentHook(Direct3DSwapChain9* _implicit_swapchain, IDirect3DDevice9* _orig) {
-	if (onCharSelec) {
+void hook_gw2::PresentHook() {
+	if (_is_on_char_screen) {
 		LPDIRECT3DSURFACE9 l_Surface;
-		_implicit_swapchain->_runtime->_lightbuffer_texture->GetSurfaceLevel(0, &l_Surface);
-		_orig->ColorFill(l_Surface, nullptr, D3DCOLOR_COLORVALUE(0.2f, 0.2f, 0.2f, 0.2f));
+		_device->_implicit_swapchain->_runtime->_lightbuffer_texture->GetSurfaceLevel(0, &l_Surface);
+		_device->_orig->ColorFill(l_Surface, nullptr, D3DCOLOR_COLORVALUE(0.2f, 0.2f, 0.2f, 0.2f));
 		l_Surface->Release();
 
-		onCharSelecLastFrame = true;
-	}
-	else onCharSelecLastFrame = false;
-	onCharSelec = false;
-
-	if (!fx_applied) {
-		_implicit_swapchain->_runtime->applyPostFX(onCharSelecLastFrame, currentSurface);
-	}
-	fx_applied = false;
-	if (unstable_in_cframe) {
-		can_use_unstable = true;
+		_is_on_char_screen_last_frame = true;
 	} else {
-		can_use_unstable = false;
+		_is_on_char_screen_last_frame = false;
 	}
-	unstable_in_cframe = false;
+	_is_on_char_screen = false;
+
+	if (!_is_fx_done) _device->_implicit_swapchain->_runtime->applyPostFX(_is_on_char_screen_last_frame, _surface_current);
+	_is_fx_done = false;
 }
 
-HRESULT hook_gw2::SetRenderTargetHook(DWORD RenderTargetIndex, IDirect3DSurface9* pRenderTarget, IDirect3DDevice9* _orig) {
-	HRESULT hr = _orig->SetRenderTarget(RenderTargetIndex, pRenderTarget);
-	currentSurface = pRenderTarget;
+HRESULT hook_gw2::SetRenderTargetHook(DWORD RenderTargetIndex, IDirect3DSurface9* pRenderTarget) {
+	HRESULT hr = _device->_orig->SetRenderTarget(RenderTargetIndex, pRenderTarget);
+	_surface_current = pRenderTarget;
 	return hr;
 }
 
-HRESULT hook_gw2::CreateVertexHook(const DWORD *pFunction, IDirect3DVertexShader9 **ppShader, IDirect3DDevice9* _orig, Direct3DSwapChain9* _implicit_swapchain) {
-	HRESULT hr = _orig->CreateVertexShader(pFunction, ppShader);
+HRESULT hook_gw2::CreateVertexHook(const DWORD *pFunction, IDirect3DVertexShader9 **ppShader) {
+	HRESULT hr = _device->_orig->CreateVertexShader(pFunction, ppShader);
 
-	if (_pShaderChS == NULL || _pShaderSt == NULL) {
+	if (_pShaderCharScreen == NULL || _pShaderInjection_stable == NULL) {
 		int l = getFuncLenght(pFunction);
-		if (_pShaderSt == NULL && checkPattern(pFunction, l, patternStable, 13)) {
+		if (_pShaderInjection_stable == NULL && checkPattern(pFunction, l, _pattern_InjectionStable, 13)) {
 			LOG(INFO) << "Stable injection point found.";
-			_pShaderSt = *ppShader;
+			_pShaderInjection_stable = *ppShader;
 			return hr;
-		} else if (_pShaderChS == NULL && checkPattern(pFunction, l, patternCharSelec, 7)) {
+		} else if (_pShaderCharScreen == NULL && checkPattern(pFunction, l, _pattern_charScreen, 7)) {
 			LOG(INFO) << "Char. screen VS found.";
-			_pShaderChS = *ppShader;
+			_pShaderCharScreen = *ppShader;
 			return hr;
 		}
 	}
 	return hr;
 }
 
-HRESULT hook_gw2::SetVertexHook(IDirect3DVertexShader9 *pShader, IDirect3DDevice9* _orig, Direct3DSwapChain9* _implicit_swapchain) {
-	if (pShader == NULL) return _orig->SetVertexShader(pShader);
+HRESULT hook_gw2::SetVertexHook(IDirect3DVertexShader9 *pShader) {
+	if (pShader == NULL) return _device->_orig->SetVertexShader(pShader);
 
-	if (!fx_applied && isInjectionShaderSt(pShader)) {
-		fx_applied = true;
-		_implicit_swapchain->_runtime->applyPostFX(onCharSelecLastFrame, currentSurface);
+	if (!_is_fx_done && isInjectionShaderSt(pShader)) {
+		_is_fx_done = true;
+		_device->_implicit_swapchain->_runtime->applyPostFX(_is_on_char_screen_last_frame, _surface_current);
 	} else if (isInjectionShaderChS(pShader)) {
-		onCharSelec = true;
+		_is_on_char_screen = true;
 	}
 
-	return _orig->SetVertexShader(pShader);
+	return _device->_orig->SetVertexShader(pShader);
 }
 
-HRESULT hook_gw2::CreatePixelHook(const DWORD *pFunction, IDirect3DPixelShader9 **ppShader, IDirect3DDevice9* _orig, Direct3DSwapChain9* _implicit_swapchain) {
+HRESULT hook_gw2::CreatePixelHook(const DWORD *pFunction, IDirect3DPixelShader9 **ppShader) {
 	int l = getFuncLenght(pFunction);
-	HRESULT hr = _orig->CreatePixelShader(pFunction, ppShader);
-	if (_pShaderUs == NULL && checkPattern(pFunction, l, patternUnstable, 7)) {
+	HRESULT hr = _device->_orig->CreatePixelShader(pFunction, ppShader);
+	if (_pShaderInjection == NULL && checkPattern(pFunction, l, _pattern_Injection, 7)) {
 		LOG(INFO) << "Unstable injection point found.";
-		_pShaderUs = *ppShader;
+		_pShaderInjection = *ppShader;
 		return hr;
-	} else if (_pShaderLit == NULL && checkPattern(pFunction, l, patternLight, 7)) {
+	} else if (_pShaderLightMap == NULL && checkPattern(pFunction, l, _pattern_lightMap, 7)) {
 		LOG(INFO) << "Light injection point found.";
-		_pShaderLit = *ppShader;
+		_pShaderLightMap = *ppShader;
 		return hr;
-	} else if (_pShaderPLit == NULL && checkPattern(pFunction, l, patternPostLight, 7)) {
+	} else if (_pShaderPostLightMap == NULL && checkPattern(pFunction, l, _pattern_postLightMap, 7)) {
 		LOG(INFO) << "PostLight injection point found.";
-		_pShaderPLit = *ppShader;
+		_pShaderPostLightMap = *ppShader;
 		return hr;
 	}
-	if ((_implicit_swapchain->_runtime->_fog_amount == 1)) return hr;
+	if ((_device->_implicit_swapchain->_runtime->_fog_amount == 1)) return hr;
 
 	int _pattern = get_pattern(pFunction, l);
 	switch (_pattern) {
-		case 1: //Detected pattern 1
-			replacePatternFog1(pFunction, l, _implicit_swapchain->_runtime->_fog_amount);
-			return _orig->CreatePixelShader(_pFunction, ppShader);
-			break;
-		case 2: //Detected pattern 2
-			replacePatternFog2(pFunction, l, _implicit_swapchain->_runtime->_fog_amount);
-			return _orig->CreatePixelShader(_pFunction, ppShader);
-			break;
-		case 3://Detected bloom
-			if(_implicit_swapchain->_runtime->_no_bloom == 0)
-				return _orig->CreatePixelShader(pFunction, ppShader);
-			replacePatternBloom(pFunction, l);
-			return _orig->CreatePixelShader(_pFunction, ppShader);
-		case 4://Detected bloom
-			if (_implicit_swapchain->_runtime->_max_sun == 0)
-				return _orig->CreatePixelShader(pFunction, ppShader);
-			replacePatternSun(pFunction, l);
-			return _orig->CreatePixelShader(_pFunction, ppShader);
-		default: //No pattern detected
-			return hr;
-			break;
+	case 1: //Detected pattern 1
+		replacePatternFog1(pFunction, l, _device->_implicit_swapchain->_runtime->_fog_amount);
+		return _device->_orig->CreatePixelShader(_pFunction, ppShader);
+		break;
+	case 2: //Detected pattern 2
+		replacePatternFog2(pFunction, l, _device->_implicit_swapchain->_runtime->_fog_amount);
+		return _device->_orig->CreatePixelShader(_pFunction, ppShader);
+		break;
+	case 3://Detected bloom
+		if (_device->_implicit_swapchain->_runtime->_no_bloom == 0)
+			return _device->_orig->CreatePixelShader(pFunction, ppShader);
+		replacePatternBloom(pFunction, l);
+		return _device->_orig->CreatePixelShader(_pFunction, ppShader);
+	case 4://Detected bloom
+		if (_device->_implicit_swapchain->_runtime->_max_sun == 0)
+			return _device->_orig->CreatePixelShader(pFunction, ppShader);
+		replacePatternSun(pFunction, l);
+		return _device->_orig->CreatePixelShader(_pFunction, ppShader);
+	default: //No pattern detected
+		return hr;
+		break;
 	}
 }
 
-HRESULT hook_gw2::SetPixelHook(IDirect3DPixelShader9 *pShader, IDirect3DDevice9* _orig, Direct3DSwapChain9* _implicit_swapchain) {
-	if(pShader == NULL) return _orig->SetPixelShader(pShader);
+HRESULT hook_gw2::SetPixelHook(IDirect3DPixelShader9 *pShader) {
+	if (pShader == NULL) return _device->_orig->SetPixelShader(pShader);
 	if (isInjectionShaderLit(pShader)) {
-		lightSurface = currentSurface;
-	} else if (lightSurface != NULL && isInjectionShaderPLit(pShader)) {
+		_surface_lightmap = _surface_current;
+	} else if (_surface_lightmap != NULL && isInjectionShaderPLit(pShader)) {
 		LPDIRECT3DSURFACE9 l_Surface;
-		_implicit_swapchain->_runtime->_lightbuffer_texture->GetSurfaceLevel(0, &l_Surface);
-		_orig->StretchRect(lightSurface, NULL, l_Surface, NULL, D3DTEXF_NONE);
+		_device->_implicit_swapchain->_runtime->_lightbuffer_texture->GetSurfaceLevel(0, &l_Surface);
+		_device->_orig->StretchRect(_surface_lightmap, NULL, l_Surface, NULL, D3DTEXF_NONE);
 		l_Surface->Release();
-		lightSurface = NULL;
+		_surface_lightmap = NULL;
 	} else if (isInjectionShaderUs(pShader)) {
 		unstable_in_cframe = true;
-		if (!fx_applied) {
-			fx_applied = true;
-			_implicit_swapchain->_runtime->applyPostFX(onCharSelecLastFrame, currentSurface);
+		if (!_is_fx_done) {
+			_is_fx_done = true;
+			_device->_implicit_swapchain->_runtime->applyPostFX(_is_on_char_screen_last_frame, _surface_current);
 		}
 	}
-	return _orig->SetPixelShader(pShader);
+	return _device->_orig->SetPixelShader(pShader);
 }
 
 int hook_gw2::get_pattern(const DWORD *pFunction, int l) {
@@ -181,9 +138,9 @@ int hook_gw2::get_pattern(const DWORD *pFunction, int l) {
 		if (pFunction[l - 11] == 0x4000004) return -1;
 		//Else it need to be edited with pattern 2
 		return 2;
-	} else if (checkPattern(pFunction, l, patternBloom, 7)) {
+	} else if (checkPattern(pFunction, l, _pattern_bloom, 7)) {
 		return 3;
-	} else if (checkPattern(pFunction, l, patternSun, 7)) {
+	} else if (checkPattern(pFunction, l, _pattern_sun, 7)) {
 		return 4;
 	}
 	return -1;
@@ -277,24 +234,24 @@ bool hook_gw2::isEnd(DWORD token) {
 	return (token & D3DSI_OPCODE_MASK) == D3DSIO_END;
 }
 
-bool hook_gw2::hook_gw2::isInjectionShaderChS(void* pShader) {
-	return pShader == _pShaderChS;
+bool hook_gw2::isInjectionShaderChS(void* pShader) {
+	return pShader == _pShaderCharScreen;
 }
 
-bool hook_gw2::hook_gw2::isInjectionShaderSt(void* pShader) {
-	return pShader == _pShaderSt;
+bool hook_gw2::isInjectionShaderSt(void* pShader) {
+	return pShader == _pShaderInjection_stable;
 }
 
-bool hook_gw2::hook_gw2::isInjectionShaderUs(void* pShader) {
-	return pShader == _pShaderUs;
+bool hook_gw2::isInjectionShaderUs(void* pShader) {
+	return pShader == _pShaderInjection;
 }
 
-bool hook_gw2::hook_gw2::isInjectionShaderLit(void* pShader) {
-	return pShader == _pShaderLit;
+bool hook_gw2::isInjectionShaderLit(void* pShader) {
+	return pShader == _pShaderLightMap;
 }
 
-bool hook_gw2::hook_gw2::isInjectionShaderPLit(void* pShader) {
-	return pShader == _pShaderPLit;
+bool hook_gw2::isInjectionShaderPLit(void* pShader) {
+	return pShader == _pShaderPostLightMap;
 }
 
 void hook_gw2::logShader(const DWORD * pFunction) {
@@ -302,16 +259,10 @@ void hook_gw2::logShader(const DWORD * pFunction) {
 	int opl = 0;
 	int l = 0;
 	while (!isEnd(pFunction[l])) {
-		/*opl = pFunction[l] & 0x0F000000 >> 24;
-		printf("l:%d\n", opl);
-		std::stringstream stream;
-		for (int i = 0; i <= opl+1; ++i) {
-			stream << std::hex << (DWORD)pFunction[l+i] << ", ";
-		}*/
 		LOG(INFO) << std::hex << (DWORD)pFunction[l];//stream.str();
-		l += 1;//2 + opl;
+		l += 1;
 	}
-	LPD3DXBUFFER disassembly;
+	/*LPD3DXBUFFER disassembly;
 	D3DXDisassembleShader(pFunction, true, "", &disassembly);
-	LOG(INFO) << static_cast<char*>(disassembly->GetBufferPointer());
+	LOG(INFO) << static_cast<char*>(disassembly->GetBufferPointer());*/
 }
