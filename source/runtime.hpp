@@ -116,6 +116,14 @@ namespace reshade
 		void set_uniform_value(uniform &variable, const int *values, size_t count);
 		void set_uniform_value(uniform &variable, const unsigned int *values, size_t count);
 		void set_uniform_value(uniform &variable, const float *values, size_t count);
+
+		float sunCoord[2] = { -1, -1 };
+		float moonCoord[2] = { -1, -1 };
+		int facingsun = 0;
+		int facingmoon = 0;
+		int onscharselec = 0;
+		int mapid = 0;
+
 		float _fog_amount = 0;
 		int _no_bloom = 1;
 		int _max_sun = 1;

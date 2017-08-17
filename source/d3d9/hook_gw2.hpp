@@ -1,5 +1,6 @@
 #pragma once
 
+#include <d3dx9shader.h>
 #include "d3d9.hpp"
 #include "log.hpp"
 
@@ -10,6 +11,40 @@ typedef union {
 	DWORD d;
 	float f;
 } DWFL;
+
+struct MumbleContext {
+	byte serverAddress[28]; // contains sockaddr_in or sockaddr_in6
+	unsigned mapId;
+	unsigned mapType;
+	unsigned shardId;
+	unsigned instance;
+	unsigned buildId;
+};
+
+struct LinkedMem {
+#ifdef _WIN32
+	UINT32	uiVersion;
+	DWORD	uiTick;
+#else
+	uint32_t uiVersion;
+	uint32_t uiTick;
+#endif
+	float	fAvatarPosition[3];
+	float	fAvatarFront[3];
+	float	fAvatarTop[3];
+	wchar_t	name[256];
+	float	fCameraPosition[3];
+	float	fCameraFront[3];
+	float	fCameraTop[3];
+	wchar_t	identity[256];
+#ifdef _WIN32
+	UINT32	context_len;
+#else
+	uint32_t context_len;
+#endif
+	MumbleContext context;
+	wchar_t description[2048];
+};
 
 class hook_gw2 {
 public:
@@ -31,7 +66,8 @@ public:
 		_pattern_bloom{ 0x3000005, 0x80270000, 0x80e40000, 0xa0ff0000, 0x2000001, 0x802f0800, 0x80e40000, }, //l = 7
 		_pattern_sun{ 0x1000041, 0x800f0002, 0x1000041, 0x800f0000, 0x2000001, 0x800f0800, 0xa0000001 }, //l = 7
 		_pattern_lightMap{ 0xa0000000, 0x80400000, 0x80950000, 0x3000005, 0x800f0800, 0x80e40000, 0x80e40001 }, //l = 7
-		_pattern_postLightMap{ 0x0, 0x2000001, 0x802f0000, 0xa0000000, 0x2000001, 0x802f0800, 0x80e40000 } //l = 7
+		_pattern_postLightMap{ 0x0, 0x2000001, 0x802f0000, 0xa0000000, 0x2000001, 0x802f0800, 0x80e40000 }, //l = 7
+		lm(NULL)
 	{ }
 
 	void PresentHook();
@@ -40,7 +76,9 @@ public:
 	HRESULT CreatePixelHook(const DWORD *pFunction, IDirect3DPixelShader9 **ppShader);
 	HRESULT SetPixelHook(IDirect3DPixelShader9 *pShader);
 	HRESULT SetRenderTargetHook(DWORD RenderTargetIndex, IDirect3DSurface9* pRenderTarget);
-
+	HRESULT SetVertexFHook(UINT StartRegister, const float *pConstantData, UINT Vector4fCount);
+	HRESULT SetPixelFHook(UINT StartRegister, const float *pConstantData, UINT Vector4fCount);
+	void ResetHook();
 private:
 	void replacePatternFog1(const DWORD *pFunction, int l, float _fog_amount);
 	void replacePatternFog2(const DWORD *pFunction, int l, float _fog_amount);
@@ -59,6 +97,7 @@ private:
 	int getFuncLenght(const DWORD *pFunction);
 
 	void logShader(const DWORD* pFunction);
+	void initMumble();
 
 	DWORD _pFunction[MAX_TOKENS];
 	void* _pShaderInjection_stable;
@@ -74,15 +113,21 @@ private:
 	DWORD _pattern_sun[7]; //l = 7
 	DWORD _pattern_lightMap[7]; //l = 7
 	DWORD _pattern_postLightMap[7]; //l = 7
+	char _bFunction[MAX_TOKENS];
 
 	bool _is_on_char_screen_last_frame;
 	bool _is_on_char_screen;
-	bool can_use_unstable;
-	bool unstable_in_cframe;
 	bool _is_fx_done;
 
 	IDirect3DSurface9* _surface_lightmap;
 	IDirect3DSurface9* _surface_current;
 	Direct3DDevice9 *_device;
-};	
+
+	LinkedMem *lm;
+	D3DXMATRIX View, World, Projection, WVP;
+	D3DXVECTOR3 moonCoord3D, sunCoord3D, sunCoord, moonCoord;
+	D3DXVECTOR3 Position, Target, Up;
+	D3DVIEWPORT9 d3dvp;
+
+};
 

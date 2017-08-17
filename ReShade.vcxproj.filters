@@ -25,6 +25,9 @@
     <Filter Include="resources">
       <UniqueIdentifier>{7f3f7a66-aeb1-4c44-abb4-d7eff03a1247}</UniqueIdentifier>
     </Filter>
+    <Filter Include="core\gw2">
+      <UniqueIdentifier>{f506fcef-7a96-41d5-a182-12611be2fd19}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\directory_watcher.cpp">
@@ -98,6 +101,12 @@
     </ClCompile>
     <ClCompile Include="source\d3d9\hook_gw2.cpp">
       <Filter>hooks\d3d9</Filter>
+    </ClCompile>
+    <ClCompile Include="source\hash.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gw2_sun_moon.cpp">
+      <Filter>core\gw2</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -193,6 +202,12 @@
     </ClInclude>
     <ClInclude Include="source\d3d9\hook_gw2.hpp">
       <Filter>hooks\d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="source\hash.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gw2_sun_moon.hpp">
+      <Filter>core\gw2</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

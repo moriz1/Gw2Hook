@@ -1,8 +1,53 @@
 #include "d3d9_device.hpp"
 #include "d3d9_swapchain.hpp"
+#include "hash.hpp"
 #include "hook_gw2.hpp"
+#include "gw2_sun_moon.hpp"
+#include <windows.h>
+
+DWORD Stable = 0x4bfaaee9;
+DWORD Char = 0x47497604;
+DWORD CharHoT = 0x5a00d081;
+DWORD Bloom = 0x59b97796;
+DWORD Sun = 0x3c3a406a;
+DWORD PostLight = 0x99006846;
+DWORD Light = 0xbfcddd47;
+DWORD Unstable = 0x7db279cf;
 
 void hook_gw2::PresentHook() {
+	if (lm == NULL) {
+		initMumble();
+		moonCoord3D = D3DXVECTOR3(80.0f, 60.0f, -0.2f);
+		sunCoord3D = D3DXVECTOR3(-90.0f, 43.5f, -2.1f);
+		Position = D3DXVECTOR3(0, 0, 0);
+		Up = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+
+		_device->_orig->GetViewport(&d3dvp);
+
+		D3DXMatrixPerspectiveFovLH(&Projection, 1.22f, (float)d3dvp.Width / (float)d3dvp.Height, 1.0f, 10000.0f);
+
+		D3DXMatrixIdentity(&World);
+	} else {
+		system("cls");
+		Target = D3DXVECTOR3(lm->fCameraFront[0], lm->fCameraFront[1], lm->fCameraFront[2]);
+		printf("Map : %d, At : %f, %f, %f\n", lm->context.mapId, lm->fCameraFront[0] * 100, lm->fCameraFront[1] * 100, lm->fCameraFront[2] * 100);
+		D3DXMatrixLookAtLH(&View, &Position, &Target, &Up);
+		WVP = World * View * Projection;
+		D3DXVec3TransformCoord(&sunCoord, gw2_sun_moon::sun(lm->context.mapId), &WVP);
+		D3DXVec3TransformCoord(&moonCoord, gw2_sun_moon::moon(lm->context.mapId), &WVP);
+
+		_device->_implicit_swapchain->_runtime->sunCoord[0] = (sunCoord.x + 1.0f) / 2.0f;
+		_device->_implicit_swapchain->_runtime->sunCoord[1] = (-sunCoord.y + 1.0f) / 2.0f;
+
+		_device->_implicit_swapchain->_runtime->moonCoord[0] = (moonCoord.x + 1.0f) / 2.0f;
+		_device->_implicit_swapchain->_runtime->moonCoord[1] = (-moonCoord.y + 1.0f) / 2.0f;
+
+		_device->_implicit_swapchain->_runtime->facingsun = !(sunCoord.z>1);
+		_device->_implicit_swapchain->_runtime->facingmoon = !(moonCoord.z>1);
+		_device->_implicit_swapchain->_runtime->onscharselec = lm->fCameraPosition[0] ==  0 && lm->fCameraPosition[1] == 0 && lm->fCameraPosition[2] == 0;
+		_device->_implicit_swapchain->_runtime->mapid = lm->context.mapId;
+	}
+
 	if (_is_on_char_screen) {
 		LPDIRECT3DSURFACE9 l_Surface;
 		_device->_implicit_swapchain->_runtime->_lightbuffer_texture->GetSurfaceLevel(0, &l_Surface);
@@ -13,10 +58,16 @@ void hook_gw2::PresentHook() {
 	} else {
 		_is_on_char_screen_last_frame = false;
 	}
+	_device->_implicit_swapchain->_runtime->onscharselec = _is_on_char_screen_last_frame;
 	_is_on_char_screen = false;
 
 	if (!_is_fx_done) _device->_implicit_swapchain->_runtime->applyPostFX(_is_on_char_screen_last_frame, _surface_current);
 	_is_fx_done = false;
+}
+
+void hook_gw2::ResetHook() {
+	D3DXMatrixPerspectiveFovLH(&Projection, 1.22f, (float)d3dvp.Width / (float)d3dvp.Height, 1.0f, 10000.0f);
+	return;
 }
 
 HRESULT hook_gw2::SetRenderTargetHook(DWORD RenderTargetIndex, IDirect3DSurface9* pRenderTarget) {
@@ -27,25 +78,21 @@ HRESULT hook_gw2::SetRenderTargetHook(DWORD RenderTargetIndex, IDirect3DSurface9
 
 HRESULT hook_gw2::CreateVertexHook(const DWORD *pFunction, IDirect3DVertexShader9 **ppShader) {
 	HRESULT hr = _device->_orig->CreateVertexShader(pFunction, ppShader);
-
-	if (_pShaderCharScreen == NULL || _pShaderInjection_stable == NULL) {
-		int l = getFuncLenght(pFunction);
-		if (_pShaderInjection_stable == NULL && checkPattern(pFunction, l, _pattern_InjectionStable, 13)) {
-			LOG(INFO) << "Stable injection point found.";
-			_pShaderInjection_stable = *ppShader;
-			return hr;
-		} else if (_pShaderCharScreen == NULL && checkPattern(pFunction, l, _pattern_charScreen, 7)) {
-			LOG(INFO) << "Char. screen VS found.";
-			_pShaderCharScreen = *ppShader;
-			return hr;
-		}
+	int l = getFuncLenght(pFunction);
+	if (_pShaderInjection_stable == NULL && getHash(pFunction, l, _bFunction, MAX_TOKENS) == Stable) {
+		LOG(INFO) << "Stable injection point found.";
+		_pShaderInjection_stable = *ppShader;
+		return hr;
+	} else if (_pShaderCharScreen == NULL && getHash(pFunction, l, _bFunction, MAX_TOKENS) == CharHoT) {
+		LOG(INFO) << "Char. screen VS found.";
+		_pShaderCharScreen = *ppShader;
+		return hr;
 	}
 	return hr;
 }
 
 HRESULT hook_gw2::SetVertexHook(IDirect3DVertexShader9 *pShader) {
 	if (pShader == NULL) return _device->_orig->SetVertexShader(pShader);
-
 	if (!_is_fx_done && isInjectionShaderSt(pShader)) {
 		_is_fx_done = true;
 		_device->_implicit_swapchain->_runtime->applyPostFX(_is_on_char_screen_last_frame, _surface_current);
@@ -55,19 +102,23 @@ HRESULT hook_gw2::SetVertexHook(IDirect3DVertexShader9 *pShader) {
 
 	return _device->_orig->SetVertexShader(pShader);
 }
+HRESULT hook_gw2::SetVertexFHook(UINT StartRegister, const float *pConstantData, UINT Vector4fCount) {
+	return  _device->_orig->SetVertexShaderConstantF(StartRegister, pConstantData, Vector4fCount);
+}
+
 
 HRESULT hook_gw2::CreatePixelHook(const DWORD *pFunction, IDirect3DPixelShader9 **ppShader) {
 	int l = getFuncLenght(pFunction);
 	HRESULT hr = _device->_orig->CreatePixelShader(pFunction, ppShader);
-	if (_pShaderInjection == NULL && checkPattern(pFunction, l, _pattern_Injection, 7)) {
+	if (_pShaderInjection == NULL && getHash(pFunction, l, _bFunction, MAX_TOKENS) == Unstable) {
 		LOG(INFO) << "Unstable injection point found.";
 		_pShaderInjection = *ppShader;
 		return hr;
-	} else if (_pShaderLightMap == NULL && checkPattern(pFunction, l, _pattern_lightMap, 7)) {
+	} else if (_pShaderLightMap == NULL && getHash(pFunction, l, _bFunction, MAX_TOKENS) == Light) {
 		LOG(INFO) << "Light injection point found.";
 		_pShaderLightMap = *ppShader;
 		return hr;
-	} else if (_pShaderPostLightMap == NULL && checkPattern(pFunction, l, _pattern_postLightMap, 7)) {
+	} else if (_pShaderPostLightMap == NULL && getHash(pFunction, l, _bFunction, MAX_TOKENS) == PostLight) {
 		LOG(INFO) << "PostLight injection point found.";
 		_pShaderPostLightMap = *ppShader;
 		return hr;
@@ -89,7 +140,7 @@ HRESULT hook_gw2::CreatePixelHook(const DWORD *pFunction, IDirect3DPixelShader9 
 			return _device->_orig->CreatePixelShader(pFunction, ppShader);
 		replacePatternBloom(pFunction, l);
 		return _device->_orig->CreatePixelShader(_pFunction, ppShader);
-	case 4://Detected bloom
+	case 4://Detected sun
 		if (_device->_implicit_swapchain->_runtime->_max_sun == 0)
 			return _device->_orig->CreatePixelShader(pFunction, ppShader);
 		replacePatternSun(pFunction, l);
@@ -111,13 +162,16 @@ HRESULT hook_gw2::SetPixelHook(IDirect3DPixelShader9 *pShader) {
 		l_Surface->Release();
 		_surface_lightmap = NULL;
 	} else if (isInjectionShaderUs(pShader)) {
-		unstable_in_cframe = true;
 		if (!_is_fx_done) {
 			_is_fx_done = true;
 			_device->_implicit_swapchain->_runtime->applyPostFX(_is_on_char_screen_last_frame, _surface_current);
 		}
 	}
 	return _device->_orig->SetPixelShader(pShader);
+}
+
+HRESULT hook_gw2::SetPixelFHook(UINT StartRegister, const float *pConstantData, UINT Vector4fCount) {
+	return _device->_orig->SetPixelShaderConstantF(StartRegister, pConstantData, Vector4fCount);
 }
 
 int hook_gw2::get_pattern(const DWORD *pFunction, int l) {
@@ -138,9 +192,9 @@ int hook_gw2::get_pattern(const DWORD *pFunction, int l) {
 		if (pFunction[l - 11] == 0x4000004) return -1;
 		//Else it need to be edited with pattern 2
 		return 2;
-	} else if (checkPattern(pFunction, l, _pattern_bloom, 7)) {
+	} else if (getHash(pFunction, l, _bFunction, MAX_TOKENS) == Bloom) {
 		return 3;
-	} else if (checkPattern(pFunction, l, _pattern_sun, 7)) {
+	} else if (getHash(pFunction, l, _bFunction, MAX_TOKENS) == Sun) {
 		return 4;
 	}
 	return -1;
@@ -259,10 +313,27 @@ void hook_gw2::logShader(const DWORD * pFunction) {
 	int opl = 0;
 	int l = 0;
 	while (!isEnd(pFunction[l])) {
-		LOG(INFO) << std::hex << (DWORD)pFunction[l];//stream.str();
+		LOG(INFO) << std::hex << (DWORD)pFunction[l];
 		l += 1;
 	}
-	/*LPD3DXBUFFER disassembly;
+	LPD3DXBUFFER disassembly;
 	D3DXDisassembleShader(pFunction, true, "", &disassembly);
-	LOG(INFO) << static_cast<char*>(disassembly->GetBufferPointer());*/
+	LOG(INFO) << static_cast<char*>(disassembly->GetBufferPointer());
+}
+
+void hook_gw2::initMumble() {
+	HANDLE hMapObject = OpenFileMappingW(PAGE_READONLY, FALSE, L"MumbleLink");
+	if (hMapObject == NULL) {
+		hMapObject = CreateFileMappingW(INVALID_HANDLE_VALUE, nullptr, PAGE_READWRITE, 0, sizeof(LinkedMem), L"MumbleLink");
+		if (hMapObject == NULL) {
+			printf("Error\n");
+		}
+	}
+
+	lm = (LinkedMem *)MapViewOfFile(hMapObject, PAGE_READONLY, 0, 0, sizeof(LinkedMem));
+	if (lm == NULL) {
+		CloseHandle(hMapObject);
+		hMapObject = NULL;
+		return;
+	}
 }

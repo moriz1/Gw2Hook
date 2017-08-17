@@ -212,6 +212,61 @@ namespace reshade
 			{
 				const float value = _last_frame_duration.count() * 1e-6f;
 				set_uniform_value(variable, &value, 1);
+			} else if (source == "suncoord") {
+				const float values[2] = { sunCoord[0], sunCoord[1] };
+				set_uniform_value(variable, values, 2);
+			} else if (source == "mooncoord") {
+				const float values[2] = { moonCoord[0], moonCoord[1] };
+				set_uniform_value(variable, values, 2);
+			}
+			else if (source == "facingsun") {
+				const int value = facingsun;
+				set_uniform_value(variable, &value, 1);
+			}
+			else if (source == "facingmoon") {
+				const int value = facingmoon;
+				set_uniform_value(variable, &value, 1);
+			}
+			else if (source == "oncharscreen") {
+				const int value = onscharselec;
+				set_uniform_value(variable, &value, 1);
+			}
+			else if (source == "mapid") {
+				const int value = mapid;
+				set_uniform_value(variable, &value, 1);
+			}
+			else if (source == "gw2time") {
+				const int value = (5400 + time(NULL)) % 7200;
+				set_uniform_value(variable, &value, 1);
+			}
+			else if (source == "gw2day") {
+				int t = (5400 + time(NULL)) % 7200;
+				float v;
+				if (t < 4200) v = 1.0f;
+				else if(t < 4500){
+					v = 1.0f - (t - 4200.0f) / 300.0f;
+				} else if (t > 6900) {
+					v = (t - 6900) / 300.0f;
+				} else {
+					v = 0.0f;
+				}
+				const float value = v;
+				set_uniform_value(variable, &value, 1);
+			}
+			else if (source == "gw2night") {
+				int t = (5400 + time(NULL)) % 7200;
+				float v;
+				if (t > 6900) {
+					v = 1.0f - (t - 6900) / 300.0f;
+				}  else if (t < 4200.0f) {
+					v = 0.0f;
+				} else if (t < 4500) {
+					v = (t - 4200.0f) / 300.0f;
+				} else {
+					v = 1.0f;
+				}
+				const float value = v;
+				set_uniform_value(variable, &value, 1);
 			}
 			else if (source == "framecount")
 			{
@@ -1223,7 +1278,7 @@ namespace reshade
 
 			ImGui::PushItemWidth(-(30 + ImGui::GetStyle().ItemSpacing.x) * 2 - 1);
 
-			if (ImGui::Combo("##presets", &_current_preset, get_preset_file, this, _preset_files.size()))
+			if (ImGui::Combo("##presets", &_current_preset, get_preset_file, this, (int)_preset_files.size()))
 			{
 				save_configuration();
 
@@ -1259,7 +1314,7 @@ namespace reshade
 					{
 						_preset_files.push_back(path);
 
-						_current_preset = _preset_files.size() - 1;
+						_current_preset = (int)_preset_files.size() - 1;
 
 						load_preset(path);
 						save_configuration();

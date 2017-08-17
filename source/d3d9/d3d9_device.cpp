@@ -215,6 +215,7 @@ UINT STDMETHODCALLTYPE Direct3DDevice9::GetNumberOfSwapChains()
 }
 HRESULT STDMETHODCALLTYPE Direct3DDevice9::Reset(D3DPRESENT_PARAMETERS *pPresentationParameters)
 {
+	_redirect->ResetHook();
 	LOG(INFO) << "Redirecting '" << "IDirect3DDevice9::Reset" << "(" << this << ", " << pPresentationParameters << ")' ...";
 
 	if (pPresentationParameters == nullptr)
@@ -716,7 +717,7 @@ HRESULT STDMETHODCALLTYPE Direct3DDevice9::GetVertexShader(IDirect3DVertexShader
 }
 HRESULT STDMETHODCALLTYPE Direct3DDevice9::SetVertexShaderConstantF(UINT StartRegister, const float *pConstantData, UINT Vector4fCount)
 {
-	return _orig->SetVertexShaderConstantF(StartRegister, pConstantData, Vector4fCount);
+	return _redirect->SetVertexFHook(StartRegister, pConstantData, Vector4fCount);
 }
 HRESULT STDMETHODCALLTYPE Direct3DDevice9::GetVertexShaderConstantF(UINT StartRegister, float *pConstantData, UINT Vector4fCount)
 {
@@ -777,7 +778,7 @@ HRESULT STDMETHODCALLTYPE Direct3DDevice9::GetPixelShader(IDirect3DPixelShader9 
 }
 HRESULT STDMETHODCALLTYPE Direct3DDevice9::SetPixelShaderConstantF(UINT StartRegister, const float *pConstantData, UINT Vector4fCount)
 {
-	return _orig->SetPixelShaderConstantF(StartRegister, pConstantData, Vector4fCount);
+	return _redirect->SetPixelFHook(StartRegister, pConstantData, Vector4fCount);
 }
 HRESULT STDMETHODCALLTYPE Direct3DDevice9::GetPixelShaderConstantF(UINT StartRegister, float *pConstantData, UINT Vector4fCount)
 {

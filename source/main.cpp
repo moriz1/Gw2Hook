@@ -10,6 +10,7 @@
 #include "hook_manager.hpp"
 #include "version.h"
 #include <Windows.h>
+#include "gw2_sun_moon.hpp"
 
 HMODULE g_module_handle = nullptr;
 
@@ -43,6 +44,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD fdwReason, LPVOID lpvReserved)
 			hooks::register_module(system_path / "d3d9.dll");
 			hooks::register_module(system_path / "user32.dll");
 			hooks::register_module(system_path / "ws2_32.dll");
+			gw2_sun_moon::init();
 
 			LOG(INFO) << "Initialized.";
 			break;
