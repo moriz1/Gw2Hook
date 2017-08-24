@@ -1580,8 +1580,8 @@ namespace reshade::d3d9
 
 		if (_constant_register_count != 0)
 		{
-			obj.uniform_storage_index = _constant_register_count;
-			obj.uniform_storage_offset = _uniform_storage_offset;
+			obj.uniform_storage_index = (int)_constant_register_count;
+			obj.uniform_storage_offset = (int)_uniform_storage_offset;
 		}
 
 		for (auto pass : node->pass_list)

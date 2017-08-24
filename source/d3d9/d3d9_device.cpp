@@ -10,6 +10,8 @@
 
 extern void dump_present_parameters(const D3DPRESENT_PARAMETERS &pp);
 
+static bool reset_fail_guard = false;
+
 // IDirect3DDevice9
 HRESULT STDMETHODCALLTYPE Direct3DDevice9::QueryInterface(REFIID riid, void **ppvObj)
 {
@@ -221,6 +223,16 @@ HRESULT STDMETHODCALLTYPE Direct3DDevice9::Reset(D3DPRESENT_PARAMETERS *pPresent
 	{
 		return D3DERR_INVALIDCALL;
 	}
+	D3DPRESENT_PARAMETERS _pParam;
+	_implicit_swapchain->GetPresentParameters(&_pParam);
+
+	if (reset_fail_guard) {
+		reset_fail_guard = false;
+		LOG(INFO) << "> Force reset.";
+	}else if (!reset_fail_guard && _pParam.BackBufferHeight == pPresentationParameters->BackBufferHeight && _pParam.BackBufferWidth == pPresentationParameters->BackBufferWidth) {
+		LOG(INFO) << "> Same buffer size, skip reset.";
+		return 0;
+	}
 
 	dump_present_parameters(*pPresentationParameters);
 
@@ -272,7 +284,12 @@ HRESULT STDMETHODCALLTYPE Direct3DDevice9::Present(const RECT *pSourceRect, cons
 
 	_implicit_swapchain->_runtime->on_present();
 
-	return _orig->Present(pSourceRect, pDestRect, hDestWindowOverride, pDirtyRegion);
+	HRESULT hr = _orig->Present(pSourceRect, pDestRect, hDestWindowOverride, pDirtyRegion);
+
+	if (FAILED(hr)) {
+		reset_fail_guard = true;
+	}
+	return hr;
 }
 HRESULT STDMETHODCALLTYPE Direct3DDevice9::GetBackBuffer(UINT iSwapChain, UINT iBackBuffer, D3DBACKBUFFER_TYPE Type, IDirect3DSurface9 **ppBackBuffer)
 {

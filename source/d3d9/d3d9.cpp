@@ -14,6 +14,8 @@
 #undef IDirect3D9Ex_CreateDeviceEx
 #pragma endregion
 
+static int bb_height = 0, bb_width = 0;
+
 void dump_present_parameters(const D3DPRESENT_PARAMETERS &pp)
 {
 	// Uncomment to get the console back, for debug
@@ -22,7 +24,6 @@ void dump_present_parameters(const D3DPRESENT_PARAMETERS &pp)
 	freopen_s(&fp, "CONOUT$", "w", stdout);
 	freopen_s(&conin, "conin$", "r", stdin);*/
 	
-
 	LOG(INFO) << "> Dumping presentation parameters:";
 	LOG(INFO) << "  +-----------------------------------------+-----------------------------------------+";
 	LOG(INFO) << "  | Parameter                               | Value                                   |";

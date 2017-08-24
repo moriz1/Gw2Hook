@@ -1015,8 +1015,8 @@ namespace reshade
 
 		if (show_splash)
 		{
-			ImGui::SetNextWindowPos(ImVec2(10, 10));
-			ImGui::SetNextWindowSize(ImVec2(_width - 20.0f, ImGui::GetItemsLineHeightWithSpacing() * 3), ImGuiSetCond_Appearing);
+			ImGui::SetNextWindowPos(ImVec2(0, 20));
+			ImGui::SetNextWindowSize(ImVec2(_width/3.0f - 20.0f, ImGui::GetItemsLineHeightWithSpacing() * 3), ImGuiSetCond_Appearing);
 			ImGui::Begin("Splash Screen", nullptr, ImVec2(), -1,
 				ImGuiWindowFlags_NoTitleBar |
 				ImGuiWindowFlags_NoScrollbar |
@@ -1223,7 +1223,7 @@ namespace reshade
 
 			ImGui::PushItemWidth(-(30 + ImGui::GetStyle().ItemSpacing.x) * 2 - 1);
 
-			if (ImGui::Combo("##presets", &_current_preset, get_preset_file, this, _preset_files.size()))
+			if (ImGui::Combo("##presets", &_current_preset, get_preset_file, this, (int)_preset_files.size()))
 			{
 				save_configuration();
 
@@ -1259,7 +1259,7 @@ namespace reshade
 					{
 						_preset_files.push_back(path);
 
-						_current_preset = _preset_files.size() - 1;
+						_current_preset = (int)_preset_files.size() - 1;
 
 						load_preset(path);
 						save_configuration();
