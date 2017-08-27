@@ -67,6 +67,10 @@ HRESULT hook_gw2::CreatePixelHook(const DWORD *pFunction, IDirect3DPixelShader9 
 		LOG(INFO) << "Light injection point found.";
 		_pShaderLightMap = *ppShader;
 		return hr;
+	} else if (_pShaderLightMapFab == NULL && checkPattern(pFunction, l, _pattern_lightMapFab, 7)) {
+		LOG(INFO) << "Light injection point fallback found.";
+		_pShaderLightMapFab = *ppShader;
+		return hr;
 	} else if (_pShaderPostLightMap == NULL && checkPattern(pFunction, l, _pattern_postLightMap, 7)) {
 		LOG(INFO) << "PostLight injection point found.";
 		_pShaderPostLightMap = *ppShader;
@@ -104,7 +108,7 @@ HRESULT hook_gw2::SetPixelHook(IDirect3DPixelShader9 *pShader) {
 	if (pShader == NULL) return _device->_orig->SetPixelShader(pShader);
 	if (isInjectionShaderLit(pShader)) {
 		_surface_lightmap = _surface_current;
-	} else if (_surface_lightmap != NULL && isInjectionShaderPLit(pShader)) {
+	} else if (_surface_lightmap != NULL && !isInjectionShaderLit(pShader)) {
 		LPDIRECT3DSURFACE9 l_Surface;
 		_device->_implicit_swapchain->_runtime->_lightbuffer_texture->GetSurfaceLevel(0, &l_Surface);
 		_device->_orig->StretchRect(_surface_lightmap, NULL, l_Surface, NULL, D3DTEXF_NONE);
@@ -247,7 +251,7 @@ bool hook_gw2::isInjectionShaderUs(void* pShader) {
 }
 
 bool hook_gw2::isInjectionShaderLit(void* pShader) {
-	return pShader == _pShaderLightMap;
+	return pShader == _pShaderLightMap || pShader == _pShaderLightMapFab;
 }
 
 bool hook_gw2::isInjectionShaderPLit(void* pShader) {

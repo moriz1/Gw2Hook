@@ -31,6 +31,7 @@ public:
 		_pattern_bloom{ 0x3000005, 0x80270000, 0x80e40000, 0xa0ff0000, 0x2000001, 0x802f0800, 0x80e40000, }, //l = 7
 		_pattern_sun{ 0x1000041, 0x800f0002, 0x1000041, 0x800f0000, 0x2000001, 0x800f0800, 0xa0000001 }, //l = 7
 		_pattern_lightMap{ 0xa0000000, 0x80400000, 0x80950000, 0x3000005, 0x800f0800, 0x80e40000, 0x80e40001 }, //l = 7
+		_pattern_lightMapFab{ 0x800f0000, 0x80e40000, 0x80e40001, 0x3000005, 0x800f0800, 0x80e40000, 0xa0000000 },
 		_pattern_postLightMap{ 0x0, 0x2000001, 0x802f0000, 0xa0000000, 0x2000001, 0x802f0800, 0x80e40000 } //l = 7
 	{ }
 
@@ -65,6 +66,7 @@ private:
 	void* _pShaderInjection;
 	void* _pShaderCharScreen;
 	void* _pShaderLightMap;
+	void* _pShaderLightMapFab;
 	void* _pShaderPostLightMap;
 
 	DWORD _pattern_InjectionStable[13];//l = 13
@@ -73,6 +75,7 @@ private:
 	DWORD _pattern_bloom[7]; //l = 7
 	DWORD _pattern_sun[7]; //l = 7
 	DWORD _pattern_lightMap[7]; //l = 7
+	DWORD _pattern_lightMapFab[7];
 	DWORD _pattern_postLightMap[7]; //l = 7
 
 	bool _is_on_char_screen_last_frame;

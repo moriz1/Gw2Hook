@@ -25,7 +25,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration">
-    <OutDir>C:\GuildWars 2\bin64\</OutDir>
+    <OutDir>E:\Jeux\Guild Wars 2\bin64\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
@@ -63,8 +63,8 @@
     <LibraryPath>D:\Programmes\DirectX SDK\Lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LibraryPath>D:\Programs\DirectX SDK\Lib\x64;$(LibraryPath)</LibraryPath>
-    <IncludePath>D:\Programs\DirectX SDK\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\Programmes\DirectX SDK\Lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\Programmes\DirectX SDK\Include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

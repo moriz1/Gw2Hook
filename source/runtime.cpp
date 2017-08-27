@@ -1015,7 +1015,7 @@ namespace reshade
 
 		if (show_splash)
 		{
-			ImGui::SetNextWindowPos(ImVec2(0, 20));
+			ImGui::SetNextWindowPos(ImVec2(0, 100));
 			ImGui::SetNextWindowSize(ImVec2(_width/3.0f - 20.0f, ImGui::GetItemsLineHeightWithSpacing() * 3), ImGuiSetCond_Appearing);
 			ImGui::Begin("Splash Screen", nullptr, ImVec2(), -1,
 				ImGuiWindowFlags_NoTitleBar |
@@ -1034,8 +1034,7 @@ namespace reshade
 			if (_reload_remaining_effects != 0)
 			{
 				ImGui::Text(
-					"Loading (%u effects remaining) ... "
-					"This might take a while. The application could become unresponsive for some time.",
+					"Loading (%u effects remaining) ... ",
 					static_cast<unsigned int>(_reload_remaining_effects));
 			}
 			else
