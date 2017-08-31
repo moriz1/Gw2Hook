@@ -93,7 +93,7 @@ HRESULT hook_gw2::CreatePixelHook(const DWORD *pFunction, IDirect3DPixelShader9 
 			return _device->_orig->CreatePixelShader(pFunction, ppShader);
 		replacePatternBloom(pFunction, l);
 		return _device->_orig->CreatePixelShader(_pFunction, ppShader);
-	case 4://Detected bloom
+	case 4://Detected sun
 		if (_device->_implicit_swapchain->_runtime->_max_sun == 0)
 			return _device->_orig->CreatePixelShader(pFunction, ppShader);
 		replacePatternSun(pFunction, l);
@@ -203,11 +203,10 @@ void hook_gw2::replacePatternFog2(const DWORD * pFunction, int l, float _fog_amo
 void hook_gw2::replacePatternBloom(const DWORD * pFunction, int l) {
 	LOG(INFO) << "Bloom shader edited.";
 	for (int i = 0; i < l; ++i) _pFunction[i] = pFunction[i];
-	//After defs and dcls, put the last op (mov oC0 r0) and End
-	_pFunction[38] = pFunction[l - 4];
-	_pFunction[39] = pFunction[l - 3];
-	_pFunction[40] = pFunction[l - 2];
-	_pFunction[41] = 0xffff;
+	//replace mov oC0, r0 by sub oC0, r0, r0
+	_pFunction[l - 4] = 0x3000002;
+	_pFunction[l - 1] = pFunction[l - 2];
+	_pFunction[l] = 0xffff;
 }
 
 void hook_gw2::replacePatternSun(const DWORD * pFunction, int l) {
