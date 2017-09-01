@@ -228,7 +228,6 @@ bool hook_gw2::checkPattern(const DWORD *pFunction, int l, DWORD *pattern, int p
 
 int hook_gw2::getFuncLenght(const DWORD *pFunction) {
 	int op = 0, l = 1;
-	bool test = true;
 	while (!isEnd(pFunction[op++]))  l++;
 	return l;
 }
@@ -259,7 +258,6 @@ bool hook_gw2::isInjectionShaderPLit(void* pShader) {
 
 void hook_gw2::logShader(const DWORD * pFunction) {
 	LOG(INFO) << "### Shader created : ###";
-	int opl = 0;
 	int l = 0;
 	while (!isEnd(pFunction[l])) {
 		LOG(INFO) << std::hex << (DWORD)pFunction[l];//stream.str();

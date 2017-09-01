@@ -23,14 +23,10 @@ BEGIN
         BLOCK "040004b0"
         BEGIN
             VALUE "CompanyName", "Grenbur"
-            VALUE "FileVersion", VERSION_GW2SPEC_STRING_FILE
+            VALUE "FileVersion", VERSION_STRING_FILE
             VALUE "ProductName", "Gw2 Hook"
-            VALUE "ProductVersion", "Gw2 Hook " VERSION_GW2SPEC_STRING_FILE " - Reshade " VERSION_STRING_PRODUCT
+            VALUE "ProductVersion", "Gw2 Hook " VERSION_STRING_FILE " - Reshade 3.0.8"
             VALUE "LegalCopyright", "Copyright © 2014. All rights reserved."
-#ifdef WIN32
-            VALUE "FileDescription", "Gw2 Hook 32-bit"
-            VALUE "OriginalFilename", "d3d9.dll"
-#endif
 #ifdef WIN64
             VALUE "FileDescription", "Gw2 Hook 64-bit"
             VALUE "OriginalFilename", "d3d9.dll"

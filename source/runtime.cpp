@@ -1026,8 +1026,8 @@ namespace reshade
 				ImGuiWindowFlags_NoInputs |
 				ImGuiWindowFlags_NoFocusOnAppearing);
 
-			ImGui::TextUnformatted("ReShade " VERSION_STRING_FILE " by crosire (http://reshade.me)");
-			ImGui::TextUnformatted("Gw2 Hook " VERSION_GW2SPEC_STRING_FILE " by Grenbur (04348.github.io/Gw2Hook/)");
+			ImGui::TextUnformatted("ReShade by crosire (http://reshade.me)");
+			ImGui::TextUnformatted("Gw2 Hook " VERSION_STRING_FILE " by Grenbur (04348.github.io/Gw2Hook/)");
 
 			ImGui::Spacing();
 
@@ -1098,7 +1098,7 @@ namespace reshade
 			{
 				ImGui::SetNextWindowPosCenter(ImGuiSetCond_Once);
 				ImGui::SetNextWindowSize(ImVec2(710, 650), ImGuiSetCond_Once);
-				ImGui::Begin("Gw2 Hook " VERSION_GW2SPEC_STRING_FILE " | ###Main", &_show_menu,
+				ImGui::Begin("Gw2 Hook " VERSION_STRING_FILE " | ###Main", &_show_menu,
 					ImGuiWindowFlags_MenuBar |
 					ImGuiWindowFlags_NoCollapse);
 
