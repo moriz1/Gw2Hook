@@ -83,6 +83,7 @@ private:
 	bool can_use_unstable;
 	bool unstable_in_cframe;
 	bool _is_fx_done;
+	bool _is_lm_resolved;
 
 	IDirect3DSurface9* _surface_lightmap;
 	IDirect3DSurface9* _surface_current;

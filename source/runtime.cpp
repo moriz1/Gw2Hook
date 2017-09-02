@@ -669,6 +669,7 @@ namespace reshade
 		_performance_mode = config.get("GENERAL", "PerformanceMode", _performance_mode).as<bool>();
 		_fog_amount = config.get("GENERAL", "FogAmount", _fog_amount).as<float>();
 		_no_bloom = config.get("GENERAL", "NoBloom", _no_bloom).as<int>();
+		_skip_ui = config.get("GENERAL", "SkipUI", _skip_ui).as<int>();
 		_max_sun = config.get("GENERAL", "MaxSun", _max_sun).as<int>();
 		_input_processing_mode = config.get("INPUT", "InputProcessing", _input_processing_mode).as<int>();
 		const auto effect_search_paths = config.get("GENERAL", "EffectSearchPaths", _effect_search_paths).data();
@@ -688,7 +689,7 @@ namespace reshade
 		_show_framerate = config.get("GENERAL", "ShowFPS", _show_framerate).as<bool>();
 
 		auto &style = _imgui_context->Style;
-		style.Alpha = config.get("STYLE", "Alpha", 0.95f).as<float>();
+		style.Alpha = config.get("STYLE", "Alpha", 0.90f).as<float>();
 
 		for (size_t i = 0; i < 3; i++)
 			_imgui_col_background[i] = config.get("STYLE", "ColBackground", _imgui_col_background).as<float>(i);
@@ -788,6 +789,7 @@ namespace reshade
 
 		config.set("GENERAL", "PerformanceMode", _performance_mode);
 		config.set("GENERAL", "FogAmount", _fog_amount);
+		config.set("GENERAL", "SkipUI", _no_bloom);
 		config.set("GENERAL", "NoBloom", _no_bloom);
 		config.set("GENERAL", "MaxSun", _max_sun);
 		config.set("GENERAL", "EffectSearchPaths", _effect_search_paths);
@@ -958,7 +960,6 @@ namespace reshade
 	void runtime::draw_overlay()
 	{
 		const bool show_splash = std::chrono::duration_cast<std::chrono::seconds>(_last_present_time - _last_reload_time).count() < 5;
-
 		if (!_overlay_key_setting_active &&
 			_input->is_key_pressed(_menu_key.keycode, _menu_key.ctrl, _menu_key.shift, false))
 		{
@@ -1323,6 +1324,10 @@ namespace reshade
 			ImGui::Separator();
 			ImGui::Spacing();
 
+			if (ImGui::Combo("Skip UI", &_skip_ui, "Yes\0No\0")) {
+				save_configuration();
+			}
+
 			if (ImGui::DragFloat("Fog amount (need a restart)", &_fog_amount, 0.005f, 0.0f, 1.0f, "%.2f")) {
 				save_configuration();
 			}
@@ -1647,7 +1652,7 @@ namespace reshade
 			ImGui::SameLine(0, 10);
 			modified |= ImGui::Checkbox("Show FPS", &_show_framerate);
 
-			modified |= ImGui::DragFloat("Alpha", &ImGui::GetStyle().Alpha, 0.005f, 0.20f, 1.0f, "%.2f");
+			modified |= ImGui::DragFloat("Alpha", &Alpha, 0.2f, 0.20f, 1.0f, "%.2f");
 			modified |= ImGui::ColorEdit3("Background Color", _imgui_col_background);
 			modified |= ImGui::ColorEdit3("Item Background Color", _imgui_col_item_background);
 			modified |= ImGui::ColorEdit3("Active Item Color", _imgui_col_active);
@@ -1656,6 +1661,7 @@ namespace reshade
 
 			if (modified)
 			{
+				if (Alpha > 0.2f)  ImGui::GetStyle().Alpha = Alpha;
 				save_configuration();
 				load_configuration();
 			}

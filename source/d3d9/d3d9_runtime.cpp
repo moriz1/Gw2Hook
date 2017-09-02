@@ -280,10 +280,6 @@ namespace reshade::d3d9
 		}
 
 		// Resolve back buffer
-		/*if (_backbuffer_resolved != _backbuffer)
-		{
-			_device->StretchRect(_backbuffer.get(), nullptr, _backbuffer_resolved.get(), nullptr, D3DTEXF_NONE);
-		}*/
 		_device->StretchRect(surface, nullptr, _backbuffer_resolved.get(), nullptr, D3DTEXF_NONE);
 
 		// Apply post processing
@@ -299,11 +295,6 @@ namespace reshade::d3d9
 			on_present_effect();
 		}
 
-		// Copy to back buffer
-		/*if (_backbuffer_resolved != _backbuffer)
-		{
-			_device->StretchRect(_backbuffer_resolved.get(), nullptr, _backbuffer.get(), nullptr, D3DTEXF_NONE);
-		}*/
 		_device->StretchRect(_backbuffer_resolved.get(), nullptr, surface, nullptr, D3DTEXF_NONE);
 
 		// Apply previous device state

@@ -3,7 +3,7 @@
 #include "hook_gw2.hpp"
 
 void hook_gw2::PresentHook() {
-	if (_is_on_char_screen) {
+	if (_is_on_char_screen || !_is_lm_resolved) {
 		LPDIRECT3DSURFACE9 l_Surface;
 		_device->_implicit_swapchain->_runtime->_lightbuffer_texture->GetSurfaceLevel(0, &l_Surface);
 		_device->_orig->ColorFill(l_Surface, nullptr, D3DCOLOR_COLORVALUE(0.2f, 0.2f, 0.2f, 0.2f));
@@ -17,6 +17,7 @@ void hook_gw2::PresentHook() {
 
 	if (!_is_fx_done) _device->_implicit_swapchain->_runtime->applyPostFX(_is_on_char_screen_last_frame, _surface_current);
 	_is_fx_done = false;
+	_is_lm_resolved = false;
 }
 
 HRESULT hook_gw2::SetRenderTargetHook(DWORD RenderTargetIndex, IDirect3DSurface9* pRenderTarget) {
@@ -46,7 +47,7 @@ HRESULT hook_gw2::CreateVertexHook(const DWORD *pFunction, IDirect3DVertexShader
 HRESULT hook_gw2::SetVertexHook(IDirect3DVertexShader9 *pShader) {
 	if (pShader == NULL) return _device->_orig->SetVertexShader(pShader);
 
-	if (!_is_fx_done && isInjectionShaderSt(pShader)) {
+	if (_device->_implicit_swapchain->_runtime->_skip_ui == 0 && !_is_fx_done && isInjectionShaderSt(pShader)) {
 		_is_fx_done = true;
 		_device->_implicit_swapchain->_runtime->applyPostFX(_is_on_char_screen_last_frame, _surface_current);
 	} else if (isInjectionShaderChS(pShader)) {
@@ -63,11 +64,11 @@ HRESULT hook_gw2::CreatePixelHook(const DWORD *pFunction, IDirect3DPixelShader9 
 		LOG(INFO) << "Unstable injection point found.";
 		_pShaderInjection = *ppShader;
 		return hr;
-	} else if (_pShaderLightMap == NULL && checkPattern(pFunction, l, _pattern_lightMap, 7)) {
+	} else if (checkPattern(pFunction, l, _pattern_lightMap, 7)) {
 		LOG(INFO) << "Light injection point found.";
 		_pShaderLightMap = *ppShader;
 		return hr;
-	} else if (_pShaderLightMapFab == NULL && checkPattern(pFunction, l, _pattern_lightMapFab, 7)) {
+	} else if (checkPattern(pFunction, l, _pattern_lightMapFab, 7)) {
 		LOG(INFO) << "Light injection point fallback found.";
 		_pShaderLightMapFab = *ppShader;
 		return hr;
@@ -114,7 +115,8 @@ HRESULT hook_gw2::SetPixelHook(IDirect3DPixelShader9 *pShader) {
 		_device->_orig->StretchRect(_surface_lightmap, NULL, l_Surface, NULL, D3DTEXF_NONE);
 		l_Surface->Release();
 		_surface_lightmap = NULL;
-	} else if (isInjectionShaderUs(pShader)) {
+		_is_lm_resolved = true;
+	} else if (_device->_implicit_swapchain->_runtime->_skip_ui == 0 && isInjectionShaderUs(pShader)) {
 		unstable_in_cframe = true;
 		if (!_is_fx_done) {
 			_is_fx_done = true;
