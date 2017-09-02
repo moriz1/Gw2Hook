@@ -815,6 +815,9 @@ namespace reshade
 	{
 		ini_file preset(path);
 
+		preset_zone = preset.get("", "Zone", "global");
+		preset_zone.as<std::string>().copy(_preset_zone, 64, 0);
+
 		for (auto &variable : _uniforms)
 		{
 			float values[16] = { };
@@ -852,6 +855,8 @@ namespace reshade
 	void runtime::save_preset(const filesystem::path &path) const
 	{
 		ini_file preset(path);
+
+		preset.set("", "Zone", preset_zone);
 
 		for (const auto &variable : _uniforms)
 		{
@@ -1324,7 +1329,7 @@ namespace reshade
 			ImGui::Separator();
 			ImGui::Spacing();
 
-			if (ImGui::Combo("Skip UI", &_skip_ui, "Yes\0No\0")) {
+			if (ImGui::Combo("SkipUI", &_skip_ui, "Yes\0No\0")) {
 				save_configuration();
 			}
 
@@ -1338,6 +1343,11 @@ namespace reshade
 
 			if (ImGui::Combo("Force sun size (need a restart)", &_max_sun, "No\0Yes\0")) {
 				save_configuration();
+			}
+
+			if (ImGui::InputText("(WIP) Zone", _preset_zone, sizeof(_preset_zone), ImGuiInputTextFlags_AutoSelectAll)) {
+				preset_zone = _preset_zone;
+				save_preset(_preset_files[_current_preset]);
 			}
 
 			ImGui::Spacing();

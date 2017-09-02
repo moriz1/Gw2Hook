@@ -120,6 +120,7 @@ namespace reshade
 		int _no_bloom = 1;
 		int _skip_ui = 0;
 		int _max_sun = 1;
+		variant preset_zone = (std::string)"global";
 
 	protected:
 		/// <summary>
@@ -232,6 +233,7 @@ namespace reshade
 		float _variable_editor_height = 0.0f;
 		unsigned int _tutorial_index = 0, _effects_expanded_state = 2;
 		char _effect_filter_buffer[64] = { };
+		char _preset_zone[64] = {};
 		size_t _reload_remaining_effects = 0, _texture_count = 0, _uniform_count = 0, _technique_count = 0;
 		float Alpha = 1.0;
 	};
