@@ -3,7 +3,7 @@
 #include "hook_gw2.hpp"
 
 void hook_gw2::PresentHook() {
-	if (_is_on_char_screen || !_is_lm_resolved) {
+	if (!_is_lm_resolved) {
 		LPDIRECT3DSURFACE9 l_Surface;
 		_device->_implicit_swapchain->_runtime->_lightbuffer_texture->GetSurfaceLevel(0, &l_Surface);
 		_device->_orig->ColorFill(l_Surface, nullptr, D3DCOLOR_COLORVALUE(0.2f, 0.2f, 0.2f, 0.2f));

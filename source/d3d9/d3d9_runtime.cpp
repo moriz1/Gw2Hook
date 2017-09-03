@@ -251,11 +251,8 @@ namespace reshade::d3d9
 	}
 
 	void d3d9_runtime::applyPostFX(bool noZBuff, IDirect3DSurface9* surface) {
-		if (noZBuff) {
-			create_depthstencil_replacement(nullptr);
-		} else {
-			detect_depth_source();
-		}
+		//noZBuff will be used with PoF char screen
+		detect_depth_source();
 		// Capture device state
 		_stateblock->Capture();
 
