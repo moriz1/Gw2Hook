@@ -205,6 +205,7 @@ namespace reshade
 		void draw_overlay();
 		void draw_overlay_menu();
 		void draw_overlay_menu_home();
+		void draw_overlay_menu_gw2();
 		void draw_overlay_menu_settings();
 		void draw_overlay_menu_statistics();
 		void draw_overlay_menu_about();
@@ -233,7 +234,7 @@ namespace reshade
 		float _variable_editor_height = 0.0f;
 		unsigned int _tutorial_index = 0, _effects_expanded_state = 2;
 		char _effect_filter_buffer[64] = { };
-		char _preset_zone[64] = {};
+		char _preset_zone[64] = {'\0'};
 		size_t _reload_remaining_effects = 0, _texture_count = 0, _uniform_count = 0, _technique_count = 0;
 		float Alpha = 1.0;
 	};

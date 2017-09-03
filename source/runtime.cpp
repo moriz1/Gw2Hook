@@ -789,7 +789,7 @@ namespace reshade
 
 		config.set("GENERAL", "PerformanceMode", _performance_mode);
 		config.set("GENERAL", "FogAmount", _fog_amount);
-		config.set("GENERAL", "SkipUI", _no_bloom);
+		config.set("GENERAL", "SkipUI", _skip_ui);
 		config.set("GENERAL", "NoBloom", _no_bloom);
 		config.set("GENERAL", "MaxSun", _max_sun);
 		config.set("GENERAL", "EffectSearchPaths", _effect_search_paths);
@@ -816,7 +816,7 @@ namespace reshade
 		ini_file preset(path);
 
 		preset_zone = preset.get("", "Zone", "global");
-		preset_zone.as<std::string>().copy(_preset_zone, 64, 0);
+		preset_zone.as<std::string>().copy(_preset_zone, 63, 0);
 
 		for (auto &variable : _uniforms)
 		{
@@ -1157,9 +1157,9 @@ namespace reshade
 		{
 			ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImGui::GetStyle().ItemSpacing * 2);
 
-			const char *const menu_items[] = { "Home", "Settings", "Statistics", "About" };
+			const char *const menu_items[] = { "Home", "Gw2 settings", "Settings", "Statistics", "About" };
 
-			for (int i = 0; i < 4; i++)
+			for (int i = 0; i < 5; i++)
 			{
 				if (ImGui::Selectable(menu_items[i], _menu_index == i, 0, ImVec2(ImGui::CalcTextSize(menu_items[i]).x, 0)))
 				{
@@ -1179,15 +1179,39 @@ namespace reshade
 				draw_overlay_menu_home();
 				break;
 			case 1:
-				draw_overlay_menu_settings();
+				draw_overlay_menu_gw2();
 				break;
 			case 2:
-				draw_overlay_menu_statistics();
+				draw_overlay_menu_settings();
 				break;
 			case 3:
+				draw_overlay_menu_statistics();
+				break;
+			case 4:
 				draw_overlay_menu_about();
 				break;
 		}
+	}
+	void runtime::draw_overlay_menu_gw2()
+	{
+		if (ImGui::Combo("SkipUI", &_skip_ui, "Yes\0No\0")) {
+			save_configuration();
+		}
+
+		if (ImGui::DragFloat("Fog amount (need a restart)", &_fog_amount, 0.005f, 0.0f, 1.0f, "%.2f")) {
+			save_configuration();
+		}
+
+		if (ImGui::Combo("Allow Gw2 bloom (need a restart)", &_no_bloom, "Yes\0No\0")) {
+			save_configuration();
+		}
+
+		if (ImGui::Combo("Force sun size (need a restart)", &_max_sun, "No\0Yes\0")) {
+			save_configuration();
+		}
+
+		ImGui::Spacing();
+		ImGui::Separator();
 	}
 	void runtime::draw_overlay_menu_home()
 	{
@@ -1328,22 +1352,6 @@ namespace reshade
 			ImGui::Spacing();
 			ImGui::Separator();
 			ImGui::Spacing();
-
-			if (ImGui::Combo("SkipUI", &_skip_ui, "Yes\0No\0")) {
-				save_configuration();
-			}
-
-			if (ImGui::DragFloat("Fog amount (need a restart)", &_fog_amount, 0.005f, 0.0f, 1.0f, "%.2f")) {
-				save_configuration();
-			}
-
-			if (ImGui::Combo("Allow Gw2 bloom (need a restart)", &_no_bloom, "Yes\0No\0")) {
-				save_configuration();
-			}
-
-			if (ImGui::Combo("Force sun size (need a restart)", &_max_sun, "No\0Yes\0")) {
-				save_configuration();
-			}
 
 			if (ImGui::InputText("(WIP) Zone", _preset_zone, sizeof(_preset_zone), ImGuiInputTextFlags_AutoSelectAll)) {
 				preset_zone = _preset_zone;
