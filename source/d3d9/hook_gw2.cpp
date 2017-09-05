@@ -107,9 +107,9 @@ HRESULT hook_gw2::CreatePixelHook(const DWORD *pFunction, IDirect3DPixelShader9 
 
 HRESULT hook_gw2::SetPixelHook(IDirect3DPixelShader9 *pShader) {
 	if (pShader == NULL) return _device->_orig->SetPixelShader(pShader);
-	if (isInjectionShaderLit(pShader)) {
+	if (!_is_lm_resolved && isInjectionShaderLit(pShader)) {
 		_surface_lightmap = _surface_current;
-	} else if (_surface_lightmap != NULL && !isInjectionShaderLit(pShader)) {
+	} else if (!_is_lm_resolved && _surface_lightmap != NULL && !isInjectionShaderLit(pShader)) {
 		LPDIRECT3DSURFACE9 l_Surface;
 		_device->_implicit_swapchain->_runtime->_lightbuffer_texture->GetSurfaceLevel(0, &l_Surface);
 		_device->_orig->StretchRect(_surface_lightmap, NULL, l_Surface, NULL, D3DTEXF_NONE);
@@ -204,11 +204,13 @@ void hook_gw2::replacePatternFog2(const DWORD * pFunction, int l, float _fog_amo
 
 void hook_gw2::replacePatternBloom(const DWORD * pFunction, int l) {
 	LOG(INFO) << "Bloom shader edited.";
+	DWFL hexFloat;
+	hexFloat.f = 0;
 	for (int i = 0; i < l; ++i) _pFunction[i] = pFunction[i];
-	//replace mov oC0, r0 by sub oC0, r0, r0
-	_pFunction[l - 4] = 0x3000002;
-	_pFunction[l - 1] = pFunction[l - 2];
-	_pFunction[l] = 0xffff;
+	_pFunction[3] = hexFloat.d;
+	_pFunction[4] = hexFloat.d;
+	_pFunction[5] = hexFloat.d;
+	_pFunction[6] = hexFloat.d;
 }
 
 void hook_gw2::replacePatternSun(const DWORD * pFunction, int l) {
