@@ -671,7 +671,6 @@ namespace reshade
 		_no_bloom = config.get("GENERAL", "NoBloom", _no_bloom).as<int>();
 		_skip_ui = config.get("GENERAL", "SkipUI", _skip_ui).as<int>();
 		_max_sun = config.get("GENERAL", "MaxSun", _max_sun).as<int>();
-		_auto_preset = config.get("GENERAL", "AutoPreset", _auto_preset).as<int>();
 		_input_processing_mode = config.get("INPUT", "InputProcessing", _input_processing_mode).as<int>();
 		const auto effect_search_paths = config.get("GENERAL", "EffectSearchPaths", _effect_search_paths).data();
 		_effect_search_paths.assign(effect_search_paths.begin(), effect_search_paths.end());
@@ -793,7 +792,6 @@ namespace reshade
 		config.set("GENERAL", "SkipUI", _skip_ui);
 		config.set("GENERAL", "NoBloom", _no_bloom);
 		config.set("GENERAL", "MaxSun", _max_sun);
-		config.set("GENERAL", "AutoPreset", _auto_preset);
 		config.set("GENERAL", "EffectSearchPaths", _effect_search_paths);
 		config.set("GENERAL", "TextureSearchPaths", _texture_search_paths);
 		config.set("GENERAL", "PreprocessorDefinitions", _preprocessor_definitions);
@@ -818,7 +816,6 @@ namespace reshade
 		ini_file preset(path);
 
 		preset_zone = preset.get("", "Zone", "global");
-		memset(_preset_zone, '\0', sizeof _preset_zone);
 		preset_zone.as<std::string>().copy(_preset_zone, 63, 0);
 
 		for (auto &variable : _uniforms)
@@ -1035,8 +1032,8 @@ namespace reshade
 				ImGuiWindowFlags_NoInputs |
 				ImGuiWindowFlags_NoFocusOnAppearing);
 
-			ImGui::TextUnformatted("ReShade by crosire (reshade.me)");
-			ImGui::TextUnformatted("Gw2 Hook " VERSION_STRING_PRODUCT " by Grenbur (04348.github.io/Gw2Hook/)");
+			ImGui::TextUnformatted("ReShade by crosire (http://reshade.me)");
+			ImGui::TextUnformatted("Gw2 Hook " VERSION_STRING_FILE " by Grenbur (04348.github.io/Gw2Hook/)");
 
 			ImGui::Spacing();
 
@@ -1107,7 +1104,7 @@ namespace reshade
 			{
 				ImGui::SetNextWindowPosCenter(ImGuiSetCond_Once);
 				ImGui::SetNextWindowSize(ImVec2(710, 650), ImGuiSetCond_Once);
-				ImGui::Begin("Gw2 Hook " VERSION_STRING_PRODUCT " ###Main", &_show_menu,
+				ImGui::Begin("Gw2 Hook " VERSION_STRING_FILE " | ###Main", &_show_menu,
 					ImGuiWindowFlags_MenuBar |
 					ImGuiWindowFlags_NoCollapse);
 
@@ -1197,10 +1194,6 @@ namespace reshade
 	}
 	void runtime::draw_overlay_menu_gw2()
 	{
-		if (ImGui::Combo("(WIP) Auto preset", &_auto_preset, "Yes\0No\0")) {
-			save_configuration();
-		}
-
 		if (ImGui::Combo("SkipUI", &_skip_ui, "Yes\0No\0")) {
 			save_configuration();
 		}
@@ -1219,9 +1212,6 @@ namespace reshade
 
 		ImGui::Spacing();
 		ImGui::Separator();
-		ImGui::Spacing();
-
-		ImGui::Text("Map ID : %d", map_id);
 	}
 	void runtime::draw_overlay_menu_home()
 	{

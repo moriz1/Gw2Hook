@@ -116,15 +116,10 @@ namespace reshade
 		void set_uniform_value(uniform &variable, const int *values, size_t count);
 		void set_uniform_value(uniform &variable, const unsigned int *values, size_t count);
 		void set_uniform_value(uniform &variable, const float *values, size_t count);
-		void load_preset(const filesystem::path &path);
-		std::vector<filesystem::path> _preset_files;
-		int _current_preset = -1;
 		float _fog_amount = 0;
 		int _no_bloom = 1;
 		int _skip_ui = 0;
 		int _max_sun = 1;
-		int _auto_preset = 1;
-		int map_id = -1;
 		variant preset_zone = (std::string)"global";
 
 	protected:
@@ -203,6 +198,7 @@ namespace reshade
 		void reload();
 		void load_configuration();
 		void save_configuration() const;
+		void load_preset(const filesystem::path &path);
 		void save_preset(const filesystem::path &path) const;
 		void save_screenshot() const;
 
@@ -220,14 +216,14 @@ namespace reshade
 
 		const unsigned int _renderer_id;
 		bool _is_initialized = false;
-		std::vector<filesystem::path> _effect_files, _effect_search_paths, _texture_search_paths;
+		std::vector<filesystem::path> _effect_files, _preset_files, _effect_search_paths, _texture_search_paths;
 		std::chrono::high_resolution_clock::time_point _start_time, _last_reload_time, _last_present_time;
 		std::chrono::high_resolution_clock::duration _last_frame_duration;
 		std::vector<unsigned char> _uniform_data_storage;
 		int _date[4] = { };
 		std::string _errors;
 		std::vector<std::string> _preprocessor_definitions;
-		int _menu_index = 0, _screenshot_format = 0, _selected_technique = -1, _input_processing_mode = 2;
+		int _menu_index = 0, _screenshot_format = 0, _current_preset = -1, _selected_technique = -1, _input_processing_mode = 2;
 		key_shortcut _menu_key, _screenshot_key, _effects_key;
 		filesystem::path _screenshot_path;
 		bool _show_menu = false, _show_error_log = false, _performance_mode = false, _effects_enabled = true;

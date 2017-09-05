@@ -15,17 +15,17 @@ xmlns="http://www.w3.org/TR/REC-html40">
  <o:DocumentProperties>
   <o:Author>Barjou-Suire Emile</o:Author>
   <o:LastAuthor>Utilisateur Windows</o:LastAuthor>
-  <o:Revision>60</o:Revision>
-  <o:TotalTime>1261</o:TotalTime>
+  <o:Revision>58</o:Revision>
+  <o:TotalTime>1259</o:TotalTime>
   <o:Created>2017-08-08T10:05:00Z</o:Created>
-  <o:LastSaved>2017-09-05T15:11:00Z</o:LastSaved>
+  <o:LastSaved>2017-09-03T16:57:00Z</o:LastSaved>
   <o:Pages>1</o:Pages>
-  <o:Words>876</o:Words>
-  <o:Characters>4821</o:Characters>
+  <o:Words>861</o:Words>
+  <o:Characters>4741</o:Characters>
   <o:Company>Nyrhu Group</o:Company>
-  <o:Lines>40</o:Lines>
+  <o:Lines>39</o:Lines>
   <o:Paragraphs>11</o:Paragraphs>
-  <o:CharactersWithSpaces>5686</o:CharactersWithSpaces>
+  <o:CharactersWithSpaces>5591</o:CharactersWithSpaces>
   <o:Version>16.00</o:Version>
  </o:DocumentProperties>
  <o:OfficeDocumentSettings>
@@ -40,8 +40,6 @@ target="index_fichiers/props007.xml">
  <w:WordDocument>
   <w:ActiveWritingStyle Lang="EN-US" VendorID="64" DLLVersion="131078"
    NLCheck="1">0</w:ActiveWritingStyle>
-  <w:SpellingState>Clean</w:SpellingState>
-  <w:GrammarState>Clean</w:GrammarState>
   <w:TrackMoves>false</w:TrackMoves>
   <w:TrackFormatting/>
   <w:HyphenationZone>21</w:HyphenationZone>
@@ -1637,12 +1635,6 @@ span.CitationintenseCar
 	color:#70AD47;
 	mso-themecolor:accent6;
 	font-style:italic;}
-span.SpellE
-	{mso-style-name:"";
-	mso-spl-e:yes;}
-span.GramE
-	{mso-style-name:"";
-	mso-gram-e:yes;}
 .MsoChpDefault
 	{mso-style-type:export-only;
 	mso-default-props:yes;
@@ -2116,42 +2108,40 @@ lang=EN-US style='mso-ansi-language:EN-US'>Gw2 Hook<span
 class=MsoSubtleEmphasis><o:p></o:p></span></span></p>
 
 <p class=MsoSubtitle style='margin-left:35.4pt'><span lang=EN-US
-style='mso-ansi-language:EN-US'>Gw2Hook is a fork of <span class=SpellE>ReShade</span>
-which target only Guild Wars 2.<o:p></o:p></span></p>
+style='mso-ansi-language:EN-US'>Gw2Hook is a fork of ReShade which target only
+Guild Wars 2.<o:p></o:p></span></p>
 
 <p class=MsoIntenseQuote style='margin-left:71.4pt'><span lang=EN-US
 style='mso-ansi-language:EN-US'>Modifying Guild Wars 2 is not supported by
-Arena.Net or <span class=SpellE>NCSoft</span>. Use it at your own risk.<o:p></o:p></span></p>
+Arena.Net or NCSoft. Use it at your own risk.<o:p></o:p></span></p>
 
 <p class=MsoNormal style='margin-left:35.4pt'><span lang=EN-US
 style='mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></p>
 
 <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:3.0pt;
 margin-left:35.4pt;line-height:normal'><span lang=EN-US style='mso-ansi-language:
-EN-US'>This aims at removing the fog in Gw2, but I decided to add more
-functions to it. This at still in an early stage, and should be used keeping
-this in mind.<span style='mso-spacerun:yes'>&nbsp; </span>Also, I&#8217;ve
-never used DirectX nor any low-level Graphic API and rarely used C++, the code
-is far from being clean!<o:p></o:p></span></p>
+EN-US'>This aims at removing the fog in Gw2, but I decided to add more functions
+to it. This at still in an early stage, and should be used keeping this in
+mind.<span style='mso-spacerun:yes'>&nbsp; </span>Also, I&#8217;ve never used
+DirectX nor any low-level Graphic API and rarely used C++, the code is far from
+being clean!<o:p></o:p></span></p>
 
 <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:3.0pt;
 margin-left:35.4pt;line-height:normal'><span lang=EN-US style='mso-ansi-language:
-EN-US'>So, to remove the fog, I installed a hook on the <span class=SpellE><span
-class=MsoSubtleReference>CreatePixelShader</span></span>, so I have access to
-each <span class=SpellE>shader&#8217;s</span> bytecode. After some researches,
-I found a pattern in the bytecode that is used to apply the fog, so basically I
-just had to change a <span class=MsoSubtleReference>mad</span> (multiply and
-add) op that applied the final <span class=SpellE>tex</span> to the object with
-the fog to a <span class=SpellE><span class=MsoSubtleReference>mov</span></span>
-(which&#8230; move the <span class=SpellE>tex</span>, without adding the fog).
-It does the same for removing bloom and forcing sun to its maximum size.<o:p></o:p></span></p>
+EN-US'>So, to remove the fog, I installed a hook on the <span
+class=MsoSubtleReference>CreatePixelShader</span>, so I have access to each
+shader&#8217;s bytecode. After some researches, I found a pattern in the
+bytecode that is used to apply the fog, so basically I just had to change a <span
+class=MsoSubtleReference>mad</span> (multiply and add) op that applied the
+final tex to the object with the fog to a <span class=MsoSubtleReference>mov</span>
+(which&#8230; move the tex, without adding the fog). It does the same for
+removing bloom and forcing sun to its maximum size.<o:p></o:p></span></p>
 
 <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:3.0pt;
 margin-left:35.4pt;line-height:normal'><span lang=EN-US style='mso-ansi-language:
-EN-US'>To skip the HUD, I removed the hook in <span class=SpellE><span
-class=MsoSubtleReference>on_present</span></span> that applied the <span
-class=SpellE>shaders</span>, apply the <span class=SpellE>shaders</span> at
-only specific state in the rendering: <o:p></o:p></span></p>
+EN-US'>To skip the HUD, I removed the hook in <span class=MsoSubtleReference>on_present</span>
+that applied the shaders, apply the shaders at only specific state in the
+rendering: <o:p></o:p></span></p>
 
 <p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:3.0pt;
 margin-left:70.8pt;line-height:normal'><span lang=EN-US style='mso-ansi-language:
@@ -2167,13 +2157,13 @@ there&#8217;s no name in the scene.<o:p></o:p></span></p>
 version:<o:p></o:p></span></h1>
 
 <p class=MsoNormal style='margin-left:70.8pt;text-indent:35.4pt'><span
-lang=EN-US style='mso-ansi-language:EN-US'>Download : <a href="download.html">Gw2Hook_1_0_8.zip</a><o:p></o:p></span></p>
+lang=EN-US style='mso-ansi-language:EN-US'>Download : <a href="download.html">Gw2Hook_1_0_7.zip</a><o:p></o:p></span></p>
 
 <h1 style='margin-left:35.4pt'><span lang=EN-US style='mso-ansi-language:EN-US'>Instructions:<o:p></o:p></span></h1>
 
 <p class=MsoIntenseQuote><span lang=EN-US style='color:red;mso-ansi-language:
-EN-US'>You need to have Gw2&#8217;s <span class=SpellE><u>shader</u></span><u>
-setting on High</u> and <u>Native render sampling</u>.<o:p></o:p></span></p>
+EN-US'>You need to have Gw2&#8217;s <u>shader setting on High</u> and <u>Native
+render sampling</u>.<o:p></o:p></span></p>
 
 <h2 style='margin-left:35.4pt'><span lang=EN-US style='mso-ansi-language:EN-US'><span
 style='mso-spacerun:yes'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>If you only want
@@ -2193,7 +2183,7 @@ lang=EN-US style='mso-fareast-font-family:Calibri;mso-fareast-theme-font:minor-l
 mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin;mso-ansi-language:
 EN-US'><span style='mso-list:Ignore'>2.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>Go
-to your <span class=SpellE>GuildWars</span> 2 installation directory.<o:p></o:p></span></p>
+to your GuildWars 2 installation directory.<o:p></o:p></span></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-left:89.4pt;mso-add-space:
 auto;text-indent:-18.0pt;mso-list:l4 level1 lfo2'><![if !supportLists]><span
@@ -2211,10 +2201,10 @@ mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin;mso-ansi-language:
 EN-US'><span style='mso-list:Ignore'>a.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'><a
 href="https://www.deltaconnected.com/arcdps/x64/reshade_loader/">See here if
-you are using <span class=SpellE>ArcDPS</span></a>.<o:p></o:p></span></p>
+you are using ArcDPS</a>.<o:p></o:p></span></p>
 
 <h2 style='margin-left:53.4pt'><span lang=EN-US style='mso-ansi-language:EN-US'>If
-you want to use the included <span class=SpellE>Shaders</span> and preset<o:p></o:p></span></h2>
+you want to use the included Shaders and preset<o:p></o:p></span></h2>
 
 <p class=MsoListParagraphCxSpFirst style='margin-left:89.4pt;mso-add-space:
 auto;text-indent:-18.0pt;mso-list:l0 level1 lfo4'><![if !supportLists]><span
@@ -2230,7 +2220,7 @@ lang=EN-US style='mso-fareast-font-family:Calibri;mso-fareast-theme-font:minor-l
 mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin;mso-ansi-language:
 EN-US'><span style='mso-list:Ignore'>2.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>Go
-to your <span class=SpellE>GuildWars</span> 2 installation directory.<o:p></o:p></span></p>
+to your GuildWars 2 installation directory.<o:p></o:p></span></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-left:89.4pt;mso-add-space:
 auto;text-indent:-18.0pt;mso-list:l0 level1 lfo4'><![if !supportLists]><span
@@ -2248,7 +2238,7 @@ mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin;mso-ansi-language:
 EN-US'><span style='mso-list:Ignore'>a.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'><a
 href="https://www.deltaconnected.com/arcdps/x64/reshade_loader/">See here if
-you are using <span class=SpellE>ArcDPS</span></a>.<o:p></o:p></span></p>
+you are using ArcDPS</a>.<o:p></o:p></span></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-left:89.4pt;mso-add-space:
 auto;text-indent:-18.0pt;mso-list:l0 level1 lfo4'><![if !supportLists]><span
@@ -2275,8 +2265,8 @@ EN-US'><span style='mso-list:Ignore'>6.<span style='font:7.0pt "Times New Roman"
 on<span class=MsoIntenseReference> Continue</span>, then on <span
 style='background:red;mso-highlight:red'><span
 style='mso-spacerun:yes'>&nbsp;&nbsp;&nbsp;</span>+<span
-style='mso-spacerun:yes'>&nbsp;&nbsp; </span></span><span class=GramE><span
-style='mso-spacerun:yes'>&nbsp;&nbsp;</span>.</span> <o:p></o:p></span></p>
+style='mso-spacerun:yes'>&nbsp;&nbsp; </span></span><span
+style='mso-spacerun:yes'>&nbsp;&nbsp;</span>. <o:p></o:p></span></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-left:89.4pt;mso-add-space:
 auto;text-indent:-18.0pt;mso-list:l0 level1 lfo4'><![if !supportLists]><span
@@ -2284,8 +2274,8 @@ lang=EN-US style='mso-fareast-font-family:Calibri;mso-fareast-theme-font:minor-l
 mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin;mso-ansi-language:
 EN-US'><span style='mso-list:Ignore'>7.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>Enter
-the name you want (like &#8220;<span class=SpellE>config</span>&#8221;, or
-&#8220;preset&#8221;, but no special characters!), and press Enter.<o:p></o:p></span></p>
+the name you want (like &#8220;config&#8221;, or &#8220;preset&#8221;), and
+press Enter.<o:p></o:p></span></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-left:89.4pt;mso-add-space:
 auto;text-indent:-18.0pt;mso-list:l0 level1 lfo4'><![if !supportLists]><span
@@ -2293,7 +2283,7 @@ lang=EN-US style='mso-fareast-font-family:Calibri;mso-fareast-theme-font:minor-l
 mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin;mso-ansi-language:
 EN-US'><span style='mso-list:Ignore'>8.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>Check
-the <span class=SpellE>shaders</span> you want (You can enable them all).<o:p></o:p></span></p>
+the shaders you want (You can enable them all).<o:p></o:p></span></p>
 
 <p class=MsoListParagraphCxSpLast style='margin-left:89.4pt;mso-add-space:auto;
 text-indent:-18.0pt;mso-list:l0 level1 lfo4'><![if !supportLists]><span
@@ -2323,7 +2313,7 @@ lang=EN-US style='mso-fareast-font-family:Calibri;mso-fareast-theme-font:minor-l
 mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin;mso-ansi-language:
 EN-US'><span style='mso-list:Ignore'>5.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>Go
-to your <span class=SpellE>GuildWars</span> 2 installation directory.<o:p></o:p></span></p>
+to your GuildWars 2 installation directory.<o:p></o:p></span></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-left:89.4pt;mso-add-space:
 auto;text-indent:-18.0pt;mso-list:l4 level1 lfo2'><![if !supportLists]><span
@@ -2341,7 +2331,7 @@ mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin;mso-ansi-language:
 EN-US'><span style='mso-list:Ignore'>a.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'><a
 href="https://www.deltaconnected.com/arcdps/x64/reshade_loader/">See here if
-you are using <span class=SpellE>ArcDPS</span></a>.<o:p></o:p></span></p>
+you are using ArcDPS</a>.<o:p></o:p></span></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-left:89.4pt;mso-add-space:
 auto;text-indent:-18.0pt;mso-list:l4 level1 lfo2'><![if !supportLists]><span
@@ -2358,8 +2348,7 @@ lang=EN-US style='mso-fareast-font-family:Calibri;mso-fareast-theme-font:minor-l
 mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin;mso-ansi-language:
 EN-US'><span style='mso-list:Ignore'>8.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>If
-you want to have the full <span class=SpellE>ReShade</span> <span class=SpellE>shader</span>
-pack:<o:p></o:p></span></p>
+you want to have the full ReShade shader pack:<o:p></o:p></span></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-left:125.4pt;mso-add-space:
 auto;text-indent:-18.0pt;mso-list:l4 level2 lfo2'><![if !supportLists]><span
@@ -2384,8 +2373,8 @@ mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin;mso-ansi-language:
 EN-US'><span style='mso-list:Ignore'>c.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>Extract
 the two folder from this .zip in <span class=MsoIntenseReference>bin64/</span>,
-so you avec <span class=MsoIntenseReference>bin64/<span class=SpellE>Shaders</span></span>
-and <span class=MsoIntenseReference>bin64/Texture.</span><o:p></o:p></span></p>
+so you avec <span class=MsoIntenseReference>bin64/Shaders</span> and <span
+class=MsoIntenseReference>bin64/Texture.</span><o:p></o:p></span></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-left:161.4pt;mso-add-space:
 auto;text-indent:-161.4pt;mso-text-indent-alt:-9.0pt;mso-list:l4 level3 lfo2'><![if !supportLists]><span
@@ -2394,8 +2383,8 @@ mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin;mso-ansi-language:
 EN-US'><span style='mso-list:Ignore'><span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span>i.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>You
-can delete individual textures and <span class=SpellE>shaders</span> that you
-won&#8217;t use, as they will increase loading time.<o:p></o:p></span></p>
+can delete individual textures and shaders that you won&#8217;t use, as they
+will increase loading time.<o:p></o:p></span></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-left:125.4pt;mso-add-space:
 auto;text-indent:-18.0pt;mso-list:l4 level2 lfo2'><![if !supportLists]><span
@@ -2411,7 +2400,7 @@ lang=EN-US style='mso-fareast-font-family:Calibri;mso-fareast-theme-font:minor-l
 mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin;mso-ansi-language:
 EN-US'><span style='mso-list:Ignore'>e.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>Open
-<span class=SpellE>ReShade&#8217;s</span> UI with Shift-F2<o:p></o:p></span></p>
+ReShade&#8217;s UI with Shift-F2<o:p></o:p></span></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-left:125.4pt;mso-add-space:
 auto;text-indent:-18.0pt;mso-list:l4 level2 lfo2'><![if !supportLists]><span
@@ -2419,7 +2408,7 @@ lang=EN-US style='mso-fareast-font-family:Calibri;mso-fareast-theme-font:minor-l
 mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin;mso-ansi-language:
 EN-US'><span style='mso-list:Ignore'>f.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>Follow
-the instruction, name the preset as you wish (but no special characters!).<o:p></o:p></span></p>
+the instruction, name the preset as you wish.<o:p></o:p></span></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-left:125.4pt;mso-add-space:
 auto;text-indent:-18.0pt;mso-list:l4 level2 lfo2'><![if !supportLists]><span
@@ -2438,11 +2427,10 @@ mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin;mso-ansi-language:
 EN-US'><span style='mso-list:Ignore'><span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span>i.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>Add
-respectively &#8220;<span class=MsoIntenseReference>/<span class=SpellE>Shaders</span></span>&#8221;
-and &#8220;<span class=MsoIntenseReference>/Textures</span>&#8221;, you should
-have: <span class=MsoIntenseReference>[&#8230;]/Guild Wars 2/bin64/<span
-class=SpellE>Shaders</span> </span>and <span class=MsoIntenseReference>[&#8230;]/Guild
-Wars 2/bin64/Textures</span><o:p></o:p></span></p>
+respectively &#8220;<span class=MsoIntenseReference>/Shaders</span>&#8221; and
+&#8220;<span class=MsoIntenseReference>/Textures</span>&#8221;, you should
+have: <span class=MsoIntenseReference>[&#8230;]/Guild Wars 2/bin64/Shaders </span>and
+<span class=MsoIntenseReference>[&#8230;]/Guild Wars 2/bin64/Textures</span><o:p></o:p></span></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-left:161.4pt;mso-add-space:
 auto;text-indent:-161.4pt;mso-text-indent-alt:-9.0pt;mso-list:l4 level3 lfo2'><![if !supportLists]><span
@@ -2459,10 +2447,8 @@ lang=EN-US style='mso-fareast-font-family:Calibri;mso-fareast-theme-font:minor-l
 mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin;mso-ansi-language:
 EN-US'><span style='mso-list:Ignore'>h.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>You
-can place additional <span class=SpellE>Shaders</span> <span class=GramE>(.<span
-class=SpellE>fx</span></span>) in the /<span class=SpellE>Shaders</span>
-folder. You can add a preset by pasting it in the /bin64 folder and select it
-with the + button on the UI.<o:p></o:p></span></p>
+can place additional Shaders (.fx) in the /Shaders folder. You can add a preset
+by pasting it in the /bin64 folder and select it with the + button on the UI.<o:p></o:p></span></p>
 
 <h1 style='margin-left:35.4pt'><span lang=EN-US style='mso-ansi-language:EN-US'>Functions:
 <o:p></o:p></span></h1>
@@ -2473,8 +2459,7 @@ lang=EN-US style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-fon
 Symbol;mso-ansi-language:EN-US'><span style='mso-list:Ignore'>&middot;<span
 style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>All
-<span class=SpellE>ReShade</span> normal functions (UI, <span class=SpellE>Shaders</span>,
-&#8230;).<o:p></o:p></span></p>
+ReShade normal functions (UI, Shaders, &#8230;).<o:p></o:p></span></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-left:106.65pt;mso-add-space:
 auto;text-indent:-18.0pt;mso-list:l2 level1 lfo6'><![if !supportLists]><span
@@ -2489,18 +2474,16 @@ auto;text-indent:-18.0pt;mso-list:l2 level1 lfo6'><![if !supportLists]><span
 lang=EN-US style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
 Symbol;mso-ansi-language:EN-US'><span style='mso-list:Ignore'>&middot;<span
 style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span></span></span><![endif]><span class=SpellE><span lang=EN-US
-style='mso-ansi-language:EN-US'>Shaders</span></span><span lang=EN-US
-style='mso-ansi-language:EN-US'> are applied before the game draw the HUD.<o:p></o:p></span></p>
+</span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>Shaders
+are applied before the game draw the HUD.<o:p></o:p></span></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-left:106.65pt;mso-add-space:
 auto;text-indent:-18.0pt;mso-list:l2 level1 lfo6'><![if !supportLists]><span
 lang=EN-US style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
 Symbol;mso-ansi-language:EN-US'><span style='mso-list:Ignore'>&middot;<span
 style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span></span></span><![endif]><span class=SpellE><span lang=EN-US
-style='mso-ansi-language:EN-US'>ReShade</span></span><span lang=EN-US
-style='mso-ansi-language:EN-US'> UI is drawn on top of the game's HUD.<o:p></o:p></span></p>
+</span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>ReShade
+UI is drawn on top of the game's HUD.<o:p></o:p></span></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-left:106.65pt;mso-add-space:
 auto;text-indent:-18.0pt;mso-list:l2 level1 lfo6'><![if !supportLists]><span
@@ -2532,7 +2515,7 @@ lang=EN-US style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-fon
 Symbol;mso-ansi-language:EN-US'><span style='mso-list:Ignore'>&middot;<span
 style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>Add
-<span class=SpellE>lightmap</span> to useable buffer from <span class=SpellE>shader</span>.<o:p></o:p></span></p>
+lightmap to useable buffer from shader.<o:p></o:p></span></p>
 
 <h1 style='margin-left:35.4pt'><span lang=EN-US style='mso-ansi-language:EN-US'>Know
 issues:<o:p></o:p></span></h1>
@@ -2555,35 +2538,11 @@ style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&
   mso-border-alt:solid windowtext .5pt;padding:0cm 5.4pt 0cm 5.4pt'>
   <p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
   normal'><span lang=EN-US style='mso-bidi-font-family:Calibri;mso-ansi-language:
-  EN-US'>Release 1.0.8<o:p></o:p></span></p>
+  EN-US'>Release 1.0.7<o:p></o:p></span></p>
   </td>
   <td width=718 valign=top style='width:538.5pt;border:solid windowtext 1.0pt;
   border-left:none;mso-border-left-alt:solid windowtext .5pt;mso-border-alt:
   solid windowtext .5pt;padding:0cm 5.4pt 0cm 5.4pt'>
-  <p class=MsoListParagraphCxSpFirst style='margin-bottom:0cm;margin-bottom:
-  .0001pt;mso-add-space:auto;text-indent:-18.0pt;line-height:normal;mso-list:
-  l5 level1 lfo10'><![if !supportLists]><span lang=EN-US style='font-family:
-  Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol;mso-ansi-language:
-  EN-US'><span style='mso-list:Ignore'>&middot;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  </span></span></span><![endif]><span lang=EN-US style='mso-bidi-font-family:
-  Calibri;mso-ansi-language:EN-US'>Improved performance.<o:p></o:p></span></p>
-  <p class=MsoListParagraphCxSpLast style='margin-bottom:0cm;margin-bottom:
-  .0001pt;mso-add-space:auto;line-height:normal'><span lang=EN-US
-  style='mso-bidi-font-family:Calibri;mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></p>
-  </td>
- </tr>
- <tr style='mso-yfti-irow:1'>
-  <td width=302 valign=top style='width:226.55pt;border:solid windowtext 1.0pt;
-  border-top:none;mso-border-top-alt:solid windowtext .5pt;mso-border-alt:solid windowtext .5pt;
-  padding:0cm 5.4pt 0cm 5.4pt'>
-  <p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
-  normal'><span lang=EN-US style='mso-bidi-font-family:Calibri;mso-ansi-language:
-  EN-US'>Release 1.0.7<o:p></o:p></span></p>
-  </td>
-  <td width=718 valign=top style='width:538.5pt;border-top:none;border-left:
-  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
-  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
-  mso-border-alt:solid windowtext .5pt;padding:0cm 5.4pt 0cm 5.4pt'>
   <p class=MsoListParagraphCxSpFirst style='margin-bottom:0cm;margin-bottom:
   .0001pt;mso-add-space:auto;text-indent:-18.0pt;line-height:normal;mso-list:
   l5 level1 lfo10'><![if !supportLists]><span lang=EN-US style='font-family:
@@ -2604,14 +2563,13 @@ style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&
   Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol;mso-ansi-language:
   EN-US'><span style='mso-list:Ignore'>&middot;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   </span></span></span><![endif]><span lang=EN-US style='mso-bidi-font-family:
-  Calibri;mso-ansi-language:EN-US'>Improved <span class=SpellE>depthbuffer</span>
-  stability.<o:p></o:p></span></p>
+  Calibri;mso-ansi-language:EN-US'>Improved depthbuffer stability.<o:p></o:p></span></p>
   <p class=MsoListParagraphCxSpLast style='margin-bottom:0cm;margin-bottom:
   .0001pt;mso-add-space:auto;line-height:normal'><span lang=EN-US
   style='mso-bidi-font-family:Calibri;mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></p>
   </td>
  </tr>
- <tr style='mso-yfti-irow:2'>
+ <tr style='mso-yfti-irow:1'>
   <td width=302 valign=top style='width:226.55pt;border:solid windowtext 1.0pt;
   border-top:none;mso-border-top-alt:solid windowtext .5pt;mso-border-alt:solid windowtext .5pt;
   padding:0cm 5.4pt 0cm 5.4pt'>
@@ -2628,17 +2586,15 @@ style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&
   l5 level1 lfo10'><![if !supportLists]><span lang=EN-US style='font-family:
   Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol;mso-ansi-language:
   EN-US'><span style='mso-list:Ignore'>&middot;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  </span></span></span><![endif]><span class=SpellE><span lang=EN-US
-  style='mso-bidi-font-family:Calibri;mso-ansi-language:EN-US'>Bugfix</span></span><span
-  lang=EN-US style='mso-bidi-font-family:Calibri;mso-ansi-language:EN-US'>:
-  fixed <span class=SpellE>reshade</span> version error with <span
-  class=SpellE>ReShade&#8217;s</span> <span class=SpellE>shaderpack</span><o:p></o:p></span></p>
+  </span></span></span><![endif]><span lang=EN-US style='mso-bidi-font-family:
+  Calibri;mso-ansi-language:EN-US'>Bugfix: fixed reshade version error with
+  ReShade&#8217;s shaderpack<o:p></o:p></span></p>
   <p class=MsoListParagraphCxSpLast style='margin-bottom:0cm;margin-bottom:
   .0001pt;mso-add-space:auto;line-height:normal'><span lang=EN-US
   style='mso-bidi-font-family:Calibri;mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></p>
   </td>
  </tr>
- <tr style='mso-yfti-irow:3'>
+ <tr style='mso-yfti-irow:2'>
   <td width=302 valign=top style='width:226.55pt;border:solid windowtext 1.0pt;
   border-top:none;mso-border-top-alt:solid windowtext .5pt;mso-border-alt:solid windowtext .5pt;
   padding:0cm 5.4pt 0cm 5.4pt'>
@@ -2655,16 +2611,14 @@ style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&
   l5 level1 lfo10'><![if !supportLists]><span lang=EN-US style='font-family:
   Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol;mso-ansi-language:
   EN-US'><span style='mso-list:Ignore'>&middot;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  </span></span></span><![endif]><span class=SpellE><span lang=EN-US
-  style='mso-bidi-font-family:Calibri;mso-ansi-language:EN-US'>Bugfix</span></span><span
-  lang=EN-US style='mso-bidi-font-family:Calibri;mso-ansi-language:EN-US'>: UI
-  skip setting save correctly.<o:p></o:p></span></p>
+  </span></span></span><![endif]><span lang=EN-US style='mso-bidi-font-family:
+  Calibri;mso-ansi-language:EN-US'>Bugfix: UI skip setting save correctly.<o:p></o:p></span></p>
   <p class=MsoListParagraphCxSpLast style='margin-bottom:0cm;margin-bottom:
   .0001pt;mso-add-space:auto;line-height:normal'><span lang=EN-US
   style='mso-bidi-font-family:Calibri;mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></p>
   </td>
  </tr>
- <tr style='mso-yfti-irow:4'>
+ <tr style='mso-yfti-irow:3'>
   <td width=302 valign=top style='width:226.55pt;border:solid windowtext 1.0pt;
   border-top:none;mso-border-top-alt:solid windowtext .5pt;mso-border-alt:solid windowtext .5pt;
   padding:0cm 5.4pt 0cm 5.4pt'>
@@ -2689,13 +2643,13 @@ style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&
   Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol;mso-ansi-language:
   EN-US'><span style='mso-list:Ignore'>&middot;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   </span></span></span><![endif]><span lang=EN-US style='mso-bidi-font-family:
-  Calibri;mso-ansi-language:EN-US'>Various <span class=SpellE>bugfix</span>.<o:p></o:p></span></p>
+  Calibri;mso-ansi-language:EN-US'>Various bugfix.<o:p></o:p></span></p>
   <p class=MsoListParagraphCxSpLast style='margin-bottom:0cm;margin-bottom:
   .0001pt;mso-add-space:auto;line-height:normal'><span lang=EN-US
   style='mso-bidi-font-family:Calibri;mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></p>
   </td>
  </tr>
- <tr style='mso-yfti-irow:5'>
+ <tr style='mso-yfti-irow:4'>
   <td width=302 valign=top style='width:226.55pt;border:solid windowtext 1.0pt;
   border-top:none;mso-border-top-alt:solid windowtext .5pt;mso-border-alt:solid windowtext .5pt;
   padding:0cm 5.4pt 0cm 5.4pt'>
@@ -2713,8 +2667,7 @@ style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&
   Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol;mso-ansi-language:
   EN-US'><span style='mso-list:Ignore'>&middot;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   </span></span></span><![endif]><span lang=EN-US style='mso-bidi-font-family:
-  Calibri;mso-ansi-language:EN-US'>Changing map don&#8217;t force effects
-  compilation.<o:p></o:p></span></p>
+  Calibri;mso-ansi-language:EN-US'>Changing map don&#8217;t force effects compilation.<o:p></o:p></span></p>
   <p class=MsoListParagraphCxSpMiddle style='margin-bottom:0cm;margin-bottom:
   .0001pt;mso-add-space:auto;text-indent:-18.0pt;line-height:normal;mso-list:
   l5 level1 lfo10'><![if !supportLists]><span lang=EN-US style='font-family:
@@ -2727,16 +2680,14 @@ style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&
   l5 level1 lfo10'><![if !supportLists]><span lang=EN-US style='font-family:
   Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol;mso-ansi-language:
   EN-US'><span style='mso-list:Ignore'>&middot;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  </span></span></span><![endif]><span class=SpellE><span lang=EN-US
-  style='mso-bidi-font-family:Calibri;mso-ansi-language:EN-US'>Bugfix</span></span><span
-  lang=EN-US style='mso-bidi-font-family:Calibri;mso-ansi-language:EN-US'>:
-  Improved <span class=SpellE>lightmap</span> stability.<o:p></o:p></span></p>
+  </span></span></span><![endif]><span lang=EN-US style='mso-bidi-font-family:
+  Calibri;mso-ansi-language:EN-US'>Bugfix: Improved lightmap stability.<o:p></o:p></span></p>
   <p class=MsoListParagraphCxSpLast style='margin-bottom:0cm;margin-bottom:
   .0001pt;mso-add-space:auto;line-height:normal'><span lang=EN-US
   style='mso-bidi-font-family:Calibri;mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></p>
   </td>
  </tr>
- <tr style='mso-yfti-irow:6'>
+ <tr style='mso-yfti-irow:5'>
   <td width=302 valign=top style='width:226.55pt;border:solid windowtext 1.0pt;
   border-top:none;mso-border-top-alt:solid windowtext .5pt;mso-border-alt:solid windowtext .5pt;
   padding:0cm 5.4pt 0cm 5.4pt'>
@@ -2760,7 +2711,7 @@ style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&
   style='mso-bidi-font-family:Calibri;mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></p>
   </td>
  </tr>
- <tr style='mso-yfti-irow:7'>
+ <tr style='mso-yfti-irow:6'>
   <td width=302 valign=top style='width:226.55pt;border:solid windowtext 1.0pt;
   border-top:none;mso-border-top-alt:solid windowtext .5pt;mso-border-alt:solid windowtext .5pt;
   padding:0cm 5.4pt 0cm 5.4pt'>
@@ -2779,7 +2730,7 @@ style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&
   EN-US'><span style='mso-list:Ignore'>&middot;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   </span></span></span><![endif]><span lang=EN-US style='mso-bidi-font-family:
   Calibri;mso-ansi-language:EN-US'>Improved injection method to be able to draw
-  <span class=SpellE>PostFX</span> in any buffer.<o:p></o:p></span></p>
+  PostFX in any buffer.<o:p></o:p></span></p>
   <p class=MsoListParagraphCxSpMiddle style='margin-bottom:0cm;margin-bottom:
   .0001pt;mso-add-space:auto;text-indent:-18.0pt;line-height:normal;mso-list:
   l5 level1 lfo10'><![if !supportLists]><span lang=EN-US style='font-family:
@@ -2794,14 +2745,14 @@ style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&
   Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol;mso-ansi-language:
   EN-US'><span style='mso-list:Ignore'>&middot;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   </span></span></span><![endif]><span lang=EN-US style='mso-bidi-font-family:
-  Calibri;mso-ansi-language:EN-US'>Added Light map to useable buffer from <span
-  class=SpellE>shader</span>.<o:p></o:p></span></p>
+  Calibri;mso-ansi-language:EN-US'>Added Light map to useable buffer from
+  shader.<o:p></o:p></span></p>
   <p class=MsoListParagraphCxSpLast style='margin-bottom:0cm;margin-bottom:
   .0001pt;mso-add-space:auto;line-height:normal'><span lang=EN-US
   style='mso-bidi-font-family:Calibri;mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></p>
   </td>
  </tr>
- <tr style='mso-yfti-irow:8'>
+ <tr style='mso-yfti-irow:7'>
   <td width=302 valign=top style='width:226.55pt;border:solid windowtext 1.0pt;
   border-top:none;mso-border-top-alt:solid windowtext .5pt;mso-border-alt:solid windowtext .5pt;
   padding:0cm 5.4pt 0cm 5.4pt'>
@@ -2841,7 +2792,7 @@ style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&
   style='mso-bidi-font-family:Calibri;mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></p>
   </td>
  </tr>
- <tr style='mso-yfti-irow:9'>
+ <tr style='mso-yfti-irow:8'>
   <td width=302 valign=top style='width:226.55pt;border:solid windowtext 1.0pt;
   border-top:none;mso-border-top-alt:solid windowtext .5pt;mso-border-alt:solid windowtext .5pt;
   padding:0cm 5.4pt 0cm 5.4pt'>
@@ -2872,7 +2823,7 @@ style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&
   style='mso-bidi-font-family:Calibri;mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></p>
   </td>
  </tr>
- <tr style='mso-yfti-irow:10'>
+ <tr style='mso-yfti-irow:9'>
   <td width=302 valign=top style='width:226.55pt;border:solid windowtext 1.0pt;
   border-top:none;mso-border-top-alt:solid windowtext .5pt;mso-border-alt:solid windowtext .5pt;
   padding:0cm 5.4pt 0cm 5.4pt'>
@@ -2898,14 +2849,14 @@ style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&
   Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol;mso-ansi-language:
   EN-US'><span style='mso-list:Ignore'>&middot;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   </span></span></span><![endif]><span lang=EN-US style='mso-bidi-font-family:
-  Calibri;mso-ansi-language:EN-US'>Added few preconfigured <span class=SpellE>shaders</span>
-  file to the archive.<o:p></o:p></span></p>
+  Calibri;mso-ansi-language:EN-US'>Added few preconfigured shaders file to the
+  archive.<o:p></o:p></span></p>
   <p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
   normal'><span lang=EN-US style='mso-bidi-font-family:Calibri;mso-ansi-language:
   EN-US'><span style='mso-spacerun:yes'>&nbsp;</span><o:p></o:p></span></p>
   </td>
  </tr>
- <tr style='mso-yfti-irow:11'>
+ <tr style='mso-yfti-irow:10'>
   <td width=302 valign=top style='width:226.55pt;border:solid windowtext 1.0pt;
   border-top:none;mso-border-top-alt:solid windowtext .5pt;mso-border-alt:solid windowtext .5pt;
   padding:0cm 5.4pt 0cm 5.4pt'>
@@ -2922,17 +2873,16 @@ style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&
   l5 level1 lfo10'><![if !supportLists]><span lang=EN-US style='font-family:
   Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol;mso-ansi-language:
   EN-US'><span style='mso-list:Ignore'>&middot;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  </span></span></span><![endif]><span class=SpellE><span lang=EN-US
-  style='mso-bidi-font-family:Calibri;mso-ansi-language:EN-US'>Bugfix</span></span><span
-  lang=EN-US style='mso-bidi-font-family:Calibri;mso-ansi-language:EN-US'>:
-  Hide the HUD in-game will not prevent FX to be drawn.<o:p></o:p></span></p>
+  </span></span></span><![endif]><span lang=EN-US style='mso-bidi-font-family:
+  Calibri;mso-ansi-language:EN-US'>Bugfix: Hide the HUD in-game will not
+  prevent FX to be drawn.<o:p></o:p></span></p>
   <p class=MsoListParagraphCxSpLast style='margin-bottom:0cm;margin-bottom:
   .0001pt;mso-add-space:auto;line-height:normal'><span lang=EN-US
   style='mso-bidi-font-family:Calibri;mso-ansi-language:EN-US'><span
   style='mso-spacerun:yes'>&nbsp;</span><o:p></o:p></span></p>
   </td>
  </tr>
- <tr style='mso-yfti-irow:12'>
+ <tr style='mso-yfti-irow:11'>
   <td width=302 valign=top style='width:226.55pt;border:solid windowtext 1.0pt;
   border-top:none;mso-border-top-alt:solid windowtext .5pt;mso-border-alt:solid windowtext .5pt;
   padding:0cm 5.4pt 0cm 5.4pt'>
@@ -2964,7 +2914,7 @@ style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&
   EN-US'><o:p>&nbsp;</o:p></span></p>
   </td>
  </tr>
- <tr style='mso-yfti-irow:13'>
+ <tr style='mso-yfti-irow:12'>
   <td width=302 valign=top style='width:226.55pt;border:solid windowtext 1.0pt;
   border-top:none;mso-border-top-alt:solid windowtext .5pt;mso-border-alt:solid windowtext .5pt;
   padding:0cm 5.4pt 0cm 5.4pt'>
@@ -2988,7 +2938,7 @@ style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&
   style='mso-bidi-font-family:Calibri;mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></p>
   </td>
  </tr>
- <tr style='mso-yfti-irow:14'>
+ <tr style='mso-yfti-irow:13'>
   <td width=302 valign=top style='width:226.55pt;border:solid windowtext 1.0pt;
   border-top:none;mso-border-top-alt:solid windowtext .5pt;mso-border-alt:solid windowtext .5pt;
   padding:0cm 5.4pt 0cm 5.4pt'>
@@ -3006,14 +2956,14 @@ style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&
   Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol;mso-ansi-language:
   EN-US'><span style='mso-list:Ignore'>&middot;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   </span></span></span><![endif]><span lang=EN-US style='mso-bidi-font-family:
-  Calibri;mso-ansi-language:EN-US'>FX now ignores the HUD (<span class=SpellE><span
-  class=MsoSubtleReference>CreateVertexShader</span></span></span><span
-  lang=EN-US style='font-size:9.5pt;font-family:Consolas;mso-bidi-font-family:
-  Consolas;color:black;mso-ansi-language:EN-US'> and </span><span class=SpellE><span
+  Calibri;mso-ansi-language:EN-US'>FX now ignores the HUD (<span
+  class=MsoSubtleReference>CreateVertexShader</span></span><span lang=EN-US
+  style='font-size:9.5pt;font-family:Consolas;mso-bidi-font-family:Consolas;
+  color:black;mso-ansi-language:EN-US'> and </span><span
   class=MsoSubtleReference><span lang=EN-US style='mso-bidi-font-family:Calibri;
-  mso-ansi-language:EN-US'>SetVertexShader</span></span></span><span
-  lang=EN-US style='font-size:9.5pt;font-family:Consolas;mso-bidi-font-family:
-  Consolas;color:black;mso-ansi-language:EN-US'> hook).</span><span lang=EN-US
+  mso-ansi-language:EN-US'>SetVertexShader</span></span><span lang=EN-US
+  style='font-size:9.5pt;font-family:Consolas;mso-bidi-font-family:Consolas;
+  color:black;mso-ansi-language:EN-US'> hook).</span><span lang=EN-US
   style='mso-bidi-font-family:Calibri;mso-ansi-language:EN-US'><o:p></o:p></span></p>
   <p class=MsoListParagraphCxSpMiddle style='margin-bottom:0cm;margin-bottom:
   .0001pt;mso-add-space:auto;text-indent:-18.0pt;line-height:normal;mso-list:
@@ -3041,7 +2991,7 @@ style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&
   style='mso-bidi-font-family:Calibri;mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></p>
   </td>
  </tr>
- <tr style='mso-yfti-irow:15;mso-yfti-lastrow:yes'>
+ <tr style='mso-yfti-irow:14;mso-yfti-lastrow:yes'>
   <td width=302 valign=top style='width:226.55pt;border:solid windowtext 1.0pt;
   border-top:none;mso-border-top-alt:solid windowtext .5pt;mso-border-alt:solid windowtext .5pt;
   padding:0cm 5.4pt 0cm 5.4pt'>
@@ -3058,12 +3008,12 @@ style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&
   Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol;mso-ansi-language:
   EN-US'><span style='mso-list:Ignore'>&middot;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:
-  EN-US'>Added </span><span class=SpellE><span class=MsoSubtleReference><span
-  lang=EN-US style='mso-bidi-font-family:Calibri;mso-ansi-language:EN-US'>CreatePixelShader</span></span></span><span
+  EN-US'>Added </span><span class=MsoSubtleReference><span lang=EN-US
+  style='mso-bidi-font-family:Calibri;mso-ansi-language:EN-US'>CreatePixelShader</span></span><span
   lang=EN-US style='font-size:9.5pt;font-family:Consolas;mso-bidi-font-family:
   Consolas;color:black;mso-ansi-language:EN-US'> hook that edit on the fly
-  pixel <span class=SpellE>shader</span> to remove the fog.</span><span
-  lang=EN-US style='mso-ansi-language:EN-US'><o:p></o:p></span></p>
+  pixel shader to remove the fog.</span><span lang=EN-US style='mso-ansi-language:
+  EN-US'><o:p></o:p></span></p>
   <p class=MsoListParagraphCxSpLast style='margin-bottom:0cm;margin-bottom:
   .0001pt;mso-add-space:auto;line-height:normal'><span lang=EN-US
   style='font-size:9.5pt;font-family:Consolas;mso-bidi-font-family:Consolas;
@@ -3086,21 +3036,14 @@ project, I&#8217;m a student and will not be able to spend too much time
 supporting this tool.<o:p></o:p></span></p>
 
 <p class=MsoNormal style='margin-left:35.4pt;line-height:normal'><span
-class=SpellE><span class=GramE><span class=Titre3Car><span lang=EN-US
-style='font-size:12.0pt;mso-ansi-language:EN-US'>Reddit</span></span></span></span><span
-class=GramE><span class=Titre3Car><span lang=EN-US style='font-size:12.0pt;
-mso-ansi-language:EN-US'> :</span></span></span><span lang=EN-US
-style='mso-ansi-language:EN-US'> <span class=SpellE><span
-class=MsoSubtleReference>Grenbur</span></span> <o:p></o:p></span></p>
+class=Titre3Car><span lang=EN-US style='font-size:12.0pt;mso-ansi-language:
+EN-US'>Reddit :</span></span><span lang=EN-US style='mso-ansi-language:EN-US'> <span
+class=MsoSubtleReference>Grenbur</span> <o:p></o:p></span></p>
 
 <p class=MsoNormal style='margin-left:35.4pt;line-height:normal'><span
-class=SpellE><span class=GramE><span class=Titre3Car><span lang=EN-US
-style='font-size:12.0pt;mso-ansi-language:EN-US'>InGame</span></span></span></span><span
-class=GramE><span class=Titre3Car><span lang=EN-US style='font-size:12.0pt;
-mso-ansi-language:EN-US'> :</span></span></span><span lang=EN-US
-style='mso-ansi-language:EN-US'> <span class=SpellE><span
-class=MsoSubtleReference>Grenbur</span></span> / <span
-class=MsoSubtleReference>Orthros.5913</span><o:p></o:p></span></p>
+class=Titre3Car><span lang=EN-US style='font-size:12.0pt;mso-ansi-language:
+EN-US'>InGame :</span></span><span lang=EN-US style='mso-ansi-language:EN-US'> <span
+class=MsoSubtleReference>Grenbur</span> / <span class=MsoSubtleReference>Orthros.5913</span><o:p></o:p></span></p>
 
 <p class=MsoNormal style='margin-left:35.4pt'><span lang=EN-US
 style='mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></p>
