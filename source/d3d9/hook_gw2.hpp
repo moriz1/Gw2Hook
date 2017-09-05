@@ -11,6 +11,41 @@ typedef union {
 	float f;
 } DWFL;
 
+struct MumbleContext {
+	byte serverAddress[28]; // contains sockaddr_in or sockaddr_in6
+	unsigned mapId;
+	unsigned mapType;
+	unsigned shardId;
+	unsigned instance;
+	unsigned buildId;
+};
+
+struct LinkedMem {
+#ifdef _WIN32
+	UINT32	uiVersion;
+	DWORD	uiTick;
+#else
+	uint32_t uiVersion;
+	uint32_t uiTick;
+#endif
+	float	fAvatarPosition[3];
+	float	fAvatarFront[3];
+	float	fAvatarTop[3];
+	wchar_t	name[256];
+	float	fCameraPosition[3];
+	float	fCameraFront[3];
+	float	fCameraTop[3];
+	wchar_t	identity[256];
+#ifdef _WIN32
+	UINT32	context_len;
+#else
+	uint32_t context_len;
+#endif
+	MumbleContext context;
+	wchar_t description[2048];
+};
+
+
 class hook_gw2 {
 public:
 	hook_gw2(Direct3DDevice9* device) :
@@ -60,6 +95,7 @@ private:
 	int getFuncLenght(const DWORD *pFunction);
 
 	void logShader(const DWORD* pFunction);
+	void initMumble();
 
 	DWORD _pFunction[MAX_TOKENS];
 	void* _pShaderInjection_stable;
@@ -88,5 +124,7 @@ private:
 	IDirect3DSurface9* _surface_lightmap;
 	IDirect3DSurface9* _surface_current;
 	Direct3DDevice9 *_device;
+
+	LinkedMem *lm = NULL;
 };	
 

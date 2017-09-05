@@ -1,19 +1,60 @@
 #include "d3d9_device.hpp"
 #include "d3d9_swapchain.hpp"
+#include "ini_file.hpp"
 #include "hook_gw2.hpp"
 
 void hook_gw2::PresentHook() {
+	auto runtime = _device->_implicit_swapchain->_runtime;
+
+	if(lm == NULL) initMumble();
+
+	if (_device->_implicit_swapchain->_runtime->_auto_preset == 0 && _device->_implicit_swapchain->_runtime->map_id != lm->context.mapId) {
+		//Map changed
+		bool preset_exist = false;
+		//Check map
+		for (int i = 0; i < runtime->_preset_files.size(); ++i) {
+			if (reshade::ini_file(runtime->_preset_files[i]).get("", "Zone").as<std::string>() == std::to_string(lm->context.mapId)) {
+				//printf("Load preset %d", lm->context.mapId);
+				runtime->_current_preset = i;
+				runtime->load_preset(runtime->_preset_files[i]);
+				preset_exist = true;
+				break;
+			}
+		}
+		if (!preset_exist) {
+			//check region
+			/*for (int i = 0; i < runtime->_preset_files.size(); ++i) {
+				if (reshade::ini_file(runtime->_preset_files[i]).get("", "Zone").as<std::string>() == std::to_string(lm->context.mapId)) {
+					printf("Load preset %d", lm->context.mapId);
+					runtime->_current_preset = i;
+					runtime->load_preset(runtime->_preset_files[i]);
+					preset_exist = true;
+					break;
+				}
+			}*/
+			if (!preset_exist) {
+				//global
+				for (int i = 0; i < runtime->_preset_files.size(); ++i) {
+					if (reshade::ini_file(runtime->_preset_files[i]).get("", "Zone").as<std::string>() == "global") {
+						//printf("Load preset %d", lm->context.mapId);
+						runtime->_current_preset = i;
+						runtime->load_preset(runtime->_preset_files[i]);
+						preset_exist = true;
+						break;
+					}
+				}
+			}
+		}
+
+	}
+	_device->_implicit_swapchain->_runtime->map_id = lm->context.mapId;
+
 	if (!_is_lm_resolved) {
 		LPDIRECT3DSURFACE9 l_Surface;
 		_device->_implicit_swapchain->_runtime->_lightbuffer_texture->GetSurfaceLevel(0, &l_Surface);
 		_device->_orig->ColorFill(l_Surface, nullptr, D3DCOLOR_COLORVALUE(0.2f, 0.2f, 0.2f, 0.2f));
 		l_Surface->Release();
-
-		_is_on_char_screen_last_frame = true;
-	} else {
-		_is_on_char_screen_last_frame = false;
 	}
-	_is_on_char_screen = false;
 
 	if (!_is_fx_done) _device->_implicit_swapchain->_runtime->applyPostFX(_is_on_char_screen_last_frame, _surface_current);
 	_is_fx_done = false;
@@ -109,7 +150,7 @@ HRESULT hook_gw2::SetPixelHook(IDirect3DPixelShader9 *pShader) {
 	if (pShader == NULL) return _device->_orig->SetPixelShader(pShader);
 	if (isInjectionShaderLit(pShader)) {
 		_surface_lightmap = _surface_current;
-	} else if (_surface_lightmap != NULL && !isInjectionShaderLit(pShader)) {
+	} else if (!_is_lm_resolved && _surface_lightmap != NULL && !isInjectionShaderLit(pShader)) {
 		LPDIRECT3DSURFACE9 l_Surface;
 		_device->_implicit_swapchain->_runtime->_lightbuffer_texture->GetSurfaceLevel(0, &l_Surface);
 		_device->_orig->StretchRect(_surface_lightmap, NULL, l_Surface, NULL, D3DTEXF_NONE);
@@ -268,4 +309,19 @@ void hook_gw2::logShader(const DWORD * pFunction) {
 	/*LPD3DXBUFFER disassembly;
 	D3DXDisassembleShader(pFunction, true, "", &disassembly);
 	LOG(INFO) << static_cast<char*>(disassembly->GetBufferPointer());*/
+}
+
+void hook_gw2::initMumble() {
+	HANDLE hMapObject = OpenFileMappingW(PAGE_READONLY, FALSE, L"MumbleLink");
+	if (hMapObject == NULL) {
+		hMapObject = CreateFileMappingW(INVALID_HANDLE_VALUE, nullptr, PAGE_READWRITE, 0, sizeof(LinkedMem), L"MumbleLink");
+	}
+	if (hMapObject != NULL) {
+		lm = (LinkedMem *)MapViewOfFile(hMapObject, PAGE_READONLY, 0, 0, sizeof(LinkedMem));
+		if (lm == NULL) {
+			CloseHandle(hMapObject);
+			hMapObject = NULL;
+			return;
+		}
+	}	
 }

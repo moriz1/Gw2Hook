@@ -34,8 +34,8 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD fdwReason, LPVOID lpvReserved)
 
 #define VERSION_PLATFORM "64-bit"
 
-			LOG(INFO) << "Initializing crosire's ReShade version '" VERSION_STRING_FILE "' (" << VERSION_PLATFORM << ") built on '" VERSION_DATE " " VERSION_TIME "' loaded from " << runtime::s_reshade_dll_path << " to " << runtime::s_target_executable_path << " ...";
-			LOG(INFO) << "Initializing Grenbur's Gw2 hook version'" VERSION_STRING_FILE "' ";
+			LOG(INFO) << "Initializing crosire's ReShade version 3.0.8 (" << VERSION_PLATFORM << ") built on '" VERSION_DATE " " VERSION_TIME "' loaded from " << runtime::s_reshade_dll_path << " to " << runtime::s_target_executable_path << " ...";
+			LOG(INFO) << "Initializing Grenbur's Gw2 hook version'" VERSION_STRING_PRODUCT "' ";
 
 			hooks::register_module(system_path / "d3d9.dll");
 			hooks::register_module(system_path / "user32.dll");
