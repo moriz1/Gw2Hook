@@ -2,8 +2,13 @@
 
 #include "d3d9.hpp"
 #include "log.hpp"
-
-
+#include "gw2_table.hpp"
+#include <vector>
+//std::vector<std::string> data;
+//data.push_back("my name");
+#include <array>
+#include <map>
+//std::array<std::string, N> data;
 #define MAX_TOKENS	8192
 
 typedef union {
@@ -11,28 +16,47 @@ typedef union {
 	float f;
 } DWFL;
 
+struct MumbleContext {
+	byte serverAddress[28]; // contains sockaddr_in or sockaddr_in6
+	unsigned mapId;
+	unsigned mapType;
+	unsigned shardId;
+	unsigned instance;
+	unsigned buildId;
+};
+
+struct LinkedMem {
+	UINT32	uiVersion;
+	DWORD	uiTick;
+	float	fAvatarPosition[3];
+	float	fAvatarFront[3];
+	float	fAvatarTop[3];
+	wchar_t	name[256];
+	float	fCameraPosition[3];
+	float	fCameraFront[3];
+	float	fCameraTop[3];
+	wchar_t	identity[256];
+	UINT32	context_len;
+	MumbleContext context;
+	wchar_t description[2048];
+};
+
 class hook_gw2 {
 public:
 	hook_gw2(Direct3DDevice9* device) :
 		_device(device),
+		rt(new gw2_table),
 		_pShaderInjection_stable(NULL),
 		_pShaderInjection(NULL),
 		_pShaderCharScreen(NULL),
-		_pShaderLightMap(NULL),
-		_pShaderPostLightMap(NULL),
-		_surface_lightmap(NULL),
 		_surface_current(NULL),
 		_is_fx_done(false),
-		_is_on_char_screen_last_frame(false),
-		_is_on_char_screen(false),
+		_is_in_competitive_map(false),
 		_pattern_InjectionStable{ 0x800c0001, 0xa0550006, 0x3000009, 0x80010002, 0x80e40001, 0xa0e40004, 0x3000009, 0x80020002, 0x80e40001, 0xa0e40005, 0x2000001, 0xe0030000, 0x80440002 },//l = 13
 		_pattern_Injection{ 0x3000005, 0x80280800, 0x80000000, 0x80ff0001, 0x2000001, 0x80270800, 0x80e40001 }, //l = 7
 		_pattern_charScreen{ 0x80440002, 0x2000001, 0xe00c0000, 0x90440009, 0x2000001, 0xe0030001, 0x90440008 }, //l = 7
 		_pattern_bloom{ 0x3000005, 0x80270000, 0x80e40000, 0xa0ff0000, 0x2000001, 0x802f0800, 0x80e40000, }, //l = 7
-		_pattern_sun{ 0x1000041, 0x800f0002, 0x1000041, 0x800f0000, 0x2000001, 0x800f0800, 0xa0000001 }, //l = 7
-		_pattern_lightMap{ 0xa0000000, 0x80400000, 0x80950000, 0x3000005, 0x800f0800, 0x80e40000, 0x80e40001 }, //l = 7
-		_pattern_lightMapFab{ 0x800f0000, 0x80e40000, 0x80e40001, 0x3000005, 0x800f0800, 0x80e40000, 0xa0000000 },
-		_pattern_postLightMap{ 0x0, 0x2000001, 0x802f0000, 0xa0000000, 0x2000001, 0x802f0800, 0x80e40000 } //l = 7
+		_pattern_sun{ 0x1000041, 0x800f0002, 0x1000041, 0x800f0000, 0x2000001, 0x800f0800, 0xa0000001 } //l = 7
 	{ }
 
 	void PresentHook();
@@ -51,8 +75,6 @@ private:
 	bool isInjectionShaderChS(void* pShader);
 	bool isInjectionShaderSt(void* pShader);
 	bool isInjectionShaderUs(void* pShader);
-	bool isInjectionShaderLit(void* pShader);
-	bool isInjectionShaderPLit(void* pShader);
 	bool isEnd(DWORD token);
 
 	int get_pattern(const DWORD *pFunction, int l);
@@ -60,33 +82,31 @@ private:
 	int getFuncLenght(const DWORD *pFunction);
 
 	void logShader(const DWORD* pFunction);
+	void initMumble();
 
 	DWORD _pFunction[MAX_TOKENS];
 	void* _pShaderInjection_stable;
 	void* _pShaderInjection;
 	void* _pShaderCharScreen;
-	void* _pShaderLightMap;
-	void* _pShaderLightMapFab;
-	void* _pShaderPostLightMap;
 
 	DWORD _pattern_InjectionStable[13];//l = 13
 	DWORD _pattern_Injection[7]; //l = 7
 	DWORD _pattern_charScreen[7]; //l = 7
 	DWORD _pattern_bloom[7]; //l = 7
 	DWORD _pattern_sun[7]; //l = 7
-	DWORD _pattern_lightMap[7]; //l = 7
-	DWORD _pattern_lightMapFab[7];
-	DWORD _pattern_postLightMap[7]; //l = 7
 
-	bool _is_on_char_screen_last_frame;
-	bool _is_on_char_screen;
 	bool can_use_unstable;
 	bool unstable_in_cframe;
 	bool _is_fx_done;
 	bool _is_lm_resolved;
+	bool _is_in_competitive_map;
 
-	IDirect3DSurface9* _surface_lightmap;
 	IDirect3DSurface9* _surface_current;
 	Direct3DDevice9 *_device;
+	std::map<LPDIRECT3DPIXELSHADER9, LPDIRECT3DPIXELSHADER9> shader_map;
+	int edited_shader_this_frame = 0;
+
+	LinkedMem *lm = NULL;
+	gw2_table *rt;
 };	
 

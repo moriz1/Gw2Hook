@@ -78,10 +78,10 @@ namespace reshade::d3d9
 		/*HERE TO ADD TEXTURES*/
 
 		// Create light buffer shader texture
-		hr = _device->CreateTexture(_width, _height, 1, D3DUSAGE_RENDERTARGET, _backbuffer_format, D3DPOOL_DEFAULT, &_lightbuffer_texture, nullptr);
+		/*hr = _device->CreateTexture(_width, _height, 1, D3DUSAGE_RENDERTARGET, _backbuffer_format, D3DPOOL_DEFAULT, &_lightbuffer_texture, nullptr);
 		if (!SUCCEEDED(hr)) {
 			LOG(ERROR) << "Failed to create light buffer texture! HRESULT is '" << std::hex << hr << std::dec << "'.";
-		}
+		}*/
 		// Create back buffer shader texture
 		hr = _device->CreateTexture(_width, _height, 1, D3DUSAGE_RENDERTARGET, _backbuffer_format, D3DPOOL_DEFAULT, &_backbuffer_texture, nullptr);
 
@@ -229,7 +229,7 @@ namespace reshade::d3d9
 		_depthstencil_texture.reset();
 
 		/*HERE TO ADD TEXTURES*/
-		_lightbuffer_texture.reset();
+		//_lightbuffer_texture.reset();
 
 		_default_depthstencil.reset();
 
@@ -618,9 +618,9 @@ namespace reshade::d3d9
 				new_reference = _depthstencil_texture;
 				break;
 			/*HERE TO ADD TEXTURES*/
-			case texture_reference::light_buffer:
+			/*case texture_reference::light_buffer:
 				new_reference = _lightbuffer_texture;
-				break;
+				break;*/
 			default:
 				return false;
 		}
@@ -1016,9 +1016,9 @@ namespace reshade::d3d9
 				update_texture_reference(texture, texture_reference::depth_buffer);
 			} 
 			/*HERE TO ADD TEXTURES*/
-			else if (texture.impl_reference == texture_reference::light_buffer) {
+			/*else if (texture.impl_reference == texture_reference::light_buffer) {
 				update_texture_reference(texture, texture_reference::light_buffer);
-			}
+			}*/
 		}
 
 		return true;

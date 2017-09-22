@@ -1437,9 +1437,9 @@ namespace reshade::d3d9
 			_runtime->update_texture_reference(obj, texture_reference::depth_buffer);
 		}
 		/*HERE TO ADD TEXTURES*/
-		else if (node->semantic == "LIGHT" || node->semantic == "SV_LIGHT") {
+		/*else if (node->semantic == "LIGHT" || node->semantic == "SV_LIGHT") {
 			_runtime->update_texture_reference(obj, texture_reference::light_buffer);
-		}
+		}*/
 		else
 		{
 			DWORD usage = 0;

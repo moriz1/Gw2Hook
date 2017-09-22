@@ -38,6 +38,10 @@ namespace reshade
 		/// File path to the current executable.
 		/// </summary>
 		static filesystem::path s_target_executable_path;
+		/// <summary>
+		/// File path to the working directory.
+		/// </summary>
+		static filesystem::path s_gw2hook_wrkdir_path;
 
 		/// <summary>
 		/// Construct a new runtime instance.
@@ -116,11 +120,19 @@ namespace reshade
 		void set_uniform_value(uniform &variable, const int *values, size_t count);
 		void set_uniform_value(uniform &variable, const unsigned int *values, size_t count);
 		void set_uniform_value(uniform &variable, const float *values, size_t count);
+		void load_preset(const filesystem::path &path);
+		void reload();
+		std::vector<filesystem::path> _preset_files;
+		int _current_preset = -1;
 		float _fog_amount = 0;
 		int _no_bloom = 1;
 		int _skip_ui = 0;
 		int _max_sun = 1;
+		int _auto_preset = 1;
+		int map_id = -1;
+		std::string map_region;
 		variant preset_zone = (std::string)"global";
+		bool _performance_mode = false;
 
 	protected:
 		/// <summary>
@@ -195,10 +207,8 @@ namespace reshade
 	private:
 		struct key_shortcut { int keycode; bool ctrl, shift; };
 
-		void reload();
 		void load_configuration();
 		void save_configuration() const;
-		void load_preset(const filesystem::path &path);
 		void save_preset(const filesystem::path &path) const;
 		void save_screenshot() const;
 
@@ -216,21 +226,21 @@ namespace reshade
 
 		const unsigned int _renderer_id;
 		bool _is_initialized = false;
-		std::vector<filesystem::path> _effect_files, _preset_files, _effect_search_paths, _texture_search_paths;
+		std::vector<filesystem::path> _effect_files, _effect_search_paths, _texture_search_paths;
 		std::chrono::high_resolution_clock::time_point _start_time, _last_reload_time, _last_present_time;
 		std::chrono::high_resolution_clock::duration _last_frame_duration;
 		std::vector<unsigned char> _uniform_data_storage;
 		int _date[4] = { };
 		std::string _errors;
 		std::vector<std::string> _preprocessor_definitions;
-		int _menu_index = 0, _screenshot_format = 0, _current_preset = -1, _selected_technique = -1, _input_processing_mode = 2;
+		int _menu_index = 0, _screenshot_format = 0, _selected_technique = -1, _input_processing_mode = 2;
 		key_shortcut _menu_key, _screenshot_key, _effects_key;
 		filesystem::path _screenshot_path;
-		bool _show_menu = false, _show_error_log = false, _performance_mode = false, _effects_enabled = true;
+		bool _show_menu = false, _show_error_log = false, _effects_enabled = true;
 		bool _show_clock = false, _show_framerate = false;
 		bool _overlay_key_setting_active = false, _screenshot_key_setting_active = false, _toggle_key_setting_active = false;
-		float _imgui_col_background[3] = { 236.0f/255.0f, 240.0f/ 255.0f, 241.0f / 255.0f }, _imgui_col_item_background[3] = { 171.0f / 255.0f, 183.0f / 255.0f, 183.0f / 255.0f };
-		float _imgui_col_active[3] = { 113.0f / 255.0f, 157.0f / 255.0f, 32.0f / 255.0f }, _imgui_col_text[3] = { 34.0f / 255.0f, 49.0f / 255.0f, 63.0f / 255.0f }, _imgui_col_text_fps[3] = { 1.0f, 0.0f, 0.0f };
+		float _imgui_col_background[3] = { 236.0f/255.0f, 240.0f/ 255.0f, 241.0f / 255.0f }, _imgui_col_item_background[3] = { 203.0f / 255.0f, 191.0f / 255.0f, 199.0f / 255.0f };
+		float _imgui_col_active[3] = { 148.0f / 255.0f, 28.0f / 255.0f, 56.0f / 255.0f }, _imgui_col_text[3] = { 34.0f / 255.0f, 49.0f / 255.0f, 63.0f / 255.0f }, _imgui_col_text_fps[3] = { 183.0f / 255.0f, 28.0f / 255.0f, 87.0f / 255.0f };
 		float _variable_editor_height = 0.0f;
 		unsigned int _tutorial_index = 0, _effects_expanded_state = 2;
 		char _effect_filter_buffer[64] = { };

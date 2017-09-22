@@ -63,7 +63,7 @@ namespace reshade::d3d9
 		com_ptr<IDirect3DSurface9> _backbuffer_texture_surface;
 		com_ptr<IDirect3DTexture9> _depthstencil_texture;
 		/*HERE TO ADD TEXTURES*/
-		com_ptr<IDirect3DTexture9> _lightbuffer_texture;
+		//com_ptr<IDirect3DTexture9> _lightbuffer_texture;
 
 	private:
 		struct depth_source_info

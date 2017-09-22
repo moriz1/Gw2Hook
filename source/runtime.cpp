@@ -18,10 +18,11 @@
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include <imgui.h>
 #include <imgui_internal.h>
+#include "gw2_table.hpp"
 
 namespace reshade
 {
-	filesystem::path runtime::s_reshade_dll_path, runtime::s_target_executable_path;
+	filesystem::path runtime::s_reshade_dll_path, runtime::s_target_executable_path, runtime::s_gw2hook_wrkdir_path;
 
 	runtime::runtime(uint32_t renderer) :
 		_renderer_id(renderer),
@@ -29,8 +30,8 @@ namespace reshade
 		_last_frame_duration(std::chrono::milliseconds(1)),
 		_imgui_context(ImGui::CreateContext()),
 		_imgui_font_atlas(std::make_unique<ImFontAtlas>()),
-		_effect_search_paths({ s_reshade_dll_path.parent_path() }),
-		_texture_search_paths({ s_reshade_dll_path.parent_path() }),
+		_effect_search_paths({ s_gw2hook_wrkdir_path+"Shaders\\" }),
+		_texture_search_paths({ s_gw2hook_wrkdir_path + "Textures\\" }),
 		_preprocessor_definitions({
 			"RESHADE_DEPTH_LINEARIZATION_FAR_PLANE=1000.0",
 			"RESHADE_DEPTH_INPUT_IS_UPSIDE_DOWN=0",
@@ -39,7 +40,7 @@ namespace reshade
 		_menu_key({ 0x71, false, true }), // VK_F2 + VK_SHIFT
 		_screenshot_key({ 0x2C, false, false }), // VK_SNAPSHOT
 		_effects_key({ }),
-		_screenshot_path(s_target_executable_path.parent_path()),
+		_screenshot_path(s_gw2hook_wrkdir_path+"Screenshots"),
 		_variable_editor_height(300)
 	{
 		ImGui::SetCurrentContext(_imgui_context);
@@ -174,7 +175,41 @@ namespace reshade
 
 				if (_current_preset >= 0)
 				{
-					load_preset(_preset_files[_current_preset]);
+					if (_auto_preset == 0) {
+						bool preset_exist = false;
+						for (int i = 0; i < _preset_files.size(); ++i) {
+							if (gw2_table::checkID(map_id, reshade::ini_file(_preset_files[i]).get("", "Zone").as<std::string>())) {
+								_current_preset = i;
+								load_preset(_preset_files[i]);
+								preset_exist = true;
+								break;
+							}
+						}
+						if (!preset_exist) {
+							//check region
+							for (int i = 0; i < _preset_files.size(); ++i) {
+								if (reshade::ini_file(_preset_files[i]).get("", "Zone").as<std::string>() == map_region) {
+									_current_preset = i;
+									load_preset(_preset_files[i]);
+									preset_exist = true;
+									break;
+								}
+							}
+							if (!preset_exist) {
+								//global
+								for (int i = 0; i < _preset_files.size(); ++i) {
+									if (reshade::ini_file(_preset_files[i]).get("", "Zone").as<std::string>() == "global") {
+										_current_preset = i;
+										load_preset(_preset_files[i]);
+										preset_exist = true;
+										break;
+									}
+								}
+							}
+						}
+					} else {
+						load_preset(_preset_files[_current_preset]);
+					}
 				}
 
 				if (strcmp(_effect_filter_buffer, "Search") != 0)
@@ -649,8 +684,7 @@ namespace reshade
 
 	void runtime::load_configuration()
 	{
-		filesystem::path path(s_reshade_dll_path);
-		path.replace_extension(".ini");
+		filesystem::path path(s_gw2hook_wrkdir_path + "config.ini");
 		const ini_file config(path);
 
 		const int menu_key[3] = { _menu_key.keycode, _menu_key.ctrl ? 1 : 0, _menu_key.shift ? 1 : 0 };
@@ -671,6 +705,7 @@ namespace reshade
 		_no_bloom = config.get("GENERAL", "NoBloom", _no_bloom).as<int>();
 		_skip_ui = config.get("GENERAL", "SkipUI", _skip_ui).as<int>();
 		_max_sun = config.get("GENERAL", "MaxSun", _max_sun).as<int>();
+		_auto_preset = config.get("GENERAL", "AutoPreset", _auto_preset).as<int>();
 		_input_processing_mode = config.get("INPUT", "InputProcessing", _input_processing_mode).as<int>();
 		const auto effect_search_paths = config.get("GENERAL", "EffectSearchPaths", _effect_search_paths).data();
 		_effect_search_paths.assign(effect_search_paths.begin(), effect_search_paths.end());
@@ -749,7 +784,7 @@ namespace reshade
 			_current_preset = -1;
 		}
 
-		const filesystem::path parent_path = s_reshade_dll_path.parent_path();
+		const filesystem::path parent_path = s_gw2hook_wrkdir_path + "Presets\\";
 		auto preset_files2 = filesystem::list_files(parent_path, "*.ini");
 		auto preset_files3 = filesystem::list_files(parent_path, "*.txt");
 		preset_files2.insert(preset_files2.end(), preset_files3.begin(), preset_files3.end());
@@ -778,8 +813,7 @@ namespace reshade
 	}
 	void runtime::save_configuration() const
 	{
-		filesystem::path path(s_reshade_dll_path);
-		path.replace_extension(".ini");
+		filesystem::path path(s_gw2hook_wrkdir_path + "config.ini");
 		ini_file config(path);
 
 		config.set("INPUT", "KeyMenu", { _menu_key.keycode, _menu_key.ctrl ? 1 : 0, _menu_key.shift ? 1 : 0 });
@@ -792,6 +826,7 @@ namespace reshade
 		config.set("GENERAL", "SkipUI", _skip_ui);
 		config.set("GENERAL", "NoBloom", _no_bloom);
 		config.set("GENERAL", "MaxSun", _max_sun);
+		config.set("GENERAL", "AutoPreset", _auto_preset);
 		config.set("GENERAL", "EffectSearchPaths", _effect_search_paths);
 		config.set("GENERAL", "TextureSearchPaths", _texture_search_paths);
 		config.set("GENERAL", "PreprocessorDefinitions", _preprocessor_definitions);
@@ -816,6 +851,7 @@ namespace reshade
 		ini_file preset(path);
 
 		preset_zone = preset.get("", "Zone", "global");
+		memset(_preset_zone, '\0', sizeof _preset_zone);
 		preset_zone.as<std::string>().copy(_preset_zone, 63, 0);
 
 		for (auto &variable : _uniforms)
@@ -1194,24 +1230,63 @@ namespace reshade
 	}
 	void runtime::draw_overlay_menu_gw2()
 	{
-		if (ImGui::Combo("SkipUI", &_skip_ui, "Yes\0No\0")) {
-			save_configuration();
+		if (ImGui::CollapsingHeader("General", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			if (ImGui::Combo("Skip UI", &_skip_ui, "Yes\0No\0")) {
+				save_configuration();
+			}
+
+			if (ImGui::DragFloat("Fog amount", &_fog_amount, 0.005f, 0.0f, 1.0f, "%.2f")) {
+				save_configuration();
+			}
+
+			ImGui::Spacing();
+			ImGui::Separator();
+			ImGui::Spacing();
+
+			ImGui::Text("Following options need a restart to take effect.", map_id);
+			ImGui::Spacing();
+
+			if (ImGui::Combo("Allow Gw2 bloom", &_no_bloom, "Yes\0No\0")) {
+				save_configuration();
+			}
+
+			if (ImGui::Combo("Force sun size", &_max_sun, "No\0Yes\0")) {
+				save_configuration();
+			}
+
+			ImGui::Spacing();
+			ImGui::Separator();
+			ImGui::Spacing();
 		}
 
-		if (ImGui::DragFloat("Fog amount (need a restart)", &_fog_amount, 0.005f, 0.0f, 1.0f, "%.2f")) {
-			save_configuration();
+		if (ImGui::CollapsingHeader("Auto preset selection", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			if (ImGui::Combo("Auto preset selection", &_auto_preset, "Yes\0No\0")) {
+				save_configuration();
+			}
+
+			ImGui::Text("Usage of auto preset selection :\n");
+			ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
+			ImGui::Text("The Zone field in first tab is used to limit a preset to a specific zone.");
+			ImGui::Text("It will then be loaded automatically. If using \"Performance mode\", it will reload effects.");
+			ImGui::Spacing(); ImGui::Spacing();
+			ImGui::Text("This field can be :");
+			ImGui::Text("\t\tA map ID (\"15\", \"899\", etc...)");
+			ImGui::Text("\t\tA list of map ID (\"15-24-899\")");
+			ImGui::Text("\t\tA region (\"Ascalon\", \"World vs. World\", etc...)");
+			ImGui::Text("\t\t\"global\" (used as fallback)");
+			ImGui::Text("You should have a global preset to handle unspecified maps.");
+			ImGui::Spacing(); ImGui::Spacing();
+			ImGui::Text("Informations about this map :");
+			ImGui::Text("\t\tMap ID : %d", map_id);
+			ImGui::Text("\t\tRegion : %s", map_region.c_str());
+
+			ImGui::Spacing();
+			ImGui::Separator();
+			ImGui::Spacing();
 		}
 
-		if (ImGui::Combo("Allow Gw2 bloom (need a restart)", &_no_bloom, "Yes\0No\0")) {
-			save_configuration();
-		}
-
-		if (ImGui::Combo("Force sun size (need a restart)", &_max_sun, "No\0Yes\0")) {
-			save_configuration();
-		}
-
-		ImGui::Spacing();
-		ImGui::Separator();
 	}
 	void runtime::draw_overlay_menu_home()
 	{
@@ -1281,7 +1356,7 @@ namespace reshade
 
 				if (ImGui::InputText("Name", buf, sizeof(buf), ImGuiInputTextFlags_EnterReturnsTrue))
 				{
-					auto path = filesystem::absolute(buf, s_reshade_dll_path.parent_path());
+					auto path = filesystem::absolute(buf, s_gw2hook_wrkdir_path + "Presets\\");
 					path.replace_extension(".ini");
 
 					if (filesystem::exists(path) || filesystem::exists(path.parent_path()))
@@ -1353,7 +1428,9 @@ namespace reshade
 			ImGui::Separator();
 			ImGui::Spacing();
 
-			if (ImGui::InputText("(WIP) Zone", _preset_zone, sizeof(_preset_zone), ImGuiInputTextFlags_AutoSelectAll)) {
+			ImGui::Text("When using the auto preset selection, use this to limit this preset to a specific zone.");
+			ImGui::Text("More info about this field in the \"Gw2 Settings\" tab.");
+			if (ImGui::InputText("Zone", _preset_zone, sizeof(_preset_zone), ImGuiInputTextFlags_AutoSelectAll)) {
 				preset_zone = _preset_zone;
 				save_preset(_preset_files[_current_preset]);
 			}

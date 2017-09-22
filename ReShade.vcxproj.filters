@@ -96,6 +96,9 @@
     <ClCompile Include="source\d3d9\hook_gw2.cpp">
       <Filter>hooks\d3d9</Filter>
     </ClCompile>
+    <ClCompile Include="source\gw2_table.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\com_ptr.hpp">
@@ -190,6 +193,9 @@
     </ClInclude>
     <ClInclude Include="source\d3d9\hook_gw2.hpp">
       <Filter>hooks\d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gw2_table.hpp">
+      <Filter>core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
